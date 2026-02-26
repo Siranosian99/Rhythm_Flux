@@ -1,3 +1,4 @@
 class AppTexts{
-  static const appName="Rhythm Flux";
+  static const appName1="RhYthM";
+  static const appName2="FluX";
 }

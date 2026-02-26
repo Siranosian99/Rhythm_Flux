@@ -1,18 +1,110 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:rhythm_flux/constants/app_texts_style.dart';
 
 import '../constants/app_texts.dart';
 
-class MainMenuScreen extends StatelessWidget {
+class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});
+
+  @override
+  State<MainMenuScreen> createState() => _MainMenuScreenState();
+}
+
+class _MainMenuScreenState extends State<MainMenuScreen> with TickerProviderStateMixin{
+  late final AnimationController _controller;
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this);
+  }
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: Column(
-        children: [
-          Text(AppTexts.appName,style:AppTextStyles.appNameStyle ?? TextStyle());
-        ],
-      )));
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            children: [
+              //      - assets/lottie/equalizer_blue.json
+              //       - assets/lottie/equalizer_pink.json
+              //       - assets/lottie/video_play_button.json
+              // Lottie.asset('assets/lottie/equalizer_blue.json'),
+              // Lottie.asset('assets/lottie/equalizer_pink.json'),
+              Stack(
+                alignment: AlignmentGeometry.center,
+                children: [
+                  Lottie.asset('assets/lottie/equalizer_pink.json'),
+                  Text(
+                    AppTexts.appName1,
+                    style: AppTextStyles.appName1Style,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+              Stack(
+                alignment: AlignmentGeometry.center,
+                children: [
+                  Lottie.asset('assets/lottie/equalizer_blue.json'),
+                  Text(
+                    AppTexts.appName2,
+                    style: AppTextStyles.appName2Style,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+                Row(
+
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Transform.rotate(
+                      angle: 1.5, // radians cinsinden
+                      child:  SizedBox(
+                        height: 100,
+                        width: 100,
+                        child:Lottie.asset("assets/lottie/music_notes_white.json"),
+                      ),
+                    ),
+                    Transform.rotate(
+                      angle: -1.5, // radians cinsinden
+                      child:  SizedBox(
+                        height: 100,
+                        width: 100,
+                        child:Lottie.asset("assets/lottie/music_notes_white.json"),
+                      ),
+                    ),
+
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                    height: 200,
+                    width: 200,
+                    child:Lottie.asset("assets/lottie/happy_spaceman.json"),
+                  ),
+                ),
+                SizedBox(
+                  width: 300,
+                  height: 400,
+                  child: GestureDetector(
+                    onTap:(){
+                    },
+                    child: Lottie.asset(
+                      'assets/lottie/play_button.json',
+                    ),
+                  ),
+                )
+
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

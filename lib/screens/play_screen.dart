@@ -1,4 +1,8 @@
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:rhythm_flux/screens/main_menu_screen.dart';
+
+import '../game/game_screen.dart';
 
 class PlayScreen extends StatefulWidget {
   const PlayScreen({super.key});
@@ -10,6 +14,11 @@ class PlayScreen extends StatefulWidget {
 class _PlayScreenState extends State<PlayScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: GameWidget(
+        game: MyGame(),
+
+      ),
+    );
   }
 }

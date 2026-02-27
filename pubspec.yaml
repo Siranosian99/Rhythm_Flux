@@ -68,9 +68,7 @@ flutter:
       - assets/lottie/happy_spaceman.json
       - assets/lottie/music_notes.json
       - assets/lottie/music_notes_white.json
-      - assets/spaceman/real.png
-      - assets/spaceman/spaceman.png
-      - assets/spaceman/spaceman.jpg
+      - assets/images/spaceman.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import '../game/game_screen.dart';
 
 class Square extends RectangleComponent with TapCallbacks , HasGameRef<MyGame>{
-  static int speed = 1;
+  static int speed =-100;
   static const squareSize = 50.0;
   static const indicatorSize = 6.0;
 
@@ -27,35 +27,38 @@ class Square extends RectangleComponent with TapCallbacks , HasGameRef<MyGame>{
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    add(
-      RectangleComponent(
-        size: Vector2(20, 100),
-        anchor: Anchor.centerRight,
-        position: Vector2(
-          gameRef.size.x / 1.2,        // ekranın en sağı
-          gameRef.size.y / 2,    // dikey ortası
-        ),
-        paint: Paint()..color = Colors.blueAccent,
-      ),
-    );
-    add(
-      RectangleComponent(
-        size: Vector2(20, 100),
-        anchor: Anchor.centerLeft,
-        position: Vector2(
-         60,                     // ekranın solu
-          gameRef.size.y / 2,    // dikeyde ortala
-        ),
-        paint: Paint()..color = Colors.purpleAccent,
-        // paintLayers: [Paint()..color = Colors.purpleAccent,]
-      ),
-    );
+    // add(
+    //   RectangleComponent(
+    //     size: Vector2(20, 100),
+    //     anchor: Anchor.centerRight,
+    //     position: Vector2(
+    //       gameRef.size.x / 1.2,        // ekranın en sağı
+    //       gameRef.size.y / 2,    // dikey ortası
+    //     ),
+    //     paint: Paint()..color = Colors.blueAccent,
+    //   ),
+    // );
+    // add(
+    //   RectangleComponent(
+    //     size: Vector2(20, 100),
+    //     anchor: Anchor.centerLeft,
+    //     position: Vector2(
+    //      60,                     // ekranın solu
+    //       gameRef.size.y / 2,    // dikeyde ortala
+    //     ),
+    //     paint: Paint()..color = Colors.purpleAccent,
+    //     // paintLayers: [Paint()..color = Colors.purpleAccent,]
+    //   ),
+    // );
+    add(Paddle(speed: 100, isLeft: true,color: Colors.purpleAccent,moveX:true ));
+    add(Paddle(speed: 100, isLeft: false,color:Colors.blueAccent,moveX: false ));
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    speed +=speed *2;
+    // speed +=speed *2;
+    // position.y += 1;
     // angle += speed * dt;
     // angle %= 2 * math.pi;
   }
@@ -65,4 +68,44 @@ class Square extends RectangleComponent with TapCallbacks , HasGameRef<MyGame>{
   //   removeFromParent();
   //   event.handled = true;
   // }
+}
+class Paddle extends RectangleComponent with HasGameRef<MyGame> {
+  double speed;
+  final bool isLeft;
+  Color color;
+  final bool moveX;
+  Paddle({
+    required this.color,
+    required this.speed,
+    required this.isLeft,
+    required this.moveX,
+  }) : super(
+    size: Vector2(20, 100),
+    anchor: Anchor.center,
+    paint: Paint()..color = color,
+  );
+
+  @override
+  Future<void> onLoad() async {
+    double centerY = gameRef.size.y / 2;
+
+    if (isLeft) {
+      position = Vector2(80, centerY);
+    } else {
+      position = Vector2(gameRef.size.x - 80, centerY);
+    }
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    if (moveX && position.x >= 50){
+      position.x += speed * dt;
+      speed -= position.x *dt;
+    } else if(!moveX && position.x <12){
+      position.x += speed * dt;
+      position.y = gameRef.size.y /2;
+      speed += position.x *dt;
+    }
+  }
 }

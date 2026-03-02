@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import '../game/game_screen.dart';
 
 class Square extends RectangleComponent with TapCallbacks , HasGameRef<MyGame>{
-  static const speed = 1;
+  static int speed = 1;
   static const squareSize = 50.0;
   static const indicatorSize = 6.0;
 
@@ -47,6 +47,7 @@ class Square extends RectangleComponent with TapCallbacks , HasGameRef<MyGame>{
           gameRef.size.y / 2,    // dikeyde ortala
         ),
         paint: Paint()..color = Colors.purpleAccent,
+        // paintLayers: [Paint()..color = Colors.purpleAccent,]
       ),
     );
   }
@@ -54,8 +55,9 @@ class Square extends RectangleComponent with TapCallbacks , HasGameRef<MyGame>{
   @override
   void update(double dt) {
     super.update(dt);
-    angle += speed * dt;
-    angle %= 2 * math.pi;
+    speed +=speed *2;
+    // angle += speed * dt;
+    // angle %= 2 * math.pi;
   }
 
   // @override

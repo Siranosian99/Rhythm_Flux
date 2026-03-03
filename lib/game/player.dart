@@ -7,7 +7,7 @@ import 'package:rhythm_flux/game/game_screen.dart';
 class Player extends SpriteComponent with TapCallbacks , HasGameRef<MyGame>{
   Player({super.position}) :
         super(size: Vector2.all(150), anchor: Anchor.center );
-  double speed = -100; // yukarı gidiyor
+  double speed = 500; // yukarı gidiyor
 
   @override
   Future<void> onLoad() async {

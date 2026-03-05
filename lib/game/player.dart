@@ -9,15 +9,13 @@ import 'package:rhythm_flux/game/game_screen.dart';
 
 import '../widgets/door_widget.dart';
 
-class Player extends SpriteComponent with TapCallbacks, HasGameRef<MyGame> {
+class Player extends SpriteComponent with TapCallbacks, HasGameRef<MyGame>,CollisionCallbacks {
   Player()
-    : super(size: Vector2.all(290), anchor: Anchor.center,position:Vector2(220,900));
+    : super(size: Vector2.all(300), anchor: Anchor.center,position:Vector2(220,840));
   double speed = 500; // yukarı gidiyor
 
   @override
   FutureOr<void> onLoad() async {
-    position.x=220;
-    position.y=500;
     add(RectangleHitbox());
     sprite = await Sprite.load('spaceman.png');
   }
@@ -31,14 +29,17 @@ class Player extends SpriteComponent with TapCallbacks, HasGameRef<MyGame> {
   @override
   void update(double dt) {
     super.update(dt);
-    // position.y += speed * dt;
-    // if (position.y - size.y / 2 <= 0) {
-    //   position.y = size.y / 2;
-    //   speed = 100;
-    // }
-    // if (position.y + size.y / 2 >= gameRef.size.y) {
-    //   position.y = gameRef.size.y - size.y / 2;
-    //   speed = -100;
-    // }
+    position.y += speed * dt;
+    if (position.y - size.y / 2 <= 0) {
+      position.y = size.y / 2;
+      speed = 100;
+    }
+    if (position.y + size.y / 2 >= gameRef.size.y) {
+      position.y = gameRef.size.y - size.y / 2;
+      speed = -100;
+    }
   }
+
+
+
 }

@@ -7,10 +7,12 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
+import 'package:rhythm_flux/game/player.dart';
 
 import '../game/game_screen.dart';
 
-class Square extends RectangleComponent with TapCallbacks, HasGameRef<MyGame> {
+class Square extends RectangleComponent
+    with TapCallbacks, HasGameRef<MyGame>, CollisionCallbacks {
   static int speed = -100;
   static const squareSize = 50.0;
   static const indicatorSize = 6.0;
@@ -52,12 +54,25 @@ class Square extends RectangleComponent with TapCallbacks, HasGameRef<MyGame> {
     //     // paintLayers: [Paint()..color = Colors.purpleAccent,]
     //   ),
     // );
-    add(RectangleHitbox());
     add(
-      Paddle(speed: -120, isLeft: true, color: Colors.purpleAccent, moveX: true,maxDistance: 100,startX:120),
+      Paddle(
+        speed: -120,
+        isLeft: true,
+        color: Colors.purpleAccent,
+        moveX: true,
+        maxDistance: 100,
+        startX: 120,
+      ),
     );
     add(
-      Paddle(speed: -120, isLeft: false, color: Colors.blueAccent, moveX: true,maxDistance: 100,startX:350),
+      Paddle(
+        speed: -120,
+        isLeft: false,
+        color: Colors.blueAccent,
+        moveX: true,
+        maxDistance: 100,
+        startX: 350,
+      ),
     );
 
   }
@@ -78,7 +93,8 @@ class Square extends RectangleComponent with TapCallbacks, HasGameRef<MyGame> {
   // }
 }
 
-class Paddle extends RectangleComponent with HasGameRef<MyGame> {
+class Paddle extends RectangleComponent
+    with HasGameRef<MyGame>, CollisionCallbacks {
   double speed;
   final bool isLeft;
   final Color color;
@@ -101,6 +117,7 @@ class Paddle extends RectangleComponent with HasGameRef<MyGame> {
 
   @override
   Future<void> onLoad() async {
+    add(RectangleHitbox());
     double centerY = gameRef.size.y / 2;
 
     if (isLeft) {
@@ -108,16 +125,25 @@ class Paddle extends RectangleComponent with HasGameRef<MyGame> {
     } else {
       position = Vector2(gameRef.size.x - 80, centerY);
     }
+
   }
+
 
   @override
   void update(double dt) {
     super.update(dt);
-    position.x+= speed *dt;
-    if((position.x-startX).abs() >= maxDistance){
+    position.x += speed * dt;
+    if ((position.x - startX).abs() >= maxDistance) {
       speed = -speed;
     }
     // speed++;
     // position.x =speed;
+  }
+  @override
+  void onCollisionStart(Set<Vector2> points, PositionComponent other) {
+    if (other is Player) {
+      print("Çarpışma oldu!");
+    }
+    super.onCollisionStart(points, other);
   }
 }

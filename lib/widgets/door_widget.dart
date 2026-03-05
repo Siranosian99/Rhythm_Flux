@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/palette.dart';
@@ -25,7 +27,7 @@ class Square extends RectangleComponent with TapCallbacks, HasGameRef<MyGame> {
   // );
 
   @override
-  Future<void> onLoad() async {
+  FutureOr<void> onLoad() async {
     super.onLoad();
     // add(
     //   RectangleComponent(
@@ -50,12 +52,14 @@ class Square extends RectangleComponent with TapCallbacks, HasGameRef<MyGame> {
     //     // paintLayers: [Paint()..color = Colors.purpleAccent,]
     //   ),
     // );
+    add(RectangleHitbox());
     add(
-      Paddle(speed: -60, isLeft: true, color: Colors.purpleAccent, moveX: true,maxDistance: 50,startX:100),
+      Paddle(speed: -120, isLeft: true, color: Colors.purpleAccent, moveX: true,maxDistance: 100,startX:120),
     );
     add(
-      Paddle(speed: -60, isLeft: false, color: Colors.blueAccent, moveX: true,maxDistance: 80,startX:350),
+      Paddle(speed: -120, isLeft: false, color: Colors.blueAccent, moveX: true,maxDistance: 100,startX:350),
     );
+
   }
 
   @override

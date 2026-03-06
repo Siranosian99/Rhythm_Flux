@@ -11,7 +11,7 @@ import '../widgets/door_widget.dart';
 
 class Player extends SpriteComponent with TapCallbacks, HasGameRef<MyGame>,CollisionCallbacks {
   Player()
-    : super(size: Vector2.all(300), anchor: Anchor.center,position:Vector2(220,840));
+    : super(size: Vector2.all(150), anchor: Anchor.center,position:Vector2(210,840));
   double speed = 500; // yukarı gidiyor
 
   @override
@@ -39,7 +39,5 @@ class Player extends SpriteComponent with TapCallbacks, HasGameRef<MyGame>,Colli
       speed = -100;
     }
   }
-
-
 
 }

@@ -5,11 +5,13 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
 import 'package:rhythm_flux/game/player.dart';
+import 'package:rhythm_flux/game/score_board.dart';
 
 import '../game/game_screen.dart';
+import '../game/score_board.dart';
+
 
 class Square extends RectangleComponent
     with TapCallbacks, HasGameRef<MyGame>, CollisionCallbacks {
@@ -54,6 +56,7 @@ class Square extends RectangleComponent
     //     // paintLayers: [Paint()..color = Colors.purpleAccent,]
     //   ),
     // );
+    // add(ScoreBoard());
     add(
       Paddle(
         speed: -120,
@@ -142,7 +145,10 @@ class Paddle extends RectangleComponent
   @override
   void onCollisionStart(Set<Vector2> points, PositionComponent other) {
     if (other is Player) {
-      print("Çarpışma oldu!");
+      print("Çarpışma owldu!");
+
+      game.state.addScore();
+
     }
     super.onCollisionStart(points, other);
   }

@@ -3,8 +3,9 @@ import 'package:flame/components.dart';
 import 'package:flame/text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rhythm_flux/game/game_screen.dart';
 
-class ScoreBoard extends TextComponent with  CollisionCallbacks,HasGameRef{
+class ScoreBoard extends TextComponent with  CollisionCallbacks,HasGameRef<MyGame>{
   static int score = 1;
   ScoreBoard() : super();
 
@@ -42,7 +43,7 @@ class ScoreBoard extends TextComponent with  CollisionCallbacks,HasGameRef{
 
   @override
   void update(double dt) {
-    text = "Score: ${game..score}";
+    text = "Score: ${game.state.score}";
   }
   // Skoru güncellemek için
   // void updateScore(int value) {

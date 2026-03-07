@@ -12,7 +12,7 @@ class MyGame extends FlameGame with HasCollisionDetection ,HasGameRef<MyGame> {
   final GameState  state= GameState();
   @override
   FutureOr<void> onLoad() async {
-    debugMode =true;
+    // debugMode =true;
     add(Player());
     add(Square());
     add(ScoreBoard());

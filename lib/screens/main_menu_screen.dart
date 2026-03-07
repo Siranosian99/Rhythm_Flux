@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
 import 'package:rhythm_flux/constants/app_texts_style.dart';
 import 'package:rhythm_flux/screens/play_screen.dart';
@@ -103,13 +104,18 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                 width: bottomOffset,
                 height: bottomOffset,
                 child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const PlayScreen(),
-                      ),
-                    );
+                  onTap: () async{
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (_) => const PlayScreen(),
+                    //   ),
+                    // );
+                    final player = AudioPlayer();                   // Create a player
+                    final duration = await player.setAsset(           // Load a URL
+                        'assets/music/music_example.mp3');                 // Schemes: (https: | file: | asset: )
+                    player.play();                                  // Play without waiting for completion
+                    // await player.play();
                   },
                   child: Lottie.asset('assets/lottie/play_button.json'),
                 ),

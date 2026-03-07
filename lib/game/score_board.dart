@@ -13,7 +13,6 @@ class ScoreBoard extends TextComponent with  CollisionCallbacks,HasGameRef<MyGam
   Future<void> onLoad() async {
     super.onLoad();
     final scoreText = TextComponent(
-      text: "Score: $score",
       anchor: Anchor.center,
       position: size / 2, // kutunun ortasına
       textRenderer: TextPaint(

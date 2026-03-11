@@ -14,7 +14,7 @@ class ScoreBoard extends TextComponent with  CollisionCallbacks,HasGameRef<MyGam
     super.onLoad();
     final scoreText = TextComponent(
       anchor: Anchor.center,
-      position: size / 2, // kutunun ortasına
+      position: size / 2,
       textRenderer: TextPaint(
         style: GoogleFonts.roboto(
           fontSize: 28,

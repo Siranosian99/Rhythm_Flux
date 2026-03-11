@@ -30,7 +30,7 @@ class _SignupScreenState extends State<SignupScreen> {
       shadows: [
         Shadow(
         blurRadius:10.0,  // shadow blur
-        color: Colors.orange, // shadow color
+        color: Colors.lightBlueAccent, // shadow color
         offset: Offset(2.0,2.0), // how much shadow will be shown
       )]),
             keyboardType: TextInputType.emailAddress,
@@ -63,7 +63,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 shadows: [
                   Shadow(
                     blurRadius:10.0,  // shadow blur
-                    color: Colors.l, // shadow color
+                    color: Colors.purpleAccent, // shadow colorScheme
                     offset: Offset(2.0,2.0), // how much shadow will be shown
                   )]),
             obscureText: obscurePassword,

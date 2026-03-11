@@ -50,4 +50,20 @@ static TextStyle settingStyle=GoogleFonts.comicNeue(
     Shadow(blurRadius: 2, color: Colors.purpleAccent.withOpacity(0.5)),
   ]
 );
+  static TextStyle loginTextStyle(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final scale = screenWidth / 375;
+
+    return GoogleFonts.pressStart2p(
+      fontSize: 30 * scale,
+      color: Colors.purpleAccent,
+      shadows: [
+        Shadow(blurRadius: 5, color: Colors.lightBlueAccent),
+        Shadow(blurRadius: 15, color: Colors.lightBlueAccent),
+        Shadow(blurRadius: 30, color: Colors.lightBlueAccent),
+        Shadow(blurRadius: 60, color: Colors.lightBlueAccent.withOpacity(0.5)),
+      ],
+    );
+  }
+
 }

@@ -105,17 +105,17 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                 height: bottomOffset,
                 child: GestureDetector(
                   onTap: () async{
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (_) => const PlayScreen(),
-                    //   ),
-                    // );
-                    final player = AudioPlayer();                   // Create a player
-                    final duration = await player.setAsset(           // Load a URL
-                        'assets/music/music_example.mp3');                 // Schemes: (https: | file: | asset: )
-                    player.play();                                  // Play without waiting for completion
-                    // await player.play();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const PlayScreen(),
+                      ),
+                    );
+                    // final player = AudioPlayer();                   // Create a player
+                    // final duration = await player.setAsset(           // Load a URL
+                    //     'assets/music/music_example.mp3');                 // Schemes: (https: | file: | asset: )
+                    // player.play();                                  // Play without waiting for completion
+                    // // await player.play();
                   },
                   child: Lottie.asset('assets/lottie/play_button.json'),
                 ),

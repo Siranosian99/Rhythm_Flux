@@ -4,4 +4,8 @@ class AppTexts{
   static const startPlay= "Let's Play";
   static const settings= "Settings";
   static const scores= "Scores";
+  static const signup="Create Account";
+  static const login ="Login";
+  static const email= "Enter Your email";
+  static const password= "Enter Your password";
 }

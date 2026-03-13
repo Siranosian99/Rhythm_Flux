@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rhythm_flux/service/user_service/users.dart';
 
 import '../constants/app_texts.dart';
 import '../constants/app_texts_style.dart';
@@ -11,8 +12,11 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  bool obscurePassword = true;
+  final _emailController= TextEditingController();
+  final _passController= TextEditingController();
 
+  bool obscurePassword = true;
+  final UserService _userService=UserService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +27,8 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           // email field
           TextFormField(
@@ -93,7 +99,13 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           ),
           SizedBox(height: 12),
-          ElevatedButton(onPressed: () {}, child: Text(AppTexts.login)),
+          ElevatedButton(onPressed: () {
+             _userService.createAccount(email: _emailController.text, password: _passController.text);
+
+          }, child: Text(AppTexts.login),style:ButtonStyle(
+            fixedSize: WidgetStateProperty.all(Size(500, 2))
+
+          ),),
         ],
       ),
     );

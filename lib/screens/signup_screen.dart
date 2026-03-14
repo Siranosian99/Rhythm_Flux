@@ -102,10 +102,10 @@ class _SignupScreenState extends State<SignupScreen> {
           ElevatedButton(onPressed: () {
              _userService.createAccount(email: _emailController.text, password: _passController.text);
 
-          }, child: Text(AppTexts.login),style:ButtonStyle(
+          },style:ButtonStyle(
             fixedSize: WidgetStateProperty.all(Size(500, 2))
 
-          ),),
+          ), child: Text(AppTexts.login),),
         ],
       ),
     );

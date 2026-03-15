@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
-import 'package:rhythm_flux/constants/app_texts_style.dart';
 import 'package:rhythm_flux/screens/play_screen.dart';
 
-import '../constants/app_texts.dart';
+import '../constant/app_texts.dart';
+import '../constant/app_texts_style.dart';
 
 class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});

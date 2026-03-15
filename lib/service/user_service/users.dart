@@ -38,12 +38,18 @@ class UserService{
       );
 
       if (response.statusCode == 200) {
+        if (!response.data['user']["isVerified"]) {
+          print("verify Email");
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //     SnackBar(content: Text("Please verify your email first!"))
+          // );
+        }
         print(response.data);
-        final verifyToken= response.data['verifyToken'];
-        _dio.post('/userAuth/verify',
-        data: {
-          "verifyToken":verifyToken
-        });
+        // final verifyToken= response.data['verifyToken'];
+        // await _dio.post('/userAuth/verify',
+        // data: {
+        //   "verifyToken":verifyToken
+        // });
 
         // final token = response.data['accessToken'];
         // final rtoken = response.data['refreshToken'];

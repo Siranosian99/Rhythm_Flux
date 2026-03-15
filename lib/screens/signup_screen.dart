@@ -3,8 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:rhythm_flux/service/user_service/users.dart';
 import 'package:rhythm_flux/utils/mail_pass_controller.dart';
 
-import '../constants/app_texts.dart';
-import '../constants/app_texts_style.dart';
+import '../constant/app_texts.dart';
+import '../constant/app_texts_style.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});

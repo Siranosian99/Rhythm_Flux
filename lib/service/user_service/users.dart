@@ -30,5 +30,32 @@ class UserService{
       }
     }
   }
+  Future<bool?> login({required String email, required String password}) async {
+    try {
+      final response = await _dio.post(
+        '/userAuth/login',
+        data: {"email": email, "password": password},
+      );
 
+      if (response.statusCode == 200) {
+        print(response.data);
+        final verifyToken= response.data['verifyToken'];
+        _dio.post('/userAuth/verify',
+        data: {
+          "verifyToken":verifyToken
+        });
+
+        // final token = response.data['accessToken'];
+        // final rtoken = response.data['refreshToken'];
+
+        // _tokenHelper.tokenLocalSaver(token);
+        // _tokenHelper.refreshTokenLocalSaver(rtoken);
+        print("login succes");
+        return true;
+      }
+    } on DioException catch (e) {
+      print(e.response?.data);
+    }
+    return null;
+  }
 }

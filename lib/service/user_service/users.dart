@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:rhythm_flux/utils/decode_token.dart';
 
 class UserService{
   final Dio _dio = Dio(
@@ -38,13 +39,15 @@ class UserService{
       );
 
       if (response.statusCode == 200) {
-        if (!response.data['user']["isVerified"]) {
-          print("verify Email");
-
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //     SnackBar(content: Text("Please verify your email first!"))
-          // );
-        }
+        DecoderUtils.decoder(response.data['accessToken']);
+        print(DecoderUtils.decoder(response.data['accessToken']));
+        // if (!response.data['user']["isVerified"])
+        //   print("verify Email");
+        //
+        //   // ScaffoldMessenger.of(context).showSnackBar(
+        //   //     SnackBar(content: Text("Please verify your email first!"))
+        //   // );
+        // }
         print(response.data);
         // final verifyToken= response.data['verifyToken'];
         // await _dio.post('/userAuth/verify',

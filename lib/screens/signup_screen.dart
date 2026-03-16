@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rhythm_flux/game/game_screen.dart';
+import 'package:rhythm_flux/screens/main_menu_screen.dart';
 import 'package:rhythm_flux/service/user_service/users.dart';
 import 'package:rhythm_flux/utils/mail_pass_controller.dart';
 
@@ -54,7 +56,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Email is required";
-                  } else if (value.isEmpty || !Utils.isEmail(value)) {
+                  } else if (value.isEmpty || !MailUtils.isEmail(value)) {
                     return "Enter Valid Mail";
                   }
                   return null;
@@ -96,7 +98,7 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(height: 12),
               TextFormField(
                 validator: (value) {
-                  if (value!.isNotEmpty && !Utils.isStrongPassword(value)) {
+                  if (value!.isNotEmpty && !MailUtils.isStrongPassword(value)) {
                     return "Password must include:\n"
                         "• At least 8 characters\n"
                         "• One uppercase letter\n"
@@ -147,10 +149,18 @@ class _SignupScreenState extends State<SignupScreen> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
+                    // if(true){
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (_) => const MainMenuScreen(),
+                      //   ),
+                      // );
                     _userService.login(
                       email: _emailController.text,
                       password: _passController.text,
                     );
+
                   } else {
                     print("fac eu");
                   }

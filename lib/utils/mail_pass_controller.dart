@@ -1,4 +1,4 @@
-class Utils {
+class MailUtils {
   static bool isEmail(String email) {
     final regex = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
     return regex.hasMatch(email);

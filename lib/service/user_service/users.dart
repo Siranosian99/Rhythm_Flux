@@ -40,6 +40,7 @@ class UserService{
       if (response.statusCode == 200) {
         if (!response.data['user']["isVerified"]) {
           print("verify Email");
+
           // ScaffoldMessenger.of(context).showSnackBar(
           //     SnackBar(content: Text("Please verify your email first!"))
           // );

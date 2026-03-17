@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:rhythm_flux/utils/decode_token.dart';
+import 'package:rhythm_flux/utils/decode_token_details.dart';
+import 'package:rhythm_flux/utils/token_helper.dart';
 
 class UserService{
   final Dio _dio = Dio(
@@ -8,6 +9,8 @@ class UserService{
       headers: {"Content-Type": "application/json"},
     ),
   );
+  final _tokenHelper=TokenHelper();
+
   Future<void> createAccount({
     required String email,
     required String password,
@@ -40,7 +43,7 @@ class UserService{
 
       if (response.statusCode == 200) {
         DecoderUtils.decoder(response.data['accessToken']);
-        print(DecoderUtils.decoder(response.data['accessToken']));
+        DecoderUtils.tokenSaver(DecoderUtils.decoder(response.data['accessToken']));
         // if (!response.data['user']["isVerified"])
         //   print("verify Email");
         //
@@ -68,4 +71,26 @@ class UserService{
     }
     return null;
   }
+
+  Future<bool?> refreshToken() async {
+    try {
+      final rtoken = await _tokenHelper.refreshTokenLocalGetter();
+      if (rtoken == null) return false;
+
+      final response = await _dio.post(
+        '/userAuth/refresh',
+        data: {"refreshToken": rtoken},
+      );
+
+      if (response.statusCode == 200) {
+        final newAccessToken = response.data['accessToken'];
+        _tokenHelper.tokenLocalSaver(newAccessToken);
+        return true;
+      }
+    } on DioException catch (e) {
+      print(e.response?.data);
+    }
+    return null;
+  }
+
 }

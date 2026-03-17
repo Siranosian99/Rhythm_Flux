@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:rhythm_flux/game/game_screen.dart';
 import 'package:rhythm_flux/screens/main_menu_screen.dart';
 import 'package:rhythm_flux/service/user_service/users.dart';
+import 'package:rhythm_flux/utils/decode_token_details.dart';
 import 'package:rhythm_flux/utils/mail_pass_controller.dart';
 
 import '../constant/app_texts.dart';
@@ -20,8 +21,19 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool obscurePassword = true;
+  late bool isVerified;
+  late DecoderUtils _decoderUtils;
+  // late bool isVerified;
   final UserService _userService = UserService();
-
+@override
+  void initState() {
+  _decoderUtils=DecoderUtils();
+  getBoolValue();
+  super.initState();
+  }
+Future<void> getBoolValue()async{
+  isVerified= await DecoderUtils.isVerifiedToken() ?? false;
+}
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -149,22 +161,26 @@ class _SignupScreenState extends State<SignupScreen> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // if(true){
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (_) => const MainMenuScreen(),
-                      //   ),
-                      // );
-                    _userService.login(
-                      email: _emailController.text,
-                      password: _passController.text,
-                    );
+                    if(isVerified){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const MainMenuScreen(),
+                        ),
+                      );
+                    }
+                    else {
+                      _userService.login(
+                        email: _emailController.text,
+                        password: _passController.text,
+                      );
+                    }
+                    // _userService.login(
+                    //   email: _emailController.text,
+                    //   password: _passController.text,
+                    // );
 
-                  } else {
-                    print("fac eu");
-                  }
-                },
+                }},
                 style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.all(
                     Color.fromRGBO(136, 0, 110, 1),

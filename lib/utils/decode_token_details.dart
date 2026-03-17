@@ -20,7 +20,7 @@ class DecoderUtils {
   }
   static void removeKey()async{
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('counter');
+    await prefs.remove('isVerified');
 
   }
 }

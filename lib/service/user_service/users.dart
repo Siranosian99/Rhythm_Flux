@@ -44,6 +44,9 @@ class UserService{
       if (response.statusCode == 200) {
         DecoderUtils.decoder(response.data['accessToken']);
         DecoderUtils.tokenSaver(DecoderUtils.decoder(response.data['accessToken']));
+        _tokenHelper.tokenLocalSaver(response.data['accessToken']);
+        _tokenHelper.refreshTokenLocalSaver(response.data['user']['refreshToken']);
+        print(response.data);
         // if (!response.data['user']["isVerified"])
         //   print("verify Email");
         //
@@ -51,7 +54,7 @@ class UserService{
         //   //     SnackBar(content: Text("Please verify your email first!"))
         //   // );
         // }
-        print(response.data);
+
         // final verifyToken= response.data['verifyToken'];
         // await _dio.post('/userAuth/verify',
         // data: {

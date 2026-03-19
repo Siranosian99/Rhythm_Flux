@@ -46,6 +46,7 @@ class UserService{
         DecoderUtils.tokenSaver(DecoderUtils.decoder(response.data['accessToken']));
         _tokenHelper.tokenLocalSaver(response.data['accessToken']);
         _tokenHelper.refreshTokenLocalSaver(response.data['user']['refreshToken']);
+        _tokenHelper.userIdLocalSaver(response.data['user']['_id']);
         print(response.data);
         // if (!response.data['user']["isVerified"])
         //   print("verify Email");
@@ -73,6 +74,26 @@ class UserService{
       print(e.response?.data);
     }
     return null;
+  }
+
+
+  Future<void> getUser() async{
+    try{
+      final userId=await _tokenHelper.userIdLocalGetter();
+      final token =await _tokenHelper.tokenLocalGetter();
+      final response = await _dio.get(
+        '/userAuth/me',
+        data: {"_id": userId},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+
+      );
+      if(response.statusCode==201){
+        print(response.data);
+      }
+    } on DioException catch (e) {
+      print(e.response?.data);
+    }
+
   }
 
   Future<bool?> refreshToken() async {

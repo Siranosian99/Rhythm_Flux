@@ -5,6 +5,7 @@ import 'package:rhythm_flux/screens/main_menu_screen.dart';
 import 'package:rhythm_flux/service/user_service/users.dart';
 import 'package:rhythm_flux/utils/decode_token_details.dart';
 import 'package:rhythm_flux/utils/mail_pass_controller.dart';
+import 'package:rhythm_flux/utils/token_helper.dart';
 
 import '../constant/app_texts.dart';
 import '../constant/app_texts_style.dart';
@@ -23,17 +24,23 @@ class _SignupScreenState extends State<SignupScreen> {
   bool obscurePassword = true;
   late bool isVerified;
   late DecoderUtils _decoderUtils;
+
   // late bool isVerified;
   final UserService _userService = UserService();
-@override
+
+  @override
   void initState() {
-  _decoderUtils=DecoderUtils();
-  getBoolValue();
-  super.initState();
+    _decoderUtils = DecoderUtils();
+    getBoolValue();
+    super.initState();
   }
-Future<void> getBoolValue()async{
-  isVerified= await DecoderUtils.isVerifiedToken() ?? false;
-}
+
+  Future<void> getBoolValue() async {
+    isVerified = await DecoderUtils.isVerifiedToken() ?? false;
+    final id = await TokenHelper().userIdLocalGetter();
+    print("your IDDD:$id");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -47,7 +54,7 @@ Future<void> getBoolValue()async{
           ),
         ),
         body: Container(
-          padding:EdgeInsetsDirectional.only(start: 12,end: 12,top: 40),
+          padding: EdgeInsetsDirectional.only(start: 12, end: 12, top: 40),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -159,28 +166,26 @@ Future<void> getBoolValue()async{
               ),
               SizedBox(height: 12),
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    if(isVerified){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const MainMenuScreen(),
-                        ),
-                      );
-                    }
-                    else {
-                      _userService.login(
-                        email: _emailController.text,
-                        password: _passController.text,
-                      );
-                    }
-                    // _userService.login(
-                    //   email: _emailController.text,
-                    //   password: _passController.text,
-                    // );
+                onPressed: () async {
+                  await UserService().getUser();
 
-                }},
+                  // if (_formKey.currentState!.validate()) {
+                  //   if (isVerified) {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (_) => const MainMenuScreen(),
+                  //       ),
+                  //     );
+                  //   } else {
+                  //     _userService.login(
+                  //       email: _emailController.text,
+                  //       password: _passController.text,
+                  //     );
+                  //   }
+                  //
+                  // }
+                },
                 style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.all(
                     Color.fromRGBO(136, 0, 110, 1),

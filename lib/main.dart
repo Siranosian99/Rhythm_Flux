@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rhythm_flux/screens/main_menu_screen.dart';
 import 'package:rhythm_flux/screens/play_screen.dart';
 import 'package:rhythm_flux/screens/signup_screen.dart';
+import 'package:rhythm_flux/screens/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Color.fromRGBO(0, 0, 0, 0.8),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home:const SignupScreen()
+      home:const SplashScreen()
     );
   }
 }

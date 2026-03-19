@@ -167,8 +167,16 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(height: 12),
               ElevatedButton(
                 onPressed: () async {
+                      // _userService.login(
+                      //   email: _emailController.text,
+                      //   password: _passController.text,
+                      // );
                   await UserService().getUser();
-
+                  //     _userService.login(
+                  //       email: _emailController.text,
+                  //       password: _passController.text,
+                  //     );
+                  //   }
                   // if (_formKey.currentState!.validate()) {
                   //   if (isVerified) {
                   //     Navigator.push(

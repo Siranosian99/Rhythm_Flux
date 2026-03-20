@@ -1,8 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TokenHelper {
-  static bool? isTokenValid;
-
 
   Future<void> tokenLocalSaver(String token) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:rhythm_flux/screens/main_menu_screen.dart';
 import 'package:rhythm_flux/screens/signup_screen.dart';
+import 'package:rhythm_flux/service/user_service/users.dart';
 
 import '../utils/token_helper.dart';
 
@@ -26,6 +28,10 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> tokenChecker() async {
+    await UserService().getUser();
+    bool isExpired = JwtDecoder.isExpired("accessToken");
+
+
     final data = await _tokenHelper.tokenLocalGetter();
 
     setState(() {

@@ -4,6 +4,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:rhythm_flux/screens/main_menu_screen.dart';
 import 'package:rhythm_flux/screens/signup_screen.dart';
 import 'package:rhythm_flux/service/user_service/users.dart';
+import 'package:rhythm_flux/utils/token_checker.dart';
 
 import '../utils/token_helper.dart';
 
@@ -28,16 +29,16 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> tokenChecker() async {
-    await UserService().getUser();
-
+    // await UserService().getUser();
     final data = await _tokenHelper.tokenLocalGetter();
-
+    print(data);
     setState(() {
-      isTokenValid = data != null && data.isNotEmpty;
+      // isTokenValid = data != null && data.isNotEmpty;
+      isTokenExpired(data!);
     });
 
     if (!mounted) return;
-    if (isTokenValid!) {
+    if (!isTokenExpired(data!)) {
 
          Navigator.push(
           context,

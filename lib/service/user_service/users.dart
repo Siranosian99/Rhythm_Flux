@@ -83,7 +83,7 @@ class UserService{
 
       final response = await _dio.get(
         '/userAuth/me',
-        data: {"accsesToken": token},
+        data: {"accessToken": token},
         options: Options(headers: {
           'Authorization': 'Bearer $token',
         }),

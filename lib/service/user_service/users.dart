@@ -77,23 +77,45 @@ class UserService{
   }
 
 
-  Future<void> getUser() async{
-    try{
-      final userId=await _tokenHelper.userIdLocalGetter();
-      final token =await _tokenHelper.tokenLocalGetter();
+  Future<void> getUser() async {
+    try {
+      final token = await _tokenHelper.tokenLocalGetter();
+
       final response = await _dio.get(
         '/userAuth/me',
-        data: {"_id": userId},
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
-
+        data: {"accsesToken": token},
+        options: Options(headers: {
+          'Authorization': 'Bearer $token',
+        }),
       );
-      if(response.statusCode==201){
+
+      if (response.statusCode == 200) {
         print(response.data);
       }
+
     } on DioException catch (e) {
+
+      if (e.response?.statusCode == 401) {
+        final success = await refreshToken();
+
+        if (success == true) {
+          final newToken = await _tokenHelper.tokenLocalGetter();
+          final retryResponse = await _dio.get(
+            '/userAuth/me',
+            options: Options(headers: {
+              'Authorization': 'Bearer $newToken',
+            }),
+          );
+
+          print(retryResponse.data);
+
+        } else {
+          print("Refresh failed → login");
+        }
+      }
+
       print(e.response?.data);
     }
-
   }
 
   Future<bool?> refreshToken() async {
@@ -108,7 +130,7 @@ class UserService{
 
       if (response.statusCode == 200) {
         final newAccessToken = response.data['accessToken'];
-        _tokenHelper.tokenLocalSaver(newAccessToken);
+       await _tokenHelper.tokenLocalSaver(newAccessToken);
         return true;
       }
     } on DioException catch (e) {
@@ -117,4 +139,98 @@ class UserService{
     return null;
   }
 
+
 }
+
+// Future<List<TodosModel>?> fetchUsersTodos() async {
+//   try {
+//     String? token = await _tokenHelper.tokenLocalGetter();
+//
+//
+//     final response = await _dio.get(
+//       '/todoTracker/users',
+//       options: Options(headers: {'Authorization': 'Bearer $token'}),
+//     );
+//
+//     if (response.statusCode == 200) {
+//       final List<dynamic> todos = response.data;
+//       tasks = todos.map((e) => TodosModel.fromJson(e)).toList();
+//       emit(TodoAdvnacedState.loadTask(tasks ?? []));
+//       return tasks;
+//     }
+//   } on DioException catch (e) {
+//     if (e.response?.statusCode == 401) {
+//       // Access token expired → refresh token ile yeni token al
+//       final refreshed = await _trackerapi.refreshToken();
+//       if (refreshed == true) {
+//         // Yeni token ile isteği tekrar gönder
+//         String? newToken = await _tokenHelper.tokenLocalGetter();
+//         final retry = await _dio.get(
+//           '/todoTracker/users',
+//           options: Options(headers: {'Authorization': 'Bearer $newToken'}),
+//         );
+//         final List<dynamic> todos = retry.data;
+//         tasks = todos.map((e) => TodosModel.fromJson(e)).toList();
+//         emit(TodoAdvnacedState.loadTask(tasks ?? []));
+//         return tasks;
+//       } else {
+//         print("Refresh token failed, user must login");
+//         emit(TodoAdvnacedState.loadTask([]));
+//       }
+//     } else {
+//       print("Dio error: ${e.response?.data}");
+//       emit(TodoAdvnacedState.loadTask([]));
+//     }
+//   } catch (e) {
+//     print("Error: $e");
+//     emit(TodoAdvnacedState.loadTask([]));
+//   }
+//   return null;
+// }
+
+
+// Future<void> getUser() async {
+//   try {
+//     final token = await _tokenHelper.tokenLocalGetter();
+//
+//     final response = await _dio.get(
+//       '/userAuth/me',
+//       options: Options(headers: {
+//         'Authorization': 'Bearer $token',
+//       }),
+//     );
+//
+//     if (response.statusCode == 200) {
+//       print(response.data);
+//     }
+//
+//   } on DioException catch (e) {
+//
+//     if (e.response?.statusCode == 401) {
+//       // 🔥 refresh token al
+//       final refreshToken = await _tokenHelper.refreshTokenGetter();
+//
+//       final refreshResponse = await _dio.post(
+//         '/refresh',
+//         data: {"refreshToken": refreshToken},
+//       );
+//
+//       final newAccessToken = refreshResponse.data["accessToken"];
+//
+//       // 🔥 yeni token kaydet
+//       await _tokenHelper.saveAccessToken(newAccessToken);
+//
+//       // 🔁 TEKRAR DENEME
+//       final retryResponse = await _dio.get(
+//         '/userAuth/me',
+//         options: Options(headers: {
+//           'Authorization': 'Bearer $newAccessToken',
+//         }),
+//       );
+//
+//       print(retryResponse.data);
+//     }
+//
+//     print(e.response?.data);
+//   }
+// }

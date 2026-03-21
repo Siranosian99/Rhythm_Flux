@@ -29,8 +29,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> tokenChecker() async {
     await UserService().getUser();
-    bool isExpired = JwtDecoder.isExpired("accessToken");
-
 
     final data = await _tokenHelper.tokenLocalGetter();
 

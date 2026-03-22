@@ -4,13 +4,47 @@ import 'package:rhythm_flux/utils/decode_token_details.dart';
 import 'package:rhythm_flux/utils/token_helper.dart';
 
 class UserService{
-  final Dio _dio = Dio(
-    BaseOptions(
-      baseUrl: ApiConfig.baseUrl,
-      headers: {"Content-Type": "application/json"},
-    ),
-  );
-  final _tokenHelper=TokenHelper();
+    final  Dio _dio= Dio(
+      BaseOptions(
+        baseUrl: ApiConfig.baseUrl,
+        headers: {"Content-Type": "application/json"},
+      ),
+    );
+    final _tokenHelper=TokenHelper();
+    UserService(){
+
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options,handler)async{
+        final token=await _tokenHelper.tokenLocalGetter();
+        if(token != null){
+          options.headers["Authorization"] = "Bearer $token";
+        }
+        return handler.next(options);
+        },
+        onError: (DioException e,handler)async{
+          if(e.response?.statusCode== 401){
+            print("Token expired → refreshing...");
+            final succses=await refreshToken();
+            if( succses != null && succses) {
+              final newToken= await _tokenHelper.tokenLocalGetter();
+              e.requestOptions.headers["Authorization"] =
+              "Bearer $newToken";
+
+              final retryResponse = await _dio.fetch(e.requestOptions);
+
+              return handler.resolve(retryResponse);
+            }
+            else{
+              print("Refresh failed → login");
+            }
+          }
+          return handler.next(e);
+        }
+
+      )
+    );
+  }
 
   Future<void> createAccount({
     required String email,
@@ -85,9 +119,6 @@ class UserService{
       final response = await _dio.get(
        ApiConfig.getUser,
         data: {"accessToken": token},
-        options: Options(headers: {
-          'Authorization': 'Bearer $token',
-        }),
       );
 
       if (response.statusCode == 200) {
@@ -95,25 +126,6 @@ class UserService{
       }
 
     } on DioException catch (e) {
-
-      if (e.response?.statusCode == 401) {
-        final success = await refreshToken();
-
-        if (success == true) {
-          final newToken = await _tokenHelper.tokenLocalGetter();
-          final retryResponse = await _dio.get(
-            ApiConfig.getUser,
-            options: Options(headers: {
-              'Authorization': 'Bearer $newToken',
-            }),
-          );
-
-          print(retryResponse.data);
-
-        } else {
-          print("Refresh failed → login");
-        }
-      }
 
       print(e.response?.data);
     }

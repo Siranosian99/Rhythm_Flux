@@ -30,15 +30,16 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> tokenChecker() async {
     _userService = UserService();
-    // await _userService.getUser();
+    await _userService.getUser();
     final data = await _tokenHelper.tokenLocalGetter();
     setState(() {
+      if(data != null && data.isNotEmpty){
       // isTokenValid = data != null && data.isNotEmpty;
-      isTokenExpired(data!);
-    });
+      isTokenExpired(data);
+    }});
 
     if (!mounted) return;
-    if (!isTokenExpired(data!)) {
+    if (!isTokenExpired(data ??"")) {
 
          Navigator.push(
           context,

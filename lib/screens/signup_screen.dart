@@ -24,6 +24,7 @@ class _SignupScreenState extends State<SignupScreen> {
   bool obscurePassword = true;
   late bool isVerified;
   late DecoderUtils _decoderUtils;
+  late TokenHelper _tokenHelper;
 
   // late bool isVerified;
   final UserService _userService = UserService();
@@ -31,13 +32,14 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   void initState() {
     _decoderUtils = DecoderUtils();
+    _tokenHelper=TokenHelper();
     getBoolValue();
     super.initState();
   }
 
   Future<void> getBoolValue() async {
     isVerified = await DecoderUtils.isVerifiedToken() ?? false;
-    final id = await TokenHelper().userIdLocalGetter();
+    final id = await _tokenHelper.tokenLocalGetter();
     print("your IDDD:$id");
   }
 

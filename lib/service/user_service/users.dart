@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:rhythm_flux/constant/api_config.dart';
 import 'package:rhythm_flux/utils/decode_token_details.dart';
 import 'package:rhythm_flux/utils/token_helper.dart';
 
 class UserService{
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: "http://10.0.2.2:3000",
+      baseUrl: ApiConfig.baseUrl,
       headers: {"Content-Type": "application/json"},
     ),
   );
@@ -17,7 +18,7 @@ class UserService{
   }) async {
     try {
       final response = await _dio.post(
-        '/userAuth/create',
+        ApiConfig.createAccount,
         data: {"email": email, "password": password},
       );
 
@@ -37,7 +38,7 @@ class UserService{
   Future<bool?> login({required String email, required String password}) async {
     try {
       final response = await _dio.post(
-        '/userAuth/login',
+        ApiConfig.login,
         data: {"email": email, "password": password},
       );
 
@@ -82,7 +83,7 @@ class UserService{
       final token = await _tokenHelper.tokenLocalGetter();
 
       final response = await _dio.get(
-        '/userAuth/me',
+       ApiConfig.getUser,
         data: {"accessToken": token},
         options: Options(headers: {
           'Authorization': 'Bearer $token',
@@ -101,7 +102,7 @@ class UserService{
         if (success == true) {
           final newToken = await _tokenHelper.tokenLocalGetter();
           final retryResponse = await _dio.get(
-            '/userAuth/me',
+            ApiConfig.getUser,
             options: Options(headers: {
               'Authorization': 'Bearer $newToken',
             }),
@@ -124,7 +125,7 @@ class UserService{
       if (rtoken == null) return false;
 
       final response = await _dio.post(
-        '/userAuth/refresh',
+        ApiConfig.refreshToken,
         data: {"refreshToken": rtoken},
       );
 

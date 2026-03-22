@@ -1,41 +1,79 @@
-/*
-1-make pages design
-2-think about game logic
-3- start make the backend Data wich must save score name and musics
-4-how to get the glasses with rhytms
-5-how does connect the logic with UI and backend
+import 'package:dio/dio.dart';
+import 'package:rhythm_flux/utils/token_helper.dart';
 
-pray for me
+class ApiService {
+  final Dio _dio = Dio();
+  final TokenHelper _tokenHelper = TokenHelper();
 
- MUSIC LOGIC
- 1- play the music succses
- 2- control the beats procces...
- 3- making the server of beat analyzer...
+  ApiService() {
+    _dio.options.baseUrl = "http://YOUR_API_URL";
 
+    _dio.interceptors.add(
+      InterceptorsWrapper(
 
- music.mp3
-   ↓
-beat analysis (script / AI / library)
-   ↓
-beats.json
-   ↓
-Flutter app
-   ↓
-kapılar beatlere göre hareket eder
+        // 🔹 REQUEST
+        onRequest: (options, handler) async {
+          final token = await _tokenHelper.tokenLocalGetter();
 
-this one maaaan
-Müzik Dosyaları
-      ↓
-Node.js Analiz Serverı
-      ↓
-Beat Analizi
-      ↓
-JSON Dosyaları
-      ↓
-Flutter Oyunu
-      ↓
-Kapılar / engeller ritme göre hareket eder
+          if (token != null) {
+            options.headers["Authorization"] = "Bearer $token";
+          }
 
-*/
+          return handler.next(options);
+        },
 
+        // 🔹 ERROR
+        onError: (DioException e, handler) async {
+          if (e.response?.statusCode == 401) {
 
+            print("Token expired → refreshing...");
+
+            final success = await _refreshToken();
+
+            if (success) {
+              final newToken = await _tokenHelper.tokenLocalGetter();
+
+              e.requestOptions.headers["Authorization"] =
+              "Bearer $newToken";
+
+              final retryResponse = await _dio.fetch(e.requestOptions);
+
+              return handler.resolve(retryResponse);
+            } else {
+              print("Refresh failed → login");
+            }
+          }
+
+          return handler.next(e);
+        },
+      ),
+    );
+  }
+
+  // 🔥 REFRESH TOKEN
+  Future<bool> _refreshToken() async {
+    try {
+      final rtoken = await _tokenHelper.refreshTokenLocalGetter();
+      if (rtoken == null) return false;
+
+      final response = await _dio.post(
+        '/userAuth/refresh',
+        data: {"refreshToken": rtoken},
+      );
+
+      if (response.statusCode == 200) {
+        final newAccessToken = response.data['accessToken'];
+        await _tokenHelper.tokenLocalSaver(newAccessToken);
+        return true;
+      }
+    } catch (e) {
+      return false;
+    }
+    return false;
+  }
+
+  // 🔹 GET USER
+  Future<Response> getUser() async {
+    return await _dio.get('/userAuth/me');
+  }
+}

@@ -17,9 +17,9 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  bool? isTokenValid; // nullable, henüz kontrol edilmedi
+  bool? isTokenValid;
   final _tokenHelper = TokenHelper();
-
+  late final UserService _userService;
   @override
   void initState() {
     super.initState();
@@ -29,9 +29,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> tokenChecker() async {
-    // await UserService().getUser();
+    _userService = UserService();
+    // await _userService.getUser();
     final data = await _tokenHelper.tokenLocalGetter();
-    print(data);
     setState(() {
       // isTokenValid = data != null && data.isNotEmpty;
       isTokenExpired(data!);

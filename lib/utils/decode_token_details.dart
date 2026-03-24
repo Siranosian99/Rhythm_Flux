@@ -4,10 +4,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DecoderUtils {
   static bool decoder(String token) {
     Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+    print("-_-_-_-:$decodedToken");
     return decodedToken["isVerified"];
   }
 
-  static Future<bool?> tokenSaver(bool isVerify) async {
+  static Future<bool?> isVerifySaver(bool isVerify) async {
     final prefs = await SharedPreferences.getInstance();
     bool isVerified = await prefs.setBool('isVerified', isVerify);
     return isVerified;

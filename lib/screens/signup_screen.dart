@@ -22,17 +22,14 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool obscurePassword = true;
+  bool signUp = false;
   late bool isVerified;
-  late DecoderUtils _decoderUtils;
   late TokenHelper _tokenHelper;
-
-  // late bool isVerified;
   final UserService _userService = UserService();
 
   @override
   void initState() {
-    _decoderUtils = DecoderUtils();
-    _tokenHelper=TokenHelper();
+    _tokenHelper = TokenHelper();
     getBoolValue();
     super.initState();
   }
@@ -40,7 +37,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Future<void> getBoolValue() async {
     isVerified = await DecoderUtils.isVerifiedToken() ?? false;
     final id = await _tokenHelper.tokenLocalGetter();
-    print("your IDDD:$id");
+    print("your ID:$id");
   }
 
   @override
@@ -51,6 +48,7 @@ class _SignupScreenState extends State<SignupScreen> {
         appBar: AppBar(
           backgroundColor: Color.fromRGBO(136, 0, 110, 1),
           title: Text(
+            signUp?AppTexts.signup2:
             AppTexts.login,
             style: AppTextStyles.loginTextStyle(context),
           ),
@@ -78,7 +76,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   if (value!.isEmpty) {
                     return "Email is required";
                   } else if (value.isEmpty || !MailUtils.isEmail(value)) {
-                    return "Enter Valid Mail";
+                    return "Enter Valid Mail Format";
                   }
                   return null;
                 },
@@ -169,32 +167,33 @@ class _SignupScreenState extends State<SignupScreen> {
               SizedBox(height: 12),
               ElevatedButton(
                 onPressed: () async {
-                      _userService.login(
+                  // _userService.login(
+                  //   email: _emailController.text,
+                  //   password: _passController.text,
+                  // );
+
+                  if (_formKey.currentState!.validate()) {
+                    if (isVerified) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const MainMenuScreen(),
+                        ),
+                      );
+                    } else {
+                      signUp
+                          ? _userService.createAccount(
+                        email: _emailController.text,
+                        password: _passController.text,
+                      )
+                          : _userService.login(
                         email: _emailController.text,
                         password: _passController.text,
                       );
-                  // await UserService().getUser();
-                  //     _userService.login(
-                  //       email: _emailController.text,
-                  //       password: _passController.text,
-                  //     );
-                  //   }
-                  // if (_formKey.currentState!.validate()) {
-                  //   if (isVerified) {
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //         builder: (_) => const MainMenuScreen(),
-                  //       ),
-                  //     );
-                  //   } else {
-                  //     _userService.login(
-                  //       email: _emailController.text,
-                  //       password: _passController.text,
-                  //     );
-                  //   }
-                  //
-                  // }
+                    }
+
+                  }
+
                 },
                 style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.all(
@@ -208,11 +207,34 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 child: Text(
-                  AppTexts.login,
-                  style: GoogleFonts.pixelifySans(
+                  signUp ? AppTexts.signup : AppTexts.login,
+                  style: GoogleFonts.rubikPixels(
                     fontSize: 20,
                     color: Colors.lightBlueAccent,
                     fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    signUp = !signUp;
+                  });
+                },
+                child: Text(
+                  signUp
+                      ? "Already Have Account Login..."
+                      : "Don't have account? Create... :)",
+                  style: TextStyle(
+                    color: Color.fromRGBO(136, 0, 110, 1),
+                    fontSize: 16,
+                    shadows: [
+                      Shadow(
+                        color: Color.fromRGBO(32, 60, 20, 0.8),
+                        offset: Offset(2, 1),
+                        blurRadius: 4,
+                      ),
+                    ],
                   ),
                 ),
               ),

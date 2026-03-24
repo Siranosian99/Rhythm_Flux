@@ -12,8 +12,7 @@ class UserService{
     );
     final _tokenHelper=TokenHelper();
     UserService(){
-
-    _dio.interceptors.add(
+      _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options,handler)async{
         final token=await _tokenHelper.tokenLocalGetter();
@@ -36,12 +35,13 @@ class UserService{
               return handler.resolve(retryResponse);
             }
             else{
+              DecoderUtils.removeKey();
+              print("Key Removed  isVerified Relogin to Save...");
               print("Refresh failed → login");
             }
           }
           return handler.next(e);
         }
-
       )
     );
   }
@@ -78,31 +78,12 @@ class UserService{
 
       if (response.statusCode == 200) {
         DecoderUtils.decoder(response.data['accessToken']);
-        DecoderUtils.tokenSaver(DecoderUtils.decoder(response.data['accessToken']));
+        DecoderUtils.isVerifySaver(DecoderUtils.decoder(response.data['accessToken']));
         _tokenHelper.tokenLocalSaver(response.data['accessToken']);
         _tokenHelper.refreshTokenLocalSaver(response.data['user']['refreshToken']);
         _tokenHelper.userIdLocalSaver(response.data['user']['_id']);
-        print(response.data);
-        // if (!response.data['user']["isVerified"])
-        //   print("verify Email");
-        //
-        //   // ScaffoldMessenger.of(context).showSnackBar(
-        //   //     SnackBar(content: Text("Please verify your email first!"))
-        //   // );
-        // }
-
-        // final verifyToken= response.data['verifyToken'];
-        // await _dio.post('/userAuth/verify',
-        // data: {
-        //   "verifyToken":verifyToken
-        // });
-
-        // final token = response.data['accessToken'];
-        // final rtoken = response.data['refreshToken'];
-
-        // _tokenHelper.tokenLocalSaver(token);
-        // _tokenHelper.refreshTokenLocalSaver(rtoken);
-        print("login succes");
+        print("-----0------${response.data['accessToken']}");
+        print("-----1------${response.data}");
         return true;
       }
     } on DioException catch (e) {
@@ -115,13 +96,15 @@ class UserService{
   Future<void> getUser() async {
     try {
       final token = await _tokenHelper.tokenLocalGetter();
-
+      final isVerified=await DecoderUtils.isVerifiedToken();
+      print("isVerified:$isVerified");
       final response = await _dio.get(
        ApiConfig.getUser,
         data: {"accessToken": token},
       );
-
+    DecoderUtils.decoder(token!);
       if (response.statusCode == 200) {
+
         print(response.data);
       }
 

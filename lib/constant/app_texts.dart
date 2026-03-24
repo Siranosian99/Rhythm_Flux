@@ -5,6 +5,8 @@ class AppTexts{
   static const settings= "Settings";
   static const scores= "Scores";
   static const signup="Create Account";
+  static const signup2="Sign Up";
+
   static const login ="Login";
   static const email= "Enter Your email";
   static const password= "Enter Your password";

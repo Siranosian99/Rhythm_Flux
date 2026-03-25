@@ -53,17 +53,17 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     }
 
     if (!mounted) return;
-    if (data != null) {
+    if (data != null && data.isNotEmpty && isVerified) {
       if (!isTokenExpired(data)) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (_) => const MainMenuScreen()),
         );
       }
-    } else {
+    } else if(data == null){
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => SignupScreen(isVerified: isVerified,)),
+        MaterialPageRoute(builder: (_) => SignupScreen(isVerified: isVerified,isTokenValid: isTokenExpired(data!) ,)),
       );
     }
   }

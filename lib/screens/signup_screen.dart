@@ -12,7 +12,8 @@ import '../constant/app_texts_style.dart';
 
 class SignupScreen extends StatefulWidget {
   final bool isVerified;
-  const SignupScreen({super.key,required this.isVerified});
+  final bool isTokenValid;
+  const SignupScreen({super.key,required this.isVerified,required this.isTokenValid});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -174,7 +175,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   // );
 
                   if (_formKey.currentState!.validate()) {
-                    if (widget.isVerified) {
+                    if (widget.isVerified && widget.isTokenValid) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(

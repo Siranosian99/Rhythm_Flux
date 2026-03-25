@@ -11,7 +11,8 @@ import '../constant/app_texts.dart';
 import '../constant/app_texts_style.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+  final bool isVerified;
+  const SignupScreen({super.key,required this.isVerified});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -23,19 +24,19 @@ class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   bool obscurePassword = true;
   bool signUp = false;
-  late bool isVerified;
   late TokenHelper _tokenHelper;
-  final UserService _userService = UserService();
+  late final UserService _userService;
 
   @override
   void initState() {
+    _userService=UserService();
     _tokenHelper = TokenHelper();
     getBoolValue();
+    print("------${widget.isVerified}");
     super.initState();
   }
 
   Future<void> getBoolValue() async {
-    isVerified = await DecoderUtils.isVerifiedToken() ?? false;
     final id = await _tokenHelper.tokenLocalGetter();
     print("your ID:$id");
   }
@@ -48,7 +49,7 @@ class _SignupScreenState extends State<SignupScreen> {
         appBar: AppBar(
           backgroundColor: Color.fromRGBO(136, 0, 110, 1),
           title: Text(
-            signUp?AppTexts.signup2:
+            signUp ? AppTexts.signup2 :
             AppTexts.login,
             style: AppTextStyles.loginTextStyle(context),
           ),
@@ -58,8 +59,8 @@ class _SignupScreenState extends State<SignupScreen> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.blue, // üst kısım
-                Colors.purple, // alt kısım
+                Colors.blue,
+                Colors.purple,
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
@@ -173,7 +174,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   // );
 
                   if (_formKey.currentState!.validate()) {
-                    if (isVerified) {
+                    if (widget.isVerified) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -186,11 +187,18 @@ class _SignupScreenState extends State<SignupScreen> {
                         email: _emailController.text,
                         password: _passController.text,
                       )
-                          : _userService.login(
-                        email: _emailController.text,
-                        password: _passController.text,
-                      );
-                    }
+                          : !widget.isVerified ? ScaffoldMessenger
+                          .of(context)
+                          .showSnackBar(
+                        SnackBar(
+                          content: Text("Please verify your email",style:TextStyle(color:Colors.purple),),
+                          backgroundColor: Colors.black,
+                        ),
+                      ) : _userService.login(
+                  email: _emailController.text,
+                  password: _passController.text,
+                  );
+                  }
 
                   }
 

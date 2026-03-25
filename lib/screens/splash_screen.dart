@@ -16,7 +16,7 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver{
   final _tokenHelper = TokenHelper();
   late final UserService _userService;
   late bool isVerified;
@@ -24,32 +24,46 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     Future.delayed(Duration(seconds: 2), () {
       tokenChecker();
     });
   }
-
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      print("App geri açıldı!");
+      tokenChecker();
+    }
+  }
   Future<void> tokenChecker() async {
     _userService = UserService();
     await _userService.getUser();
-    // isVerified = (await DecoderUtils.isVerifiedToken())!;
+    isVerified = await DecoderUtils.isVerifiedToken();
+    print("---------------------:${isVerified}");
     final data = await _tokenHelper.tokenLocalGetter();
-    setState(() {
-      if (data != null && data.isNotEmpty) {
-        isTokenExpired(data);
-      }
-    });
-    // && isVerified
+
+    if (data != null && data.isNotEmpty && isVerified) {
+      isTokenExpired(data);
+    }
+
     if (!mounted) return;
-    if (!isTokenExpired(data ?? "") ) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => const MainMenuScreen()),
-      );
+    if (data != null) {
+      if (!isTokenExpired(data)) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const MainMenuScreen()),
+        );
+      }
     } else {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => const SignupScreen()),
+        MaterialPageRoute(builder: (_) => SignupScreen(isVerified: isVerified,)),
       );
     }
   }

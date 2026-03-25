@@ -82,7 +82,7 @@ class UserService{
         _tokenHelper.tokenLocalSaver(response.data['accessToken']);
         _tokenHelper.refreshTokenLocalSaver(response.data['user']['refreshToken']);
         _tokenHelper.userIdLocalSaver(response.data['user']['_id']);
-        print("-----0------${response.data['accessToken']}");
+        print("accsses token:-----0------${response.data['accessToken']}");
         print("-----1------${response.data}");
         return true;
       }
@@ -96,15 +96,16 @@ class UserService{
   Future<void> getUser() async {
     try {
       final token = await _tokenHelper.tokenLocalGetter();
-      final isVerified=await DecoderUtils.isVerifiedToken();
-      print("isVerified:$isVerified");
+      print("ads");
       final response = await _dio.get(
        ApiConfig.getUser,
         data: {"accessToken": token},
       );
-    DecoderUtils.decoder(token!);
       if (response.statusCode == 200) {
-
+        DecoderUtils.decoder(response.data['user']['accessToken']);
+        DecoderUtils.isVerifySaver(DecoderUtils.decoder(response.data['accessToken']));
+        final isVerified=await DecoderUtils.isVerifiedToken();
+        print("isVerified:$isVerified");
         print(response.data);
       }
 

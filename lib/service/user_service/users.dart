@@ -77,8 +77,9 @@ class UserService{
       );
 
       if (response.statusCode == 200) {
-        DecoderUtils.decoder(response.data['accessToken']);
-        DecoderUtils.isVerifySaver(DecoderUtils.decoder(response.data['accessToken']));
+        // final VerifiedValue= DecoderUtils.decoder(response.data['user']['accessToken']);
+        final isVerify= DecoderUtils.decoder(response.data['accessToken']);
+        await DecoderUtils.isVerifySaver(isVerify);
         _tokenHelper.tokenLocalSaver(response.data['accessToken']);
         _tokenHelper.refreshTokenLocalSaver(response.data['user']['refreshToken']);
         _tokenHelper.userIdLocalSaver(response.data['user']['_id']);
@@ -102,8 +103,11 @@ class UserService{
         data: {"accessToken": token},
       );
       if (response.statusCode == 200) {
-        DecoderUtils.decoder(response.data['user']['accessToken']);
-        DecoderUtils.isVerifySaver(DecoderUtils.decoder(response.data['accessToken']));
+        // DecoderUtils.decoder(response.data['user']['accessToken']);
+        final VerifiedValue= DecoderUtils.decoder(response.data['user']['accessToken']);
+
+        print("fucking sex:${VerifiedValue}");
+        await DecoderUtils.isVerifySaver(VerifiedValue);
         final isVerified=await DecoderUtils.isVerifiedToken();
         print("isVerified:$isVerified");
         print(response.data);

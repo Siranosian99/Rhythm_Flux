@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:rhythm_flux/screens/main_menu_screen.dart';
 import 'package:rhythm_flux/screens/signup_screen.dart';
 import 'package:rhythm_flux/service/user_service/users.dart';
 import 'package:rhythm_flux/utils/decode_token_details.dart';
 import 'package:rhythm_flux/utils/token_checker.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../utils/token_helper.dart';
 
@@ -55,15 +55,15 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     if (!mounted) return;
     if (data != null && data.isNotEmpty && isVerified) {
       if (!isTokenExpired(data)) {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const MainMenuScreen()),
         );
       }
     } else if(data == null){
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => SignupScreen(isVerified: isVerified,isTokenValid: isTokenExpired(data!) ,)),
+        MaterialPageRoute(builder: (_) => SignupScreen(isTokenValid: isTokenExpired(data ??'') ,)),
       );
     }
   }

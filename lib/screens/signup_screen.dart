@@ -11,9 +11,9 @@ import '../constant/app_texts.dart';
 import '../constant/app_texts_style.dart';
 
 class SignupScreen extends StatefulWidget {
-  final bool isVerified;
   final bool isTokenValid;
-  const SignupScreen({super.key,required this.isVerified,required this.isTokenValid});
+
+  const SignupScreen({super.key, required this.isTokenValid});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -26,18 +26,21 @@ class _SignupScreenState extends State<SignupScreen> {
   bool obscurePassword = true;
   bool signUp = false;
   late TokenHelper _tokenHelper;
+  bool isVerified = false;
   late final UserService _userService;
 
   @override
   void initState() {
-    _userService=UserService();
+    _userService = UserService();
     _tokenHelper = TokenHelper();
     getBoolValue();
-    print("------${widget.isVerified}");
+    print('iss:${isVerified}');
+    print("------${isVerified}");
     super.initState();
   }
 
   Future<void> getBoolValue() async {
+    await _userService.getUser();
     final id = await _tokenHelper.tokenLocalGetter();
     print("your ID:$id");
   }
@@ -175,8 +178,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   // );
 
                   if (_formKey.currentState!.validate()) {
-                    if (widget.isVerified && widget.isTokenValid) {
-                      Navigator.push(
+                    isVerified = await DecoderUtils.isVerifiedToken();
+                    if (isVerified && widget.isTokenValid) {
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (_) => const MainMenuScreen(),
@@ -188,21 +192,72 @@ class _SignupScreenState extends State<SignupScreen> {
                         email: _emailController.text,
                         password: _passController.text,
                       )
-                          : !widget.isVerified ? ScaffoldMessenger
-                          .of(context)
-                          .showSnackBar(
-                        SnackBar(
-                          content: Text("Please verify your email",style:TextStyle(color:Colors.purple),),
-                          backgroundColor: Colors.black,
-                        ),
-                      ) : _userService.login(
-                  email: _emailController.text,
-                  password: _passController.text,
-                  );
-                  }
 
+                          : _userService.login(
+                        email: _emailController.text,
+                        password: _passController.text,
+                      );
+                      if (isVerified) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const MainMenuScreen(),
+                          ),
+                        );
+                      }
+                      else {
+                        Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.purple.withOpacity(0.6),
+                                      blurRadius: 20,
+                                      spreadRadius: 5,
+                                    ),
+                                  ],
+                                ),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 3,
+                                  color: Colors.purpleAccent,
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              Text(
+                                "Please wait...",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                        // ScaffoldMessenger
+                        //     .of(context)
+                        //     .showSnackBar(
+                        //   SnackBar(
+                        //     content: Text("Please verify your email",
+                        //       style: TextStyle(color: Colors.purple),),
+                        //     backgroundColor: Colors.black,
+                        //   ),
+                        // );
+                        // Navigator.pushReplacement(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (_) =>
+                        //     const SignupScreen(isTokenValid: false),
+                        //   ),
+                        // );
+                      }
+                      // await _userService.getUser();
+                    }
                   }
-
                 },
                 style: ButtonStyle(
                   backgroundColor: WidgetStateProperty.all(
@@ -254,3 +309,5 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 }
+
+

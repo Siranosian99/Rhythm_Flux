@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/particles.dart';
 import 'package:flutter/material.dart';
 import 'package:rhythm_flux/game/player.dart';
 import 'package:rhythm_flux/game/score_board.dart';
@@ -112,8 +113,9 @@ class Paddle extends RectangleComponent
     required this.moveX,
     required this.maxDistance,
     required this.startX,
+
   }) : super(
-         size: Vector2(20, 100),
+         size: Vector2(30, 200),
          anchor: Anchor.center,
          paint: Paint()..color = color,
        );
@@ -148,8 +150,51 @@ class Paddle extends RectangleComponent
       print("Çarpışma owldu!");
 
       game.state.addScore();
+      game.add(
+        ParticleSystemComponent(
+          position: points.first,
+          particle: Particle.generate(
+            count: 20,
+            lifespan: 0.5,
+            generator: (i) => AcceleratedParticle(
+              acceleration: Vector2(0, 200),
+              speed: Vector2.random() * 100,
+              child: CircleParticle(
+                radius: 2,
+                paint: Paint()..color = Colors.orange,
+              ),
+            ),
+          ),
+        ),
+      );
 
     }
     super.onCollisionStart(points, other);
   }
 }
+
+
+// @override
+// void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+//   super.onCollision(intersectionPoints, other);
+//
+//   if (other is Enemy) {
+//     game.add(
+//       ParticleSystemComponent(
+//         position: intersectionPoints.first, // 👈 en doğru nokta
+//         particle: Particle.generate(
+//           count: 20,
+//           lifespan: 0.5,
+//           generator: (i) => AcceleratedParticle(
+//             acceleration: Vector2(0, 200),
+//             speed: Vector2.random() * 100,
+//             child: CircleParticle(
+//               radius: 2,
+//               paint: Paint()..color = Colors.orange,
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

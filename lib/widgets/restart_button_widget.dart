@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 
-class RestartButton extends StatelessWidget {
+class EButtons extends StatelessWidget {
   final VoidCallback onPressed;
-  const RestartButton({
+  final  String buttonText;
+  const EButtons({
     super.key,
-    required this.onPressed
+    required this.onPressed,
+    required this.buttonText
   });
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () {
-       onPressed;
-      },
+      onPressed:
+       onPressed,
       style: TextButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
         backgroundColor: const Color(0xFF1A1A2E),
@@ -24,8 +25,8 @@ class RestartButton extends StatelessWidget {
           ),
         ),
       ),
-      child: const Text(
-        "RESTART",
+      child:  Text(
+      buttonText,
         style: TextStyle(
           color: Colors.white,
           fontSize: 18,

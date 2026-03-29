@@ -83,8 +83,7 @@ class UserService{
         _tokenHelper.tokenLocalSaver(response.data['accessToken']);
         _tokenHelper.refreshTokenLocalSaver(response.data['user']['refreshToken']);
         _tokenHelper.userIdLocalSaver(response.data['user']['_id']);
-        print("accsses token:-----0------${response.data['accessToken']}");
-        print("-----1------${response.data}");
+
         return true;
       }
     } on DioException catch (e) {
@@ -106,11 +105,8 @@ class UserService{
         // DecoderUtils.decoder(response.data['user']['accessToken']);
         final VerifiedValue= DecoderUtils.decoder(response.data['user']['accessToken']);
 
-        print("fucking sex:${VerifiedValue}");
         await DecoderUtils.isVerifySaver(VerifiedValue);
         final isVerified=await DecoderUtils.isVerifiedToken();
-        print("isVerified:$isVerified");
-        print(response.data);
       }
 
     } on DioException catch (e) {

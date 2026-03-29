@@ -10,7 +10,6 @@ import '../widgets/door_widget.dart';
 
 class MyGame extends FlameGame with HasCollisionDetection ,HasGameRef<MyGame> {
   bool isGameOver = false;
-
   final GameState state = GameState();
 
   @override
@@ -32,15 +31,21 @@ class MyGame extends FlameGame with HasCollisionDetection ,HasGameRef<MyGame> {
 
     overlays.add('GameOver');
   }
-// void resetGame() {
-//   children.clear();
-//   isGameOver = false;
-//
-//   add(Player());
-//   add(Enemy());
-//
-//   overlays.remove('GameOver');
-//   resumeEngine();
-// }
-//
+  void resetGame() {
+    isGameOver = false;
+    removeAll(children);
+
+    game.state.score = 0;
+
+    add(Player());
+    add(Square());
+    add(ScoreBoard());
+    resumeEngine();
+
+    overlays.remove('GameOver');
+
+  }
+  void exitToMenu(){
+
+  }
 }

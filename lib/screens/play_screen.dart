@@ -20,6 +20,7 @@ class _PlayScreenState extends State<PlayScreen> {
           'GameOver': (context,game) {
             return GameOverOverlay(game:game as MyGame);
           },
+
         },
       ),
     );

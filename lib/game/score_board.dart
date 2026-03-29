@@ -4,9 +4,9 @@ import 'package:flame/text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rhythm_flux/game/game_screen.dart';
+import 'package:rhythm_flux/states/score_state.dart';
 
 class ScoreBoard extends TextComponent with  CollisionCallbacks,HasGameRef<MyGame>{
-  static int score = 1;
   ScoreBoard() : super();
 
   @override

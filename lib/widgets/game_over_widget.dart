@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rhythm_flux/constant/app_texts.dart';
 import 'package:rhythm_flux/game/game_screen.dart';
 import 'package:rhythm_flux/game/score_board.dart';
 import 'package:rhythm_flux/widgets/restart_button_widget.dart';
@@ -62,8 +63,7 @@ class GameOverOverlay extends StatelessWidget {
                   const SizedBox(height: 16),
 
                   // SCORE
-                  Text(
-                    "YOUR SCORE: ${ScoreBoard.score}",
+                  Text("${AppTexts.yourScore}: ${game.state.score}",
                     style: const TextStyle(
                       fontSize: 26,
                       color: Colors.white,
@@ -81,8 +81,20 @@ class GameOverOverlay extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                EButtons(buttonText:AppTexts.restart,onPressed:(){
+                  game.resetGame();
+                },),
+                const SizedBox(width: 20),
+                EButtons(buttonText:AppTexts.cancel,onPressed:(){
+                  game.resetGame();
+                },),
+              ],
+            ),
 
-            RestartButton(onPressed:(){},),
           ],
         ),
       ),

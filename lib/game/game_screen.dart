@@ -9,7 +9,10 @@ import 'package:rhythm_flux/states/score_state.dart';
 import '../widgets/door_widget.dart';
 
 class MyGame extends FlameGame with HasCollisionDetection ,HasGameRef<MyGame> {
-  final GameState  state= GameState();
+  bool isGameOver = false;
+
+  final GameState state = GameState();
+
   @override
   FutureOr<void> onLoad() async {
     // debugMode =true;
@@ -20,4 +23,24 @@ class MyGame extends FlameGame with HasCollisionDetection ,HasGameRef<MyGame> {
     // add(Maze());
 
   }
+
+  void gameOver() {
+    if (isGameOver) return;
+
+    isGameOver = true;
+    pauseEngine();
+
+    overlays.add('GameOver');
+  }
+// void resetGame() {
+//   children.clear();
+//   isGameOver = false;
+//
+//   add(Player());
+//   add(Enemy());
+//
+//   overlays.remove('GameOver');
+//   resumeEngine();
+// }
+//
 }

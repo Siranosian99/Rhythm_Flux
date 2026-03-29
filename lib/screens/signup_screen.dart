@@ -43,7 +43,6 @@ class _SignupScreenState extends State<SignupScreen> {
   Future<void> getBoolValue() async {
     await _userService.getUser();
     final id = await _tokenHelper.tokenLocalGetter();
-    print("your ID:$id");
   }
 
   @override
@@ -222,7 +221,6 @@ class _SignupScreenState extends State<SignupScreen> {
                           try {
                             isVerified = await DecoderUtils.isVerifiedToken();
                             if (isVerified && widget.isTokenValid) {
-                              print("waiting check 1");
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -235,7 +233,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                       email: _emailController.text,
                                       password: _passController.text,
                                     )
-                                  : print("waiting check -3");
+                                  :
 
                               await _userService.login(
                                 email: _emailController.text,
@@ -243,7 +241,6 @@ class _SignupScreenState extends State<SignupScreen> {
                               );
                               isVerified = await DecoderUtils.isVerifiedToken();
                               if (isVerified) {
-                                print("waiting check mann");
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(

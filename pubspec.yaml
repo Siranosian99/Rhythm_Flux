@@ -42,6 +42,7 @@ dependencies:
   jwt_decoder: ^2.0.1
   shared_preferences: ^2.5.4
   jwt_decode: ^0.3.1
+  flame_audio: ^2.11.14
 
 dev_dependencies:
   flutter_test:
@@ -75,7 +76,8 @@ flutter:
       - assets/lottie/music_notes_white.json
       - assets/images/spaceman.png
       - assets/images/Astro.png
-      - assets/music/music_example.mp3
+      - assets/audio/music_example.mp3
+      - assets/audio/death_music.wav
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

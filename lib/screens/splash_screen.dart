@@ -37,7 +37,6 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      print("App geri açıldı!");
       tokenChecker();
     }
   }
@@ -45,7 +44,6 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     _userService = UserService();
     await _userService.getUser();
     isVerified = await DecoderUtils.isVerifiedToken();
-    print("---------------------:${isVerified}");
     final data = await _tokenHelper.tokenLocalGetter();
 
     if (data != null && data.isNotEmpty && isVerified) {
@@ -55,14 +53,12 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     if (!mounted) return;
     if (data != null && data.isNotEmpty && isVerified) {
       if (!isTokenExpired(data)) {
-        print("waiting check -1");
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const MainMenuScreen()),
         );
       }
     } else if(data == null){
-      print("waiting check -2");
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => SignupScreen(isTokenValid: isTokenExpired(data ??'') ,)),

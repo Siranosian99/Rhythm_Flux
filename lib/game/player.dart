@@ -12,7 +12,7 @@ import '../widgets/door_widget.dart';
 class Player extends SpriteComponent with TapCallbacks, HasGameRef<MyGame>,CollisionCallbacks {
   Player()
     : super(size: Vector2.all(150), anchor: Anchor.center,position:Vector2(210,840));
-  double speed = 500; // yukarı gidiyor
+  double speed = 500;
 
   @override
   FutureOr<void> onLoad() async {

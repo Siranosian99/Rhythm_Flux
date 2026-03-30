@@ -42,6 +42,14 @@ class AppTextStyles {
       color: Colors.orange,
     );
   }
+  static TextStyle songSelectTextStyle(BuildContext context){
+    final screenWidth = MediaQuery.of(context).size.width;
+    final scale = screenWidth / 375;
+    return GoogleFonts.pixelifySans(
+      fontSize: 20 * scale,
+      color: Colors.yellow,
+    );
+  }
 static TextStyle settingStyle=GoogleFonts.comicNeue(
   shadows: [
     Shadow(blurRadius: 5, color: Colors.purpleAccent),
@@ -49,6 +57,7 @@ static TextStyle settingStyle=GoogleFonts.comicNeue(
     Shadow(blurRadius: 1, color: Colors.purpleAccent),
     Shadow(blurRadius: 2, color: Colors.purpleAccent.withOpacity(0.5)),
   ]
+
 );
   static TextStyle loginTextStyle(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;

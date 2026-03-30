@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
@@ -11,7 +12,8 @@ import '../widgets/door_widget.dart';
 class MyGame extends FlameGame with HasCollisionDetection ,HasGameRef<MyGame> {
   bool isGameOver = false;
   final GameState state = GameState();
-
+  final VoidCallback onExit;
+  MyGame({required this.onExit});
   @override
   FutureOr<void> onLoad() async {
     // debugMode =true;
@@ -46,6 +48,6 @@ class MyGame extends FlameGame with HasCollisionDetection ,HasGameRef<MyGame> {
 
   }
   void exitToMenu(){
-
+    onExit();
   }
 }

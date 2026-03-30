@@ -15,7 +15,11 @@ class _PlayScreenState extends State<PlayScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: GameWidget(
-        game: MyGame(),
+        game: MyGame(
+          onExit:(){
+            Navigator.pop(context);
+          }
+        ),
         overlayBuilderMap: {
           'GameOver': (context,game) {
             return GameOverOverlay(game:game as MyGame);

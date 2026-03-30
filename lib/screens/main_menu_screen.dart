@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
 import 'package:rhythm_flux/screens/play_screen.dart';
+import 'package:rhythm_flux/utils/file_picker.dart';
 
 import '../constant/app_texts.dart';
 import '../constant/app_texts_style.dart';
@@ -16,6 +19,8 @@ class MainMenuScreen extends StatefulWidget {
 class _MainMenuScreenState extends State<MainMenuScreen>
     with TickerProviderStateMixin {
   late final AnimationController _controller;
+  bool isAblePlay = false;
+
 
   @override
   void initState() {
@@ -38,11 +43,6 @@ class _MainMenuScreenState extends State<MainMenuScreen>
         child: Center(
           child: Column(
             children: [
-              //      - assets/lottie/equalizer_blue.json
-              //       - assets/lottie/equalizer_pink.json
-              //       - assets/lottie/video_play_button.json
-              // Lottie.asset('assets/lottie/equalizer_blue.json'),
-              // Lottie.asset('assets/lottie/equalizer_pink.json'),
               Stack(
                 alignment: AlignmentGeometry.center,
                 children: [
@@ -70,7 +70,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Transform.rotate(
-                    angle: 1.5, // radians cinsinden
+                    angle: 1.5,
                     child: SizedBox(
                       height: 100,
                       width: 100,
@@ -80,7 +80,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                     ),
                   ),
                   Transform.rotate(
-                    angle: -1.5, // radians cinsinden
+                    angle: -1.5,
                     child: SizedBox(
                       height: 100,
                       width: 100,
@@ -94,38 +94,68 @@ class _MainMenuScreenState extends State<MainMenuScreen>
               Align(
                 alignment: Alignment.center,
                 child: SizedBox(
-                  height: 200,
+                  height: 185,
                   width: 200,
                   child: Lottie.asset("assets/lottie/happy_spaceman.json"),
                 ),
               ),
-              Text(AppTexts.startPlay,style:AppTextStyles.startPlayStyle(context),),
+              Text(
+                AppTexts.startPlay,
+                style: AppTextStyles.startPlayStyle(context),
+              ),
+              TextButton(
+                onPressed:()async{
+                  await FilePickerHelper.selectFile();
+                },
+                child: Text(
+                  AppTexts.selectMusic,
+                  style: AppTextStyles.songSelectTextStyle(context),
+                ),
+              ),
               SizedBox(
                 width: bottomOffset,
                 height: bottomOffset,
                 child: GestureDetector(
-                  onTap: () async{
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const PlayScreen(),
-                      ),
-                    );
-                    // final player = AudioPlayer();                   // Create a player
-                    // final duration = await player.setAsset(           // Load a URL
-                    //     'assets/music/music_example.mp3');                 // Schemes: (https: | file: | asset: )
-                    // player.play();                                  // Play without waiting for completion
-                    // // await player.play();
-                  },
+                  onTap: isAblePlay
+                      ? () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const PlayScreen(),
+                            ),
+                          );
+                          // final player = AudioPlayer();                   // Create a player
+                          // final duration = await player.setAsset(           // Load a URL
+                          //     'assets/music/music_example.mp3');                 // Schemes: (https: | file: | asset: )
+                          // player.play();                                  // Play without waiting for completion
+                          // // await player.play();
+                        }
+                      : null,
                   child: Lottie.asset('assets/lottie/play_button.json'),
                 ),
               ),
               Row(
+                mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  TextButton(onPressed: (){}, child: Text(AppTexts.settings,style:AppTextStyles.settingStyle,)),
-                  TextButton(onPressed: (){}, child: Text(AppTexts.scores,style:AppTextStyles.settingStyle,)),                ],
-              )
+                  TextButton(
+                    onPressed: () {
+
+                    },
+                    child: Text(
+                      AppTexts.settings,
+                      style: AppTextStyles.settingStyle,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      AppTexts.scores,
+                      style: AppTextStyles.settingStyle,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

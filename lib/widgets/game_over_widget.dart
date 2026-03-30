@@ -90,7 +90,7 @@ class GameOverOverlay extends StatelessWidget {
                 },),
                 const SizedBox(width: 20),
                 EButtons(buttonText:AppTexts.cancel,onPressed:(){
-                  game.resetGame();
+                  game.exitToMenu();
                 },),
               ],
             ),

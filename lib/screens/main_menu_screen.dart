@@ -18,20 +18,30 @@ class MainMenuScreen extends StatefulWidget {
 
 class _MainMenuScreenState extends State<MainMenuScreen>
     with TickerProviderStateMixin {
+  late final player;
   late final AnimationController _controller;
   bool isAblePlay = false;
-
 
   @override
   void initState() {
     super.initState();
+    isMusicPlaying();
     _controller = AnimationController(vsync: this);
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    player.dispose();
     super.dispose();
+  }
+
+  void isMusicPlaying() async {
+    player = AudioPlayer();
+    await player.setAsset('assets/audio/old_sega.mp3');
+    await player.setLoopMode(LoopMode.one);
+
+    player.play();
   }
 
   @override
@@ -91,20 +101,17 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                   ),
                 ],
               ),
-              Align(
-                alignment: Alignment.center,
-                child: SizedBox(
-                  height: 185,
+              SizedBox(
+                  height: 200,
                   width: 200,
                   child: Lottie.asset("assets/lottie/happy_spaceman.json"),
                 ),
-              ),
               Text(
                 AppTexts.startPlay,
                 style: AppTextStyles.startPlayStyle(context),
               ),
               TextButton(
-                onPressed:()async{
+                onPressed: () async {
                   await FilePickerHelper.selectFile();
                 },
                 child: Text(
@@ -112,26 +119,25 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                   style: AppTextStyles.songSelectTextStyle(context),
                 ),
               ),
-              SizedBox(
-                width: bottomOffset,
-                height: bottomOffset,
-                child: GestureDetector(
-                  onTap: isAblePlay
-                      ? () async {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const PlayScreen(),
-                            ),
-                          );
-                          // final player = AudioPlayer();                   // Create a player
-                          // final duration = await player.setAsset(           // Load a URL
-                          //     'assets/music/music_example.mp3');                 // Schemes: (https: | file: | asset: )
-                          // player.play();                                  // Play without waiting for completion
-                          // // await player.play();
-                        }
-                      : null,
-                  child: Lottie.asset('assets/lottie/play_button.json'),
+              Expanded(
+                child: SizedBox(
+                  width: bottomOffset,
+                  height: bottomOffset,
+                  child: GestureDetector(
+                    onTap: //isaAblePlay
+                    true
+                        ? () async {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const PlayScreen(),
+                              ),
+                            );
+                            player.dispose();
+                          }
+                        : null,
+                    child: Lottie.asset('assets/lottie/play_button.json'),
+                  ),
                 ),
               ),
               Row(
@@ -139,9 +145,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                    onPressed: () {
-
-                    },
+                    onPressed: () {},
                     child: Text(
                       AppTexts.settings,
                       style: AppTextStyles.settingStyle,

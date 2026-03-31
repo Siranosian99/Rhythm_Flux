@@ -4,5 +4,6 @@ class ApiConfig{
   static String createAccount= '/userAuth/create';
   static String login= '/userAuth/login';
   static String getUser= '/userAuth/me';
+  static String analyzeMusic= '/serviceAnalyze/analyzeMusic';
 
 }

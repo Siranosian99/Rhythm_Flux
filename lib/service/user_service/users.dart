@@ -57,7 +57,7 @@ class UserService{
       );
 
       if (response.statusCode == 201) {
-        print("user Created Brooo:${response.data}");
+        print("User Created :${response.data}");
         print(response.data);
       }
     } on DioException catch (e) {

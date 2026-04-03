@@ -1,13 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:rhythm_flux/screens/play_screen.dart';
+import 'package:rhythm_flux/service/music_analyze/analyze_service.dart';
 import 'package:rhythm_flux/utils/file_picker.dart';
 
 import '../constant/app_texts.dart';
 import '../constant/app_texts_style.dart';
+import '../provider/audio_provider.dart';
 
 class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});
@@ -102,17 +103,23 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                 ],
               ),
               SizedBox(
-                  height: 200,
-                  width: 200,
-                  child: Lottie.asset("assets/lottie/happy_spaceman.json"),
-                ),
+                height: 200,
+                width: 200,
+                child: Lottie.asset("assets/lottie/happy_spaceman.json"),
+              ),
               Text(
                 AppTexts.startPlay,
                 style: AppTextStyles.startPlayStyle(context),
               ),
               TextButton(
                 onPressed: () async {
-                  await FilePickerHelper.selectFile();
+               FilePickerHelper.selectFile();
+                  // final formData = await FilePickerHelper.selectFile();
+                  // if (!context.mounted) return;
+                  // if (formData == null) return;
+                  // final audioData = await analyzer.analyzer(formData);
+                  // if (!context.mounted) return;
+                  // context.read<AudioProvider>().setAudio(audioData!);
                 },
                 child: Text(
                   AppTexts.selectMusic,
@@ -148,6 +155,13 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                     onPressed: () {},
                     child: Text(
                       AppTexts.settings,
+                      style: AppTextStyles.settingStyle,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      AppTexts.previous,
                       style: AppTextStyles.settingStyle,
                     ),
                   ),

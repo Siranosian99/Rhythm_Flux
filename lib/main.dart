@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rhythm_flux/provider/audio_provider.dart';
 import 'package:rhythm_flux/screens/main_menu_screen.dart';
 import 'package:rhythm_flux/screens/play_screen.dart';
 import 'package:rhythm_flux/screens/signup_screen.dart';
 import 'package:rhythm_flux/screens/splash_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => AudioProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

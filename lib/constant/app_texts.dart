@@ -14,4 +14,5 @@ class AppTexts {
   static const email = "Enter Your email";
   static const password = "Enter Your password";
   static const selectMusic="Please Select a music to Can play...";
+  static const previous="Previous Rhythms";
 }

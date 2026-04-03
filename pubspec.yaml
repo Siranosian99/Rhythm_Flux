@@ -44,6 +44,7 @@ dependencies:
   jwt_decode: ^0.3.1
   flame_audio: ^2.11.14
   file_picker: ^10.3.10
+  provider: ^6.1.5+1
 
 dev_dependencies:
   flutter_test:

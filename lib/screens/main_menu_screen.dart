@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 import 'package:rhythm_flux/screens/play_screen.dart';
 import 'package:rhythm_flux/service/music_analyze/analyze_service.dart';
 import 'package:rhythm_flux/utils/file_picker.dart';

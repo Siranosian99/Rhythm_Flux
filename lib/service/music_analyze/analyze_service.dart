@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:rhythm_flux/constant/api_config.dart';
 
 import '../../provider/audio_provider.dart';
@@ -10,7 +9,7 @@ class Analyzer {
   final Dio _dio = Dio(
     BaseOptions(
       baseUrl: ApiConfig.baseUrl,
-      headers: {"Content-Type": "multipart/form-data"},
+      // headers: {"Content-Type": "multipart/form-data"},
     ),
   );
 
@@ -32,8 +31,9 @@ class Analyzer {
 
       final audioData = AudioData(bpm: bpm, beats: beats);
       await saveRhythms(bpm, beats, name);
-      return audioData;
       print(response.data); // { bpm: ..., beats: [...] }
+
+      return audioData;
     } catch (e) {
       print("Error in alanyze:${e.toString()}");
     }

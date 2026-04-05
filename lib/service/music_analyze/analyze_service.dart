@@ -46,12 +46,21 @@ class Analyzer {
         ApiConfig.saveMusic,
         data: {"bpm": bpm, "beats": beats, "name": name},
       );
-      if (response.statusCode == 201 || response.statusCode ==200)   {
+      if (response.statusCode == 201 || response.statusCode == 200) {
         print(response.data);
       }
     } catch (e) {
       print("Error in Save System:$e");
     }
   }
+
+  Future<void> getUserRhythms() async {
+    try {
+      final response= await _dio.get(ApiConfig.getMusic,data: {
+        // 'user_id':user_id,
+      });
+    } catch (e) {}
+  }
+
 }
-Future<void> getMusicInfo() async {}
+

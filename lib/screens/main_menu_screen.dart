@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
 import 'package:rhythm_flux/screens/play_screen.dart';
+import 'package:rhythm_flux/screens/previous_rhythms.dart';
 import 'package:rhythm_flux/service/music_analyze/analyze_service.dart';
+import 'package:rhythm_flux/service/user_service/users.dart';
 import 'package:rhythm_flux/utils/file_picker.dart';
+import 'package:rhythm_flux/utils/token_helper.dart';
 
 import '../constant/app_texts.dart';
 import '../constant/app_texts_style.dart';
@@ -19,12 +22,14 @@ class MainMenuScreen extends StatefulWidget {
 class _MainMenuScreenState extends State<MainMenuScreen>
     with TickerProviderStateMixin {
   late final player;
+  late final _userService;
   late final AnimationController _controller;
   bool isAblePlay = false;
 
   @override
   void initState() {
     super.initState();
+    _userService = UserService();
     isMusicPlaying();
     _controller = AnimationController(vsync: this);
   }
@@ -42,6 +47,10 @@ class _MainMenuScreenState extends State<MainMenuScreen>
     await player.setLoopMode(LoopMode.one);
 
     player.play();
+  }
+
+  Future<void> getToken() async {
+    await _userService.getUser();
   }
 
   @override
@@ -112,7 +121,10 @@ class _MainMenuScreenState extends State<MainMenuScreen>
               ),
               TextButton(
                 onPressed: () async {
-               FilePickerHelper.selectFile();
+                  // final token = await TokenHelper().tokenLocalGetter();
+                  // print("ttt--------------$token");
+                  await getToken();
+                  FilePickerHelper.selectFile();
                   // final formData = await FilePickerHelper.selectFile();
                   // if (!context.mounted) return;
                   // if (formData == null) return;
@@ -158,7 +170,14 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>  RhythmListScreen (),
+                        ),
+                      );
+                    },
                     child: Text(
                       AppTexts.previous,
                       style: AppTextStyles.settingStyle,

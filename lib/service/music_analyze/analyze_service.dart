@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:rhythm_flux/constant/api_config.dart';
+import 'package:rhythm_flux/utils/token_helper.dart';
 
 import '../../provider/audio_provider.dart';
 import '../models/audio_model.dart';
 
 class Analyzer {
+  TokenHelper _tokenHelper=TokenHelper();
   final Dio _dio = Dio(
     BaseOptions(
       baseUrl: ApiConfig.baseUrl,
@@ -42,15 +44,21 @@ class Analyzer {
 
   Future<void> saveRhythms(double bpm, List<double> beats, String name) async {
     try {
+      final token =await _tokenHelper.tokenLocalGetter();
       final response = await _dio.post(
         ApiConfig.saveMusic,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
         data: {"bpm": bpm, "beats": beats, "name": name},
       );
       if (response.statusCode == 201 || response.statusCode == 200) {
         print(response.data);
       }
     } catch (e) {
-      print("Error in Save System:$e");
+      print("Error in Save System:${e.toString()}");
     }
   }
 

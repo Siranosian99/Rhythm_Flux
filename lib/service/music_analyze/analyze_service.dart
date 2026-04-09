@@ -7,7 +7,7 @@ import '../../provider/audio_provider.dart';
 import '../models/audio_model.dart';
 
 class Analyzer {
-  TokenHelper _tokenHelper=TokenHelper();
+  TokenHelper _tokenHelper = TokenHelper();
   final Dio _dio = Dio(
     BaseOptions(
       baseUrl: ApiConfig.baseUrl,
@@ -31,7 +31,7 @@ class Analyzer {
           .map((e) => double.parse(e.toString()))
           .toList();
 
-      final audioData = AudioData(bpm: bpm, beats: beats);
+      final audioData = AudioData(bpm: bpm, beats: beats, name: name);
       await saveRhythms(bpm, beats, name);
       print(response.data); // { bpm: ..., beats: [...] }
 
@@ -44,14 +44,10 @@ class Analyzer {
 
   Future<void> saveRhythms(double bpm, List<double> beats, String name) async {
     try {
-      final token =await _tokenHelper.tokenLocalGetter();
+      final token = await _tokenHelper.tokenLocalGetter();
       final response = await _dio.post(
         ApiConfig.saveMusic,
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
-        ),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
         data: {"bpm": bpm, "beats": beats, "name": name},
       );
       if (response.statusCode == 201 || response.statusCode == 200) {
@@ -62,13 +58,36 @@ class Analyzer {
     }
   }
 
-  Future<void> getUserRhythms() async {
+  Future<List<AudioData>?> getUserRhythms() async {
     try {
-      final response= await _dio.get(ApiConfig.getMusic,data: {
-        // 'user_id':user_id,
-      });
-    } catch (e) {}
+      final token = await _tokenHelper.tokenLocalGetter();
+
+      final response = await _dio.get(
+        ApiConfig.getRhythms,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      if(response.statusCode == 200 || response.statusCode ==201){
+        final List rhythms = response.data['allRhythms'];
+        final List<AudioData> audioData = rhythms.map((item) {
+          final bpm = double.parse(item['bpm'].toString());
+          final name = item['name'];
+          final beats = (item['beats'] as List)
+              .map((e) => double.parse(e.toString()))
+              .toList();
+
+          return AudioData(
+            bpm: bpm,
+            beats: beats,
+            name: name,
+          );
+        }).toList();
+        print("User Rhythms:${response.data}");
+        return audioData;
+      }
+
+    } catch (e) {
+      print("Error fetch Rhythms:${e.toString()}");
+    }
+    return null;
   }
-
 }
-

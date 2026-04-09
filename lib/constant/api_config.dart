@@ -6,7 +6,7 @@ class ApiConfig{
   static String getUser= '/userAuth/me';
   static String analyzeMusic= '/serviceAnalyze/analyzeMusic';
   static String saveMusic= '/serviceAnalyze/saveRhythms';
-  static String getMusic= '/serviceAnalyze/getRhythms';
+  static String getRhythms= '/serviceAnalyze/getRhythms';
 
 
 }

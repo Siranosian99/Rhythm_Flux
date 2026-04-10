@@ -1,5 +1,5 @@
 class GameState {
-  int score = 12;
+  int score = 0;
   void addScore() {
     score++;
   }

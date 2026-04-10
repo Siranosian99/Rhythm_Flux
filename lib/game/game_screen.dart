@@ -7,6 +7,7 @@ import 'package:flame/game.dart';
 // import 'package:flame_audio/flame_audio.dart';
 import 'package:rhythm_flux/game/player.dart';
 import 'package:rhythm_flux/game/score_board.dart';
+import 'package:rhythm_flux/game/score_zone.dart';
 import 'package:rhythm_flux/states/score_state.dart';
 import 'package:rhythm_flux/utils/audio_manager.dart';
 
@@ -21,11 +22,12 @@ class MyGame extends FlameGame with HasCollisionDetection, HasGameRef<MyGame> {
 
   @override
   FutureOr<void> onLoad() async {
-    // debugMode =true;
+    debugMode =true;
     AudioManager.isMusicPlaying("play");
     add(Player());
     add(Square());
     add(ScoreBoard());
+    add(ScoreZone());
 
     // add(ScoreBoard());
     // add(Maze());

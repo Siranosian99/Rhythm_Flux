@@ -10,6 +10,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:rhythm_flux/game/player.dart';
 import 'package:rhythm_flux/game/score_board.dart';
+import 'package:rhythm_flux/game/score_zone.dart';
 
 import '../game/game_screen.dart';
 import '../game/score_board.dart';
@@ -148,8 +149,8 @@ class Paddle extends RectangleComponent
   @override
   void onCollisionStart(Set<Vector2> points, PositionComponent other) {
     if (other is Player) {
-      gameRef.gameOver();
-      // game.state.addScore();
+      // gameRef.gameOver();
+
       game.add(
         ParticleSystemComponent(
           position: points.first,
@@ -167,7 +168,10 @@ class Paddle extends RectangleComponent
           ),
         ),
       );
-      // FlameAudio.play('death_music.wav', volume: 0.3);
+      FlameAudio.play('death_music.wav', volume: 0.3);
+    }
+    else if(other is ScoreZone){
+      game.state.addScore();
     }
     super.onCollisionStart(points, other);
   }

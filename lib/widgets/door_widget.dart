@@ -170,9 +170,6 @@ class Paddle extends RectangleComponent
       );
       FlameAudio.play('death_music.wav', volume: 0.3);
     }
-    else if(other is ScoreZone){
-      game.state.addScore();
-    }
     super.onCollisionStart(points, other);
   }
 }

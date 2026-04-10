@@ -17,17 +17,19 @@ class MyGame extends FlameGame with HasCollisionDetection, HasGameRef<MyGame> {
   bool isGameOver = false;
   final GameState state = GameState();
   final VoidCallback onExit;
-
+  late Player player;
   MyGame({required this.onExit});
 
   @override
   FutureOr<void> onLoad() async {
     debugMode =true;
+     player=Player();
     AudioManager.isMusicPlaying("play");
+    // add(player);
     add(Player());
     add(Square());
     add(ScoreBoard());
-    add(ScoreZone());
+    add(ScoreZone(player));
 
     // add(ScoreBoard());
     // add(Maze());
@@ -47,7 +49,6 @@ class MyGame extends FlameGame with HasCollisionDetection, HasGameRef<MyGame> {
   void resetGame() {
     isGameOver = false;
     removeAll(children);
-
     game.state.score = 0;
 
     add(Player());

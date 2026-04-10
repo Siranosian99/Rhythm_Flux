@@ -11,6 +11,7 @@ import 'package:rhythm_flux/utils/token_helper.dart';
 import '../constant/app_texts.dart';
 import '../constant/app_texts_style.dart';
 import '../provider/audio_provider.dart';
+import '../utils/audio_manager.dart';
 
 class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});
@@ -20,8 +21,7 @@ class MainMenuScreen extends StatefulWidget {
 }
 
 class _MainMenuScreenState extends State<MainMenuScreen>
-    with TickerProviderStateMixin {
-  late final player;
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   late final _userService;
   late final AnimationController _controller;
   bool isAblePlay = false;
@@ -29,24 +29,28 @@ class _MainMenuScreenState extends State<MainMenuScreen>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _userService = UserService();
-    isMusicPlaying();
+    AudioManager.isMusicPlaying("old_sega");
     _controller = AnimationController(vsync: this);
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    player.dispose();
+    // AudioManager.pause();
+    WidgetsBinding.instance.removeObserver(this);
+
     super.dispose();
   }
 
-  void isMusicPlaying() async {
-    player = AudioPlayer();
-    await player.setAsset('assets/audio/old_sega.mp3');
-    await player.setLoopMode(LoopMode.one);
-
-    player.play();
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      AudioManager.resume();
+    } else if (state == AppLifecycleState.paused) {
+      AudioManager.pause();
+    }
   }
 
   Future<void> getToken() async {
@@ -151,7 +155,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                                 builder: (_) => const PlayScreen(),
                               ),
                             );
-                            player.dispose();
+                            AudioManager.pause();
                           }
                         : null,
                     child: Lottie.asset('assets/lottie/play_button.json'),
@@ -170,13 +174,13 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                     ),
                   ),
                   TextButton(
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: () async {
+                      AudioManager.pause();
+                      await Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) =>  RhythmListScreen (),
-                        ),
+                        MaterialPageRoute(builder: (_) => RhythmListScreen()),
                       );
+                      AudioManager.resume();
                     },
                     child: Text(
                       AppTexts.previous,

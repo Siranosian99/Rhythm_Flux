@@ -16,4 +16,5 @@ class AppTexts {
   static const selectMusic="Please Select a music to Can play...";
   static const previous="Previous Rhythms";
   static const rhythms="Rhythms";
+  static const oops=  "OOPS! EMPTY";
 }

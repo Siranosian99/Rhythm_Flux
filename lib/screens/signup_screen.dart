@@ -35,8 +35,6 @@ class _SignupScreenState extends State<SignupScreen> {
     _userService = UserService();
     _tokenHelper = TokenHelper();
     getBoolValue();
-    print('iss:${isVerified}');
-    print("------${isVerified}");
     super.initState();
   }
 

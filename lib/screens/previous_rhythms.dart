@@ -4,6 +4,8 @@ import 'package:rhythm_flux/constant/app_texts.dart';
 import 'package:rhythm_flux/service/models/audio_model.dart';
 import 'package:rhythm_flux/service/music_analyze/analyze_service.dart';
 
+import '../service/user_service/users.dart';
+
 class RhythmListScreen extends StatefulWidget {
   @override
   State<RhythmListScreen> createState() => _RhythmListScreenState();
@@ -11,16 +13,20 @@ class RhythmListScreen extends StatefulWidget {
 
 class _RhythmListScreenState extends State<RhythmListScreen> {
   late Analyzer _analyzer;
-  late List<AudioData> rhythms=[];
+  late List<AudioData> rhythms = [];
+  late final UserService _userService;
 
   @override
   void initState() {
     super.initState();
+    _userService = UserService();
     _analyzer = Analyzer();
     Rhythms();
   }
 
   Future<void> Rhythms() async {
+    await _userService.getUser();
+
     rhythms = await _analyzer.getUserRhythms() ?? [];
     setState(() {
       rhythms;
@@ -36,13 +42,13 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
           AppTexts.rhythms,
           style: GoogleFonts.pressStart2p(fontSize: 16),
         ),
-        backgroundColor: Colors.deepPurpleAccent,
+        backgroundColor: Colors.deepOrangeAccent,
         centerTitle: true,
       ),
       body: rhythms.isEmpty
           ? Center(
               child: Text(
-                "OOPS! EMPTY",
+                AppTexts.oops,
                 style: GoogleFonts.pressStart2p(
                   fontSize: 14,
                   color: Colors.purpleAccent,

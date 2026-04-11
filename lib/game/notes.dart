@@ -1,26 +1,54 @@
-// import 'package:dio/dio.dart';
-// import 'package:file_picker/file_picker.dart';
+import 'package:flame/collisions.dart';
+// import 'package:flame/components.dart';
+// import 'package:rhythm_flux/game/player.dart';
 //
-// Future<void> pickAndUploadMusic() async {
-//   final result = await FilePicker.platform.pickFiles(type: FileType.audio);
-//   if (result == null) return;
+// import 'game_screen.dart';
 //
-//   final path = result.files.single.path!;
+// class ScoreZone extends PositionComponent
+//     with CollisionCallbacks, HasGameRef<MyGame> {
 //
-//   final dio = Dio();
+//   bool counted = false;
+//   double? entryY; // nereden girdi
 //
-//   final formData = FormData.fromMap({
-//     "audio": await MultipartFile.fromFile(path, filename: "music.mp3"),
-//   });
+//   final Player player;
 //
-//   final response = await dio.post(
-//     "http://10.0.2.2:3000/upload", // emulator kullanıyorsan
-//     data: formData,
-//     options: Options(headers: {"Content-Type": "multipart/form-data"}),
-//     onSendProgress: (sent, total) {
-//       print("${(sent / total * 100).toStringAsFixed(0)}%");
-//     },
+//   ScoreZone(this.player)
+//       : super(
+//     size: Vector2(100, 500),
+//     position: Vector2(200, 200),
 //   );
 //
-//   print(response.data); // { bpm: ..., beats: [...] }
+//   @override
+//   Future<void> onLoad() async {
+//     add(RectangleHitbox(collisionType: CollisionType.passive));
+//   }
+//
+//   // 👉 ZONE’A GİRİNCE
+//   @override
+//   void onCollisionStart(Set<Vector2> _, PositionComponent other) {
+//     if (other is Player && !counted) {
+//       entryY = player.y; // giriş noktası
+//     }
+//   }
+//
+//   // 👉 ZONE’DAN ÇIKINCA
+//   @override
+//   void onCollisionEnd(PositionComponent other) {
+//     if (other is Player && !counted && entryY != null) {
+//       final exitY = player.y;
+//
+//       final enteredFromTop = entryY! < y;
+//       final enteredFromBottom = entryY! > y + height;
+//
+//       final exitedOpposite =
+//           (enteredFromTop && exitY > y + height) ||
+//               (enteredFromBottom && exitY < y);
+//
+//       if (exitedOpposite) {
+//         counted = true;
+//         gameRef.state.addScore();
+//         print("SCORE +1 ✅");
+//       }
+//     }
+//   }
 // }

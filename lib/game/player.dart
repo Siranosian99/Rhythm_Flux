@@ -23,7 +23,7 @@ class Player extends SpriteComponent with TapCallbacks, HasGameRef<MyGame>,Colli
   @override
   void onTapUp(TapUpEvent info) {
     // size += Vector2.all(50);
-    speed += speed++;
+    speed += speed;
   }
 
   @override
@@ -39,5 +39,6 @@ class Player extends SpriteComponent with TapCallbacks, HasGameRef<MyGame>,Colli
       speed = -100;
     }
   }
+
 
 }

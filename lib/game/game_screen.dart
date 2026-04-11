@@ -25,8 +25,8 @@ class MyGame extends FlameGame with HasCollisionDetection, HasGameRef<MyGame> {
     debugMode =true;
      player=Player();
     AudioManager.isMusicPlaying("play");
-    // add(player);
-    add(Player());
+    add(player);
+    // add(Player());
     add(Square());
     add(ScoreBoard());
     add(ScoreZone(player));

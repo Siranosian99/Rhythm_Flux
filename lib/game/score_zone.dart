@@ -12,11 +12,10 @@ class ScoreZone extends PositionComponent
   final Player player;
 
   ScoreZone(this.player)
-    : super(
-        size: Vector2(412, 200),
-        anchor: Anchor.topLeft,
-        position: Vector2(10, 350),
-      );
+      : super(
+    size: Vector2(230, 230),
+    position: Vector2(120, 390),
+  );
 
   @override
   Future<void> onLoad() async {
@@ -25,11 +24,14 @@ class ScoreZone extends PositionComponent
 
   @override
   void onCollisionStart(
-    Set<Vector2> intersectionPoints,
-    PositionComponent other,
-  ) {
+      Set<Vector2> intersectionPoints,
+      PositionComponent other,
+      ) {
     if (other is Player) {
-      if (player.position.x > position.x + size.x) {
+      final top = player.y - player.height / 2;
+      final bottom = player.y + player.height / 2;
+
+      if (top < 398 || bottom > 600) {
         final game = findGame() as MyGame;
         game.state.addScore();
         print("SCORE +1 ✅");
@@ -37,5 +39,14 @@ class ScoreZone extends PositionComponent
     }
 
     super.onCollisionStart(intersectionPoints, other);
+  }
+  @override
+  void onCollisionEnd(PositionComponent other) {
+    super.onCollisionEnd(other);
+
+    if (other is Door) {
+      score += 1;
+      print("Kapıdan çıktın! Skor: $score");
+    }
   }
 }

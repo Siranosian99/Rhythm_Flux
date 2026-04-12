@@ -136,7 +136,17 @@ class UserService{
     return null;
   }
 
-
+Future<void> saveScore(int score)async{
+      try{
+        final response= await _dio.post(ApiConfig.saveScore,  data: {"scores": score},);
+        if(response.statusCode==200 || response.statusCode==201){
+          print(response.data);
+        }
+      }
+      catch(e){
+        print("Error Saving Score:${e.toString()}");
+      }
+}
 }
 
 // Future<List<TodosModel>?> fetchUsersTodos() async {

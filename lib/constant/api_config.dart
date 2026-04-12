@@ -7,6 +7,7 @@ class ApiConfig{
   static String analyzeMusic= '/serviceAnalyze/analyzeMusic';
   static String saveMusic= '/serviceAnalyze/saveRhythms';
   static String getRhythms= '/serviceAnalyze/getRhythms';
+  static String saveScore='/userAuth/saveScore';
 
 
 }

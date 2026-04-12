@@ -7,6 +7,7 @@ import 'package:rhythm_flux/service/music_analyze/analyze_service.dart';
 import 'package:rhythm_flux/service/user_service/users.dart';
 import 'package:rhythm_flux/utils/file_picker.dart';
 import 'package:rhythm_flux/utils/token_helper.dart';
+import 'package:rhythm_flux/widgets/score_dialog.dart';
 
 import '../constant/app_texts.dart';
 import '../constant/app_texts_style.dart';
@@ -188,7 +189,9 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () async{
+                    await scoreDialog(context,[120, 95, 80, 60, 40]);
+                    },
                     child: Text(
                       AppTexts.scores,
                       style: AppTextStyles.settingStyle,

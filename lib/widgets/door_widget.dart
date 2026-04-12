@@ -149,7 +149,7 @@ class Paddle extends RectangleComponent
   @override
   void onCollisionStart(Set<Vector2> points, PositionComponent other) {
     if (other is Player) {
-      // gameRef.gameOver();
+      gameRef.gameOver();
 
       game.add(
         ParticleSystemComponent(

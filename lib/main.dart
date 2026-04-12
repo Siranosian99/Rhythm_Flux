@@ -16,6 +16,9 @@ void main() {
   runApp(const MyApp());
 }
 
+// git config --global user.email "aleppo.vs1@gmail.com"
+// git config --global user.name "Siranosian99"
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

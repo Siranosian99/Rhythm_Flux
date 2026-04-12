@@ -22,7 +22,7 @@ class MyGame extends FlameGame with HasCollisionDetection, HasGameRef<MyGame> {
 
   @override
   FutureOr<void> onLoad() async {
-    debugMode =true;
+    // debugMode =true;
      player=Player();
     AudioManager.isMusicPlaying("play");
     add(player);

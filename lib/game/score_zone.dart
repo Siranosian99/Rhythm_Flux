@@ -22,31 +22,39 @@ class ScoreZone extends PositionComponent
     add(RectangleHitbox(collisionType: CollisionType.passive));
   }
 
-  @override
-  void onCollisionStart(
-      Set<Vector2> intersectionPoints,
-      PositionComponent other,
-      ) {
-    if (other is Player) {
-      final top = player.y - player.height / 2;
-      final bottom = player.y + player.height / 2;
-
-      if (top < 398 || bottom > 600) {
-        final game = findGame() as MyGame;
-        game.state.addScore();
-        print("SCORE +1 ✅");
-      }
-    }
-
-    super.onCollisionStart(intersectionPoints, other);
-  }
+  // @override
+  // void onCollisionStart(
+  //     Set<Vector2> intersectionPoints,
+  //     PositionComponent other,
+  //     ) {
+  //   if (other is Player) {
+  //     final top = player.y - player.height / 2;
+  //     final bottom = player.y + player.height / 2;
+  //
+  //     if (top < 398 || bottom > 600) {
+  //       final game = findGame() as MyGame;
+  //       game.state.addScore();
+  //       print("SCORE +1 ✅");
+  //     }
+  //   }
+  //
+  //   super.onCollisionStart(intersectionPoints, other);
+  // }
   @override
   void onCollisionEnd(PositionComponent other) {
     super.onCollisionEnd(other);
 
-    if (other is Door) {
-      score += 1;
-      print("Kapıdan çıktın! Skor: $score");
+    if (other is Player) {
+      final playerTop = other.y - other.height / 2;
+      final playerBottom = other.y + other.height / 2;
+
+      // print("Player Top: $playerTop, Bottom: $playerBottom");
+
+
+      if (playerBottom < 398 || playerTop > 600) {
+        gameRef.state.addScore();
+        print("SCORE +1 ✅");
+      }
     }
   }
 }

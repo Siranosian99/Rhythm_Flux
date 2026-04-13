@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:rhythm_flux/service/models/score_model.dart';
 
-Future<void> scoreDialog(BuildContext context, List<int> scores) async {
+Future<void> scoreDialog(BuildContext context, List<ScoreModel> scores) async {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -51,7 +52,7 @@ Future<void> scoreDialog(BuildContext context, List<int> scores) async {
                         ),
                       ),
                       Text(
-                        scores[index].toString(),
+                        scores[index].score.toString(),
                         style: TextStyle(
                           fontFamily: 'PressStart2P',
                           color: Colors.blueAccent,

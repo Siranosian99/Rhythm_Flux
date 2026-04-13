@@ -1,48 +1,48 @@
 import 'package:dio/dio.dart';
 import 'package:rhythm_flux/constant/api_config.dart';
+import 'package:rhythm_flux/service/models/score_model.dart';
 import 'package:rhythm_flux/utils/decode_token_details.dart';
 import 'package:rhythm_flux/utils/token_helper.dart';
 
-class UserService{
-    final  Dio _dio= Dio(
-      BaseOptions(
-        baseUrl: ApiConfig.baseUrl,
-        headers: {"Content-Type": "application/json"},
-      ),
-    );
-    final _tokenHelper=TokenHelper();
-    UserService(){
-      _dio.interceptors.add(
+class UserService {
+  final Dio _dio = Dio(
+    BaseOptions(
+      baseUrl: ApiConfig.baseUrl,
+      headers: {"Content-Type": "application/json"},
+    ),
+  );
+  final _tokenHelper = TokenHelper();
+
+  UserService() {
+    _dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options,handler)async{
-        final token=await _tokenHelper.tokenLocalGetter();
-        if(token != null){
-          options.headers["Authorization"] = "Bearer $token";
-        }
-        return handler.next(options);
+        onRequest: (options, handler) async {
+          final token = await _tokenHelper.tokenLocalGetter();
+          if (token != null) {
+            options.headers["Authorization"] = "Bearer $token";
+          }
+          return handler.next(options);
         },
-        onError: (DioException e,handler)async{
-          if(e.response?.statusCode== 401){
+        onError: (DioException e, handler) async {
+          if (e.response?.statusCode == 401) {
             print("Token expired → refreshing...");
-            final succses=await refreshToken();
-            if( succses != null && succses) {
-              final newToken= await _tokenHelper.tokenLocalGetter();
-              e.requestOptions.headers["Authorization"] =
-              "Bearer $newToken";
+            final succses = await refreshToken();
+            if (succses != null && succses) {
+              final newToken = await _tokenHelper.tokenLocalGetter();
+              e.requestOptions.headers["Authorization"] = "Bearer $newToken";
 
               final retryResponse = await _dio.fetch(e.requestOptions);
 
               return handler.resolve(retryResponse);
-            }
-            else{
+            } else {
               DecoderUtils.removeKey();
               print("Key Removed  isVerified Relogin to Save...");
               print("Refresh failed → login");
             }
           }
           return handler.next(e);
-        }
-      )
+        },
+      ),
     );
   }
 
@@ -61,7 +61,6 @@ class UserService{
         print(response.data);
       }
     } on DioException catch (e) {
-
       if (e.response != null) {
         print("Backend error: ${e.response!.data}");
       } else {
@@ -69,6 +68,7 @@ class UserService{
       }
     }
   }
+
   Future<bool?> login({required String email, required String password}) async {
     try {
       final response = await _dio.post(
@@ -78,10 +78,12 @@ class UserService{
 
       if (response.statusCode == 200) {
         // final VerifiedValue= DecoderUtils.decoder(response.data['user']['accessToken']);
-        final isVerify= DecoderUtils.decoder(response.data['accessToken']);
+        final isVerify = DecoderUtils.decoder(response.data['accessToken']);
         await DecoderUtils.isVerifySaver(isVerify);
         _tokenHelper.tokenLocalSaver(response.data['accessToken']);
-        _tokenHelper.refreshTokenLocalSaver(response.data['user']['refreshToken']);
+        _tokenHelper.refreshTokenLocalSaver(
+          response.data['user']['refreshToken'],
+        );
         _tokenHelper.userIdLocalSaver(response.data['user']['_id']);
 
         return true;
@@ -92,25 +94,24 @@ class UserService{
     return null;
   }
 
-
   Future<void> getUser() async {
     try {
       final token = await _tokenHelper.tokenLocalGetter();
       print("ads");
       final response = await _dio.get(
-       ApiConfig.getUser,
+        ApiConfig.getUser,
         data: {"accessToken": token},
       );
       if (response.statusCode == 200) {
         // DecoderUtils.decoder(response.data['user']['accessToken']);
-        final VerifiedValue= DecoderUtils.decoder(response.data['user']['accessToken']);
+        final VerifiedValue = DecoderUtils.decoder(
+          response.data['user']['accessToken'],
+        );
 
         await DecoderUtils.isVerifySaver(VerifiedValue);
-        final isVerified=await DecoderUtils.isVerifiedToken();
+        final isVerified = await DecoderUtils.isVerifiedToken();
       }
-
     } on DioException catch (e) {
-
       print(e.response?.data);
     }
   }
@@ -127,7 +128,7 @@ class UserService{
 
       if (response.statusCode == 200) {
         final newAccessToken = response.data['accessToken'];
-       await _tokenHelper.tokenLocalSaver(newAccessToken);
+        await _tokenHelper.tokenLocalSaver(newAccessToken);
         return true;
       }
     } on DioException catch (e) {
@@ -136,17 +137,41 @@ class UserService{
     return null;
   }
 
-Future<void> saveScore(int score)async{
-      try{
-        final response= await _dio.post(ApiConfig.saveScore,  data: {"scores": score},);
-        if(response.statusCode==200 || response.statusCode==201){
-          print(response.data);
-        }
+  Future<void> saveScore(int score) async {
+    try {
+      final response = await _dio.post(
+        ApiConfig.saveScore,
+        data: {"score": score},
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print(response.data);
       }
-      catch(e){
-        print("Error Saving Score:${e.toString()}");
+    } catch (e) {
+      print("Error Saving Score:${e.toString()}");
+    }
+  }
+
+  Future<List<ScoreModel?>?> getScores() async {
+    try {
+      final token = await _tokenHelper.tokenLocalGetter();
+      final response = await _dio.get(
+        ApiConfig.getScore,
+        data: {"accessToken": token},
+      );
+      if (response.statusCode == 200) {
+        final data = (response.data['userScores']['scores'] as List)
+            .map((e) => int.parse(e.toString()))
+            .toList();
+        final id=response.data['userScores']['userId'];
+        print("------$data");
+        final scores= [ScoreModel(userId: id, score: data)];
+        return scores;
       }
-}
+    } on DioException catch (e) {
+      print(e.response?.data);
+    }
+    return null;
+  }
 }
 
 // Future<List<TodosModel>?> fetchUsersTodos() async {
@@ -194,7 +219,6 @@ Future<void> saveScore(int score)async{
 //   }
 //   return null;
 // }
-
 
 // Future<void> getUser() async {
 //   try {

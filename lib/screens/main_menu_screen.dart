@@ -3,6 +3,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
 import 'package:rhythm_flux/screens/play_screen.dart';
 import 'package:rhythm_flux/screens/previous_rhythms.dart';
+import 'package:rhythm_flux/service/models/score_model.dart';
 import 'package:rhythm_flux/service/music_analyze/analyze_service.dart';
 import 'package:rhythm_flux/service/user_service/users.dart';
 import 'package:rhythm_flux/utils/file_picker.dart';
@@ -26,6 +27,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
   late final _userService;
   late final AnimationController _controller;
   bool isAblePlay = false;
+  List<ScoreModel> allScores=[];
 
   @override
   void initState() {
@@ -33,6 +35,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
     WidgetsBinding.instance.addObserver(this);
     _userService = UserService();
     AudioManager.isMusicPlaying("old_sega");
+    getScores();
     _controller = AnimationController(vsync: this);
   }
 
@@ -57,6 +60,9 @@ class _MainMenuScreenState extends State<MainMenuScreen>
   Future<void> getToken() async {
     await _userService.getUser();
   }
+  Future<void> getScores()async{
+  allScores =await _userService.getScores();
+}
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +196,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                   ),
                   TextButton(
                     onPressed: () async{
-                    await scoreDialog(context,[120, 95, 80, 60, 40]);
+                    await scoreDialog(context,allScores);
                     },
                     child: Text(
                       AppTexts.scores,

@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:rhythm_flux/game/player.dart';
 import 'package:rhythm_flux/game/score_board.dart';
 import 'package:rhythm_flux/game/score_zone.dart';
+import 'package:rhythm_flux/service/user_service/users.dart';
 
 import '../game/game_screen.dart';
 import '../game/score_board.dart';
@@ -125,8 +126,8 @@ class Paddle extends RectangleComponent
   @override
   Future<void> onLoad() async {
     add(RectangleHitbox());
-    double centerY = gameRef.size.y / 2;
 
+    double centerY = gameRef.size.y / 2;
     if (isLeft) {
       position = Vector2(80, centerY);
     } else {
@@ -149,8 +150,8 @@ class Paddle extends RectangleComponent
   @override
   void onCollisionStart(Set<Vector2> points, PositionComponent other) {
     if (other is Player) {
-      gameRef.gameOver();
-
+      // gameRef.gameOver();
+      UserService().saveScore(gameRef.state.score);
       game.add(
         ParticleSystemComponent(
           position: points.first,

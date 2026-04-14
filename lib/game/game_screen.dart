@@ -8,6 +8,7 @@ import 'package:flame/game.dart';
 import 'package:rhythm_flux/game/player.dart';
 import 'package:rhythm_flux/game/score_board.dart';
 import 'package:rhythm_flux/game/score_zone.dart';
+import 'package:rhythm_flux/game/timer.dart';
 import 'package:rhythm_flux/service/user_service/users.dart';
 import 'package:rhythm_flux/states/score_state.dart';
 import 'package:rhythm_flux/utils/audio_manager.dart';
@@ -33,6 +34,7 @@ class MyGame extends FlameGame with HasCollisionDetection, HasGameRef<MyGame> {
     add(Square());
     add(ScoreBoard());
     add(ScoreZone(player));
+    add(TimerGift());
 
     // add(ScoreBoard());
     // add(Maze());
@@ -58,6 +60,7 @@ class MyGame extends FlameGame with HasCollisionDetection, HasGameRef<MyGame> {
     add(Player());
     add(Square());
     add(ScoreBoard());
+    add(ScoreZone(player));
     resumeEngine();
     AudioManager.resume();
     overlays.remove('GameOver');

@@ -151,7 +151,6 @@ class Paddle extends RectangleComponent
   void onCollisionStart(Set<Vector2> points, PositionComponent other) {
     if (other is Player) {
       // gameRef.gameOver();
-      UserService().saveScore(gameRef.state.score);
       game.add(
         ParticleSystemComponent(
           position: points.first,

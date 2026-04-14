@@ -52,3 +52,96 @@ import 'package:flame/collisions.dart';
 //     }
 //   }
 // }
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+// Fake audio player (gerçek player yerine simülasyon)
+class FakePlayer {
+  double volume = 0.5;
+
+  void setVolume(double v) {
+    volume = v;
+    print("Volume set to: $volume");
+  }
+}
+
+final player = FakePlayer();
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: const HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  double volume = 0.5;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: const Text("Volume Control"),
+        backgroundColor: Colors.purple,
+      ),
+
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+
+            const Text(
+              "VOLUME",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            Slider(
+              value: volume,
+              min: 0.0,
+              max: 1.0,
+              activeColor: Colors.purpleAccent,
+              inactiveColor: Colors.grey,
+
+              onChanged: (value) {
+                setState(() {
+                  volume = value;
+                });
+
+                player.setVolume(value);
+              },
+            ),
+
+            Text(
+              volume.toStringAsFixed(2),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

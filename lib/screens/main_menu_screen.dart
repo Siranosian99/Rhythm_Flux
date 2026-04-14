@@ -8,6 +8,7 @@ import 'package:rhythm_flux/service/music_analyze/analyze_service.dart';
 import 'package:rhythm_flux/service/user_service/users.dart';
 import 'package:rhythm_flux/utils/file_picker.dart';
 import 'package:rhythm_flux/utils/token_helper.dart';
+import 'package:rhythm_flux/widgets/settings_dialog.dart';
 import 'package:rhythm_flux/widgets/score_dialog.dart';
 
 import '../constant/app_texts.dart';
@@ -27,7 +28,8 @@ class _MainMenuScreenState extends State<MainMenuScreen>
   late final _userService;
   late final AnimationController _controller;
   bool isAblePlay = false;
-  List<ScoreModel> allScores=[];
+  double volume = 0.5;
+  List<int> allScores = [];
 
   @override
   void initState() {
@@ -60,9 +62,11 @@ class _MainMenuScreenState extends State<MainMenuScreen>
   Future<void> getToken() async {
     await _userService.getUser();
   }
-  Future<void> getScores()async{
-  allScores =await _userService.getScores();
-}
+
+  Future<void> getScores() async {
+    allScores = await _userService.getScores();
+    // allScores = data.map((e) => e as int).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,12 +178,21 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await settingsDialog(context, (value) {
+                        setState(() {
+                          volume = value;
+                        });
+
+                        AudioManager.setVol(value);
+                      }, volume);
+                    },
                     child: Text(
                       AppTexts.settings,
                       style: AppTextStyles.settingStyle,
                     ),
                   ),
+
                   TextButton(
                     onPressed: () async {
                       AudioManager.pause();
@@ -195,8 +208,8 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                     ),
                   ),
                   TextButton(
-                    onPressed: () async{
-                    await scoreDialog(context,allScores);
+                    onPressed: () async {
+                      await scoreDialog(context, allScores);
                     },
                     child: Text(
                       AppTexts.scores,

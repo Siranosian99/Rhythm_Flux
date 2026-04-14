@@ -151,21 +151,19 @@ class UserService {
     }
   }
 
-  Future<List<ScoreModel?>?> getScores() async {
+  Future<List<int>?> getScores() async {
     try {
+      List<int> allScores=[];
       final token = await _tokenHelper.tokenLocalGetter();
       final response = await _dio.get(
         ApiConfig.getScore,
         data: {"accessToken": token},
       );
       if (response.statusCode == 200) {
-        final data = (response.data['userScores']['scores'] as List)
-            .map((e) => int.parse(e.toString()))
-            .toList();
-        final id=response.data['userScores']['userId'];
-        print("------$data");
-        final scores= [ScoreModel(userId: id, score: data)];
-        return scores;
+        final score=response.data['userScores']['scores'];
+        allScores=List<int>.from(score);
+        print("------$score");
+        return allScores;
       }
     } on DioException catch (e) {
       print(e.response?.data);

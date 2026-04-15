@@ -28,6 +28,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
   late final _userService;
   late final AnimationController _controller;
   bool isAblePlay = false;
+  bool isMute=false;
   double volume = 0.5;
   List<int> allScores = [];
 
@@ -185,7 +186,12 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                         });
 
                         AudioManager.setVol(value);
-                      }, volume);
+                      }, volume,isMute,(value){
+                        setState(() {
+                          isMute=value;
+                        });
+                       isMute ? AudioManager.mute(): AudioManager.unMute(volume);
+                      });
                     },
                     child: Text(
                       AppTexts.settings,

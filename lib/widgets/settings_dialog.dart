@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-Future<void> settingsDialog(BuildContext context,  Function(double) onChanged,double volume) async {
+Future<void> settingsDialog(BuildContext context,  Function(double) onChangedDouble,double volume,bool isMute,Function(bool) onChangedBool) async {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       double tempVolume = volume;
+      bool tempMute=isMute;
       return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
@@ -47,15 +48,15 @@ Future<void> settingsDialog(BuildContext context,  Function(double) onChanged,do
                       ),
                       Slider(
                         value: tempVolume,
-                        onChanged: (value){
+                        onChanged: tempMute?null:(value){
                           setState(() {
                             tempVolume = value;
                           });
 
-                          onChanged(value);
+                          onChangedDouble(value);
                         },
                         min: 0,
-                        max: 1-0,
+                        max: 1,
                       ),
                     ],
                   ),
@@ -63,8 +64,8 @@ Future<void> settingsDialog(BuildContext context,  Function(double) onChanged,do
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         "MUSIC",
                         style: TextStyle(
                           fontFamily: 'PressStart2P',
@@ -73,25 +74,30 @@ Future<void> settingsDialog(BuildContext context,  Function(double) onChanged,do
                         ),
                       ),
                       Switch(
-                        value: true,
-                        onChanged: null,
+                        value: tempMute,
+                        onChanged: (value){
+                          setState((){
+                            tempMute=value;
+                          });
+                       onChangedBool(value);
+                        },
                       ),
                     ],
                   ),
 
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.redAccent,
-                    ),
-                    onPressed: null, // UI only
-                    child: const Text(
-                      "EXIT GAME",
-                      style: TextStyle(
-                        fontFamily: 'PressStart2P',
-                        fontSize: 10,
-                      ),
-                    ),
-                  ),
+                  // ElevatedButton(
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: Colors.redAccent,
+                  //   ),
+                  //   onPressed: null, // UI only
+                  //   child: const Text(
+                  //     "EXIT GAME",
+                  //     style: TextStyle(
+                  //       fontFamily: 'PressStart2P',
+                  //       fontSize: 10,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

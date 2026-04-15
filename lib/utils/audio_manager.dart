@@ -11,9 +11,9 @@ class AudioManager {
   }
 
   static void setVol(double volume)=>player.setVolume(volume);
+  static void unMute(double volume)=>player.setVolume(volume);
   static void mute()=> player.setVolume(0);
   static void pause() => player.pause();
-
   static void resume() => player.play();
 
   static void dispose() => player.dispose();

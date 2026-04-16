@@ -12,10 +12,10 @@ import 'package:rhythm_flux/game/player.dart';
 import 'package:rhythm_flux/game/score_board.dart';
 import 'package:rhythm_flux/game/score_zone.dart';
 import 'package:rhythm_flux/service/user_service/users.dart';
+import 'package:rhythm_flux/utils/suprises.dart';
 
 import '../game/game_screen.dart';
 import '../game/score_board.dart';
-
 
 class Square extends RectangleComponent
     with TapCallbacks, HasGameRef<MyGame>, CollisionCallbacks {
@@ -37,6 +37,7 @@ class Square extends RectangleComponent
   @override
   FutureOr<void> onLoad() async {
     super.onLoad();
+
     // add(
     //   RectangleComponent(
     //     size: Vector2(20, 100),
@@ -81,7 +82,6 @@ class Square extends RectangleComponent
         startX: 350,
       ),
     );
-
   }
 
   @override
@@ -108,6 +108,7 @@ class Paddle extends RectangleComponent
   final bool moveX;
   final double maxDistance;
   final double startX;
+  static bool isTransparent = false;
 
   Paddle({
     required this.color,
@@ -116,12 +117,17 @@ class Paddle extends RectangleComponent
     required this.moveX,
     required this.maxDistance,
     required this.startX,
-
   }) : super(
          size: Vector2(30, 200),
          anchor: Anchor.center,
-         paint: Paint()..color = color,
+         // paint: Paint()..color = isTransparent ?Colors.transparent:color,
        );
+
+  @override
+  void render(Canvas canvas) {
+    paint.color = isTransparent ? Colors.transparent : color;
+    super.render(canvas);
+  }
 
   @override
   Future<void> onLoad() async {
@@ -133,9 +139,7 @@ class Paddle extends RectangleComponent
     } else {
       position = Vector2(gameRef.size.x - 80, centerY);
     }
-
   }
-
 
   @override
   void update(double dt) {
@@ -147,9 +151,15 @@ class Paddle extends RectangleComponent
     // speed++;
     // position.x =speed;
   }
+
   @override
   void onCollisionStart(Set<Vector2> points, PositionComponent other) {
     if (other is Player) {
+      final action = IncreaseScore(gameRef);
+      action.suprise();
+      final drama = DoorTransparent(gameRef);
+      drama.suprise();
+
       // gameRef.gameOver();
       game.add(
         ParticleSystemComponent(
@@ -173,5 +183,3 @@ class Paddle extends RectangleComponent
     super.onCollisionStart(points, other);
   }
 }
-
-

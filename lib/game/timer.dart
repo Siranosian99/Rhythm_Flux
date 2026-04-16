@@ -34,8 +34,8 @@ class TimerGift extends TextComponent with  CollisionCallbacks,HasGameRef<MyGame
       ),
     );
 
-    position = Vector2(30,980);
-    anchor = Anchor.bottomLeft;
+    position = Vector2(100,900);
+    anchor = Anchor.bottomCenter;
     add(scoreText);
 
   }

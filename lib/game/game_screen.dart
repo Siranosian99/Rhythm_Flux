@@ -13,6 +13,7 @@ import 'package:rhythm_flux/service/user_service/users.dart';
 import 'package:rhythm_flux/states/score_state.dart';
 import 'package:rhythm_flux/utils/audio_manager.dart';
 
+import '../utils/suprises.dart';
 import '../widgets/door_widget.dart';
 
 class MyGame extends FlameGame with HasCollisionDetection, HasGameRef<MyGame> {
@@ -35,6 +36,8 @@ class MyGame extends FlameGame with HasCollisionDetection, HasGameRef<MyGame> {
     add(ScoreBoard());
     add(ScoreZone(player));
     add(TimerGift());
+
+
 
     // add(ScoreBoard());
     // add(Maze());

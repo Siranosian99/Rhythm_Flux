@@ -13,7 +13,7 @@ class Player extends SpriteComponent with TapCallbacks, HasGameRef<MyGame>,Colli
   Player()
     : super(size: Vector2.copy(Vector2(50,200)), anchor: Anchor.center,position:Vector2(210,840));
   double speed = 500;
-
+ static bool isFast=false;
   @override
   FutureOr<void> onLoad() async {
     add(RectangleHitbox());
@@ -29,7 +29,7 @@ class Player extends SpriteComponent with TapCallbacks, HasGameRef<MyGame>,Colli
   @override
   void update(double dt) {
     super.update(dt);
-    position.y += speed * dt;
+    position.y += isFast ? speed * dt * 100:speed * dt ;
     if (position.y - size.y / 2 <= 0) {
       position.y = size.y / 2;
       speed = 100;

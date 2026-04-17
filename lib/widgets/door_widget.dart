@@ -155,10 +155,6 @@ class Paddle extends RectangleComponent
   @override
   void onCollisionStart(Set<Vector2> points, PositionComponent other) {
     if (other is Player) {
-      final action = IncreaseScore(gameRef);
-      action.suprise();
-      final drama = DoorTransparent(gameRef);
-      drama.suprise();
 
       // gameRef.gameOver();
       game.add(

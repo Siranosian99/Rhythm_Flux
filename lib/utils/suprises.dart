@@ -1,49 +1,54 @@
 import 'package:flame/components.dart';
 
 import '../game/game_screen.dart';
+import '../game/player.dart';
 import '../widgets/door_widget.dart';
 
-abstract class Suprises<T> {
+abstract class Surprise<T> {
   final MyGame game;
 
-  Suprises(this.game);
+  Surprise(this.game);
 
-  void suprise([T? value]) {}
+  void surprise([T? value]);
 }
 
-class IncreaseScore extends Suprises<int> {
+class IncreaseScore extends Surprise<int> {
   IncreaseScore(super.game);
 
   @override
-  void suprise([int? score]) {
+  void surprise([int? score]) {
     game.state.score += 5;
     print("Score Increased by 5");
   }
 }
 
-class DecreaseScore extends Suprises<int> {
+class DecreaseScore extends Surprise<int> {
   DecreaseScore(super.game);
 
   @override
-  void suprise([int? score]) {
+  void surprise([int? score]) {
     game.state.score -= 5;
     print("Score Decreased by 5");
   }
 }
 
-class DoorTransparent extends Suprises<bool> {
+class DoorTransparent extends Surprise<bool> {
   DoorTransparent(super.game);
   @override
-  void suprise([bool? value]) {
+  void surprise([bool? value]) {
     Paddle.isTransparent = value ?? !Paddle.isTransparent;
 
     print("Transparent: ${Paddle.isTransparent}");
   }
 }
 
-// class IncreaseSpeed extends Suprises {
-//   @override
-//   void suprise() {
-//     super.suprise();
-//   }
-// }
+class IncreaseSpeed extends Surprise<bool> {
+  IncreaseSpeed(super.game);
+
+  @override
+  void surprise([bool? value]) {
+    Player.isFast = value ?? !Player.isFast;
+
+    print("Speed isFast: ${Player.isFast}");
+  }
+}

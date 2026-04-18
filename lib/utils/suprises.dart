@@ -38,7 +38,7 @@ class DoorTransparent extends Surprise<bool> {
   void surprise([bool? value]) {
     Paddle.isTransparent = value ?? !Paddle.isTransparent;
 
-    print("Transparent: ${Paddle.isTransparent}");
+    print("Transparent Value: ${Paddle.isTransparent}");
   }
 }
 
@@ -47,8 +47,9 @@ class IncreaseSpeed extends Surprise<bool> {
 
   @override
   void surprise([bool? value]) {
-    Player.isFast = value ?? !Player.isFast;
-
+    if(value != null) {
+      value = !Player.isFast;
+    }
     print("Speed isFast: ${Player.isFast}");
   }
 }

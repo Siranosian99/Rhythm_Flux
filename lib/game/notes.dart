@@ -1,147 +1,94 @@
-import 'package:flame/collisions.dart';
-// import 'package:flame/components.dart';
-// import 'package:rhythm_flux/game/player.dart';
-//
-// import 'game_screen.dart';
-//
-// class ScoreZone extends PositionComponent
-//     with CollisionCallbacks, HasGameRef<MyGame> {
-//
-//   bool counted = false;
-//   double? entryY; // nereden girdi
-//
-//   final Player player;
-//
-//   ScoreZone(this.player)
-//       : super(
-//     size: Vector2(100, 500),
-//     position: Vector2(200, 200),
-//   );
-//
-//   @override
-//   Future<void> onLoad() async {
-//     add(RectangleHitbox(collisionType: CollisionType.passive));
-//   }
-//
-//   // 👉 ZONE’A GİRİNCE
-//   @override
-//   void onCollisionStart(Set<Vector2> _, PositionComponent other) {
-//     if (other is Player && !counted) {
-//       entryY = player.y; // giriş noktası
-//     }
-//   }
-//
-//   // 👉 ZONE’DAN ÇIKINCA
-//   @override
-//   void onCollisionEnd(PositionComponent other) {
-//     if (other is Player && !counted && entryY != null) {
-//       final exitY = player.y;
-//
-//       final enteredFromTop = entryY! < y;
-//       final enteredFromBottom = entryY! > y + height;
-//
-//       final exitedOpposite =
-//           (enteredFromTop && exitY > y + height) ||
-//               (enteredFromBottom && exitY < y);
-//
-//       if (exitedOpposite) {
-//         counted = true;
-//         gameRef.state.addScore();
-//         print("SCORE +1 ✅");
-//       }
-//     }
-//   }
-// }
+import 'package:flame/components.dart';
+import 'package:flame/game.dart';
+import 'package:flame/timer.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(GameWidget(game: MyGame()));
 }
 
-// Fake audio player (gerçek player yerine simülasyon)
-class FakePlayer {
-  double volume = 0.5;
-
-  void setVolume(double v) {
-    volume = v;
-    print("Volume set to: $volume");
+class MyGame extends FlameGame {
+  @override
+  Future<void> onLoad() async {
+    add(MyTimer());
   }
 }
 
-final player = FakePlayer();
+class MyTimer extends TextComponent {
+  late Timer timer;
+  late Timer surpriseTimer;
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  int timeLeft = 5;       // kısa yaptım hızlı test için
+  int effectTime = 3;
+
+  bool isEffect = false;
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+  Future<void> onLoad() async {
+    super.onLoad();
+
+    position = Vector2(200, 200);
+
+    timer = Timer(
+      1,
+      repeat: true,
+      onTick: () {
+        if (isEffect) return;
+
+        timeLeft--;
+        print("Countdown: $timeLeft");
+
+        if (timeLeft <= 0) {
+          startEffect();
+        }
+      },
     );
+
+    timer.start();
   }
-}
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  void startEffect() {
+    isEffect = true;
+    effectTime = 3;
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
+    print("🔥 EFFECT START");
 
-class _HomePageState extends State<HomePage> {
-  double volume = 0.5;
+    surpriseTimer = Timer(
+      0.5,
+      repeat: true,
+      onTick: () {
+        print("⚡ EFFECT RUNNING");
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: const Text("Volume Control"),
-        backgroundColor: Colors.purple,
-      ),
+        effectTime--;
 
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-
-            const Text(
-              "VOLUME",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            Slider(
-              value: volume,
-              min: 0.0,
-              max: 1.0,
-              activeColor: Colors.purpleAccent,
-              inactiveColor: Colors.grey,
-
-              onChanged: (value) {
-                setState(() {
-                  volume = value;
-                });
-
-                player.setVolume(value);
-              },
-            ),
-
-            Text(
-              volume.toStringAsFixed(2),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
-            ),
-          ],
-        ),
-      ),
+        if (effectTime <= 0) {
+          stopEffect();
+        }
+      },
     );
+
+    surpriseTimer.start();
+  }
+
+  void stopEffect() {
+    surpriseTimer.stop();
+    isEffect = false;
+
+    timeLeft = 5;
+
+    print("✅ EFFECT END → RESET");
+  }
+
+  @override
+  void update(double dt) {
+    timer.update(dt);
+
+    if (isEffect) {
+      surpriseTimer.update(dt);
+    }
+
+    text = isEffect
+        ? "EFFECT: $effectTime"
+        : "TIME: $timeLeft";
   }
 }

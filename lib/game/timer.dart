@@ -4,8 +4,6 @@ import 'package:flame/text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rhythm_flux/game/game_screen.dart';
-import 'package:rhythm_flux/states/score_state.dart';
-
 import '../utils/suprises.dart';
 
 class TimerGift extends TextComponent
@@ -13,8 +11,7 @@ class TimerGift extends TextComponent
   TimerGift() : super();
   late Timer timer;
   late Timer timerSurprise;
-  int timeLeft = 30;
-  int surpriseTimer = 3;
+  int timeLeft = 10;
   bool isSurprise = false;
 
   @override
@@ -26,13 +23,14 @@ class TimerGift extends TextComponent
       onTick: () {
         if (isSurprise) return;
         timeLeft--;
-        if (timeLeft == 0) {
+        if (timeLeft <= 0) {
           startSurprise();
         }
 
         // print("2 saniye sonra çalıştı");
       },
     );
+    timer.start();
     final scoreText = TextComponent(
       anchor: Anchor.center,
       position: size / 2,
@@ -56,6 +54,7 @@ class TimerGift extends TextComponent
 
   void startSurprise() {
     isSurprise = true;
+    int surpriseTimer = 3;
     timerSurprise = Timer(
       1,
       repeat: true,
@@ -67,23 +66,29 @@ class TimerGift extends TextComponent
         final faster = IncreaseSpeed(gameRef);
         faster.surprise();
         surpriseTimer--;
-        if (surpriseTimer == 0) {
+        if (surpriseTimer <= 0) {
           stopSurprise();
+          isSurprise=false;
         }
+        print("isSurpriseP:$isSurprise");
         // print("2 saniye sonra çalıştı");
       },
     );
+    timerSurprise.start();
   }
 
   void stopSurprise() {
-    isSurprise = false;
     timerSurprise.stop();
-    timeLeft = 30;
+    isSurprise = false;
+    timeLeft = 10;
   }
 
   @override
   void update(double dt) {
-    timer.update(dt);
+    // timer.update(dt);
+    // if (isSurprise) {
+    //   timerSurprise.update(dt);
+    // }
     text = "Surprise Timer:$timeLeft";
   }
 
@@ -130,3 +135,6 @@ class TimerGift extends TextComponent
 //     text = "Score: ${game.state.score}";
 //   }
 // }
+
+
+// begin 10s then 2s doing that then also 10s and then 10s normal

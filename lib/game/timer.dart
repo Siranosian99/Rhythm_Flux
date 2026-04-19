@@ -76,7 +76,7 @@ class TimerGift extends TextComponent
         // surprises.random();
         IncreaseScore(gameRef).surprise();
         DoorTransparent(gameRef).surprise();
-        IncreaseSpeed(gameRef).surprise(true);
+        IncreaseSpeed(gameRef).surprise();
         DecreaseScore(gameRef).surprise();
         surpriseTimer--;
         if (surpriseTimer <= 1) {
@@ -90,7 +90,6 @@ class TimerGift extends TextComponent
 
   void stopSurprise() {
     isSurprise = false;
-    // Player.isFast=false;
     timerSurprise.stop();
     timeLeft = 10;
   }
@@ -101,6 +100,6 @@ class TimerGift extends TextComponent
     if (isSurprise) {
       timerSurprise.update(dt);
     }
-    text = "Surprise Timer:$timeLeft";
+    text = isSurprise?"SURPRISE!!":"Surprise Timer:$timeLeft";
   }
 }

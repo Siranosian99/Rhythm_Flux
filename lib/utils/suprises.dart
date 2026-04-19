@@ -47,9 +47,9 @@ class IncreaseSpeed extends Surprise<bool> {
 
   @override
   void surprise([bool? value]) {
-    if(value != null) {
-      value = !Player.isFast;
-    }
+
+      Player.isFast = !Player.isFast;
+
     print("Speed isFast: ${Player.isFast}");
   }
 }

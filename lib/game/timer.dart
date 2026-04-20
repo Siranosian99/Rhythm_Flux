@@ -7,7 +7,9 @@ import 'package:flame/text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rhythm_flux/game/game_screen.dart';
+
 import 'package:rhythm_flux/game/player.dart';
+import 'package:rhythm_flux/utils/random_surprise.dart';
 import '../utils/suprises.dart';
 
 class TimerGift extends TextComponent
@@ -17,7 +19,6 @@ class TimerGift extends TextComponent
   late Timer timerSurprise;
   int timeLeft = 10;
   bool isSurprise = false;
-  final random=Random();
 
   @override
   Future<void> onLoad() async {
@@ -59,25 +60,24 @@ class TimerGift extends TextComponent
     isSurprise = true;
     int surpriseTimer = 3;
     timerSurprise = Timer(
-      1,
+      0.5,
       repeat: true,
       onTick: () {
-        // final surprises = [
-        //   IncreaseScore(gameRef).surprise(),
-        //   DoorTransparent(gameRef).surprise(),
-        //   IncreaseSpeed(gameRef).surprise(),
-        //   DecreaseScore(gameRef).surprise(),
-        // ];
+        final surprises = [
+          IncreaseScore(gameRef),
+          DoorTransparent(gameRef),
+          IncreaseSpeed(gameRef),
+          DecreaseScore(gameRef)
+        ];
+
         // selected.surprise();
         // action.surprise();
         // transparent.surprise();
         // faster.surprise();
-        // final selected = surprises[random.nextInt(surprises.length)];
-        // surprises.random();
-        IncreaseScore(gameRef).surprise();
-        DoorTransparent(gameRef).surprise();
-        IncreaseSpeed(gameRef).surprise();
-        DecreaseScore(gameRef).surprise();
+        // IncreaseScore(gameRef).surprise();
+        // DoorTransparent(gameRef).surprise();
+        // IncreaseSpeed(gameRef).surprise();
+        // DecreaseScore(gameRef).surprise();
         surpriseTimer--;
         if (surpriseTimer <= 1) {
           stopSurprise();
@@ -100,6 +100,6 @@ class TimerGift extends TextComponent
     if (isSurprise) {
       timerSurprise.update(dt);
     }
-    text = isSurprise?"SURPRISE!!":"Surprise Timer:$timeLeft";
+    text = isSurprise ? "SURPRISE!!" : "Surprise Timer:$timeLeft";
   }
 }

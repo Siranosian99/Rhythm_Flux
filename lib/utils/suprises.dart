@@ -10,6 +10,7 @@ abstract class Surprise<T> {
   Surprise(this.game);
 
   void surprise([T? value]);
+  void stop();
 }
 
 class IncreaseScore extends Surprise<int> {
@@ -20,7 +21,10 @@ class IncreaseScore extends Surprise<int> {
     game.state.score += 5;
     print("Score Increased by 5");
   }
-}
+
+  @override
+  void stop() {
+  }}
 
 class DecreaseScore extends Surprise<int> {
   DecreaseScore(super.game);
@@ -30,15 +34,23 @@ class DecreaseScore extends Surprise<int> {
     game.state.score -= 5;
     print("Score Decreased by 5");
   }
+
+  @override
+  void stop() {
+  }
 }
 
 class DoorTransparent extends Surprise<bool> {
   DoorTransparent(super.game);
   @override
   void surprise([bool? value]) {
-    Paddle.isTransparent = value ?? !Paddle.isTransparent;
+    Paddle.isTransparent = true;
+    print("Transparent ON");
+  }
 
-    print("Transparent Value: ${Paddle.isTransparent}");
+  void stop() {
+    Paddle.isTransparent = false;
+    print("Transparent OFF");
   }
 }
 
@@ -47,9 +59,12 @@ class IncreaseSpeed extends Surprise<bool> {
 
   @override
   void surprise([bool? value]) {
+    Player.isFast = true;
+    print("Speed ON");
+  }
 
-      Player.isFast = !Player.isFast;
-
-    print("Speed isFast: ${Player.isFast}");
+  void stop() {
+    Player.isFast = false;
+    print("Speed OFF");
   }
 }

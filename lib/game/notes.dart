@@ -1,94 +1,127 @@
+// =======================
+// TIMER GIFT (FIXED)
+// =======================
+
+import 'dart:math';
 import 'package:flame/components.dart';
-import 'package:flame/game.dart';
-import 'package:flame/timer.dart';
+import 'package:flame/collisions.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-void main() {
-  runApp(GameWidget(game: MyGame()));
-}
+import 'package:rhythm_flux/game/game_screen.dart';
+import 'package:rhythm_flux/game/player.dart';
+import '../utils/suprises.dart';
 
-class MyGame extends FlameGame {
-  @override
-  Future<void> onLoad() async {
-    add(MyTimer());
-  }
-}
+class TimerGift extends TextComponent
+    with CollisionCallbacks, HasGameRef<MyGame> {
 
-class MyTimer extends TextComponent {
+  TimerGift();
+
   late Timer timer;
-  late Timer surpriseTimer;
+  late Timer timerSurprise;
 
-  int timeLeft = 5;       // kısa yaptım hızlı test için
-  int effectTime = 3;
+  int timeLeft = 5;
+  bool isSurprise = false;
 
-  bool isEffect = false;
+  late final List<Surprise> surprises;
+  Surprise? activeSurprise;
+
+  final Random random = Random();
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
 
-    position = Vector2(200, 200);
+    // Create surprises ONCE
+    surprises = [
+      IncreaseScore(gameRef),
+      DoorTransparent(gameRef),
+      IncreaseSpeed(gameRef),
+      DecreaseScore(gameRef),
+    ];
 
+    // MAIN TIMER
     timer = Timer(
       1,
       repeat: true,
       onTick: () {
-        if (isEffect) return;
+        if (isSurprise) return;
 
         timeLeft--;
-        print("Countdown: $timeLeft");
 
         if (timeLeft <= 0) {
-          startEffect();
+          startSurprise();
         }
       },
     );
 
     timer.start();
+
+    position = Vector2(100, 900);
+    anchor = Anchor.bottomCenter;
   }
 
-  void startEffect() {
-    isEffect = true;
-    effectTime = 3;
+  // =======================
+  // START SURPRISE MODE
+  // =======================
+  void startSurprise() {
+    if (isSurprise) return;
 
-    print("🔥 EFFECT START");
+    isSurprise = true;
+    int surpriseTimer = 5;
+    activeSurprise = null;
 
-    surpriseTimer = Timer(
-      0.5,
+    timerSurprise = Timer(
+      1,
       repeat: true,
       onTick: () {
-        print("⚡ EFFECT RUNNING");
+        // pick ONLY ONE surprise at a time
+        if (activeSurprise == null) {
+          activeSurprise = surprises[random.nextInt(surprises.length)];
+          activeSurprise!.surprise();
+        }
 
-        effectTime--;
+        surpriseTimer--;
 
-        if (effectTime <= 0) {
-          stopEffect();
+        if (surpriseTimer <= 0) {
+          stopSurprise();
         }
       },
     );
 
-    surpriseTimer.start();
+    timerSurprise.start();
   }
 
-  void stopEffect() {
-    surpriseTimer.stop();
-    isEffect = false;
+  // =======================
+  // STOP SURPRISE MODE
+  // =======================
+  void stopSurprise() {
+    isSurprise = false;
 
+    // turn off active effect
+    activeSurprise?.stop();
+    activeSurprise = null;
+
+    timerSurprise.stop();
+
+    // reset normal timer
     timeLeft = 5;
-
-    print("✅ EFFECT END → RESET");
   }
 
   @override
   void update(double dt) {
     timer.update(dt);
 
-    if (isEffect) {
-      surpriseTimer.update(dt);
+    if (isSurprise) {
+      timerSurprise.update(dt);
     }
 
-    text = isEffect
-        ? "EFFECT: $effectTime"
-        : "TIME: $timeLeft";
+    text = isSurprise
+        ? "SURPRISE!!"
+        : "Surprise Timer: $timeLeft";
   }
 }
+
+
+
+//the keyboard

@@ -19,9 +19,18 @@ class TimerGift extends TextComponent
   late Timer timerSurprise;
   int timeLeft = 10;
   bool isSurprise = false;
+  Surprise? activeSurprises;
+  late final List<Surprise> surprises;
+  final Random random = Random();
 
   @override
   Future<void> onLoad() async {
+    surprises = [
+      IncreaseScore(gameRef),
+      DoorTransparent(gameRef),
+      IncreaseSpeed(gameRef),
+      DecreaseScore(gameRef),
+    ];
     super.onLoad();
     timer = Timer(
       1,
@@ -63,23 +72,12 @@ class TimerGift extends TextComponent
       0.5,
       repeat: true,
       onTick: () {
-        final surprises = [
-          IncreaseScore(gameRef),
-          DoorTransparent(gameRef),
-          IncreaseSpeed(gameRef),
-          DecreaseScore(gameRef)
-        ];
-
-        // selected.surprise();
-        // action.surprise();
-        // transparent.surprise();
-        // faster.surprise();
-        // IncreaseScore(gameRef).surprise();
-        // DoorTransparent(gameRef).surprise();
-        // IncreaseSpeed(gameRef).surprise();
-        // DecreaseScore(gameRef).surprise();
+        if (activeSurprises == null) {
+          activeSurprises = surprises[random.nextInt(surprises.length)];
+          activeSurprises?.surprise();
+        }
         surpriseTimer--;
-        if (surpriseTimer <= 1) {
+        if (surpriseTimer <= 0) {
           stopSurprise();
         }
         print("isSurpriseP:$isSurprise");
@@ -90,6 +88,8 @@ class TimerGift extends TextComponent
 
   void stopSurprise() {
     isSurprise = false;
+    activeSurprises?.stop();
+    activeSurprises = null;
     timerSurprise.stop();
     timeLeft = 10;
   }

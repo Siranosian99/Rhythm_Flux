@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:flame/events.dart';
+import 'package:flame/input.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
@@ -16,12 +18,12 @@ import 'package:rhythm_flux/utils/audio_manager.dart';
 import '../utils/suprises.dart';
 import '../widgets/door_widget.dart';
 
-class MyGame extends FlameGame with HasCollisionDetection, HasGameRef<MyGame> {
+class MyGame extends FlameGame with HasCollisionDetection, HasGameRef<MyGame>,TapCallbacks {
   bool isGameOver = false;
   late final UserService _userService;
   final GameState state = GameState();
   final VoidCallback onExit;
-  late Player player;
+  late final Player player;
   MyGame({required this.onExit});
 
   @override
@@ -36,14 +38,19 @@ class MyGame extends FlameGame with HasCollisionDetection, HasGameRef<MyGame> {
     add(ScoreBoard());
     add(ScoreZone(player));
     add(TimerGift());
-
-
-
     // add(ScoreBoard());
     // add(Maze());
   }
 
-
+  @override
+  void onTapDown(TapDownEvent event) {
+    if(player.velocity == Vector2.zero()){
+      player.start();
+    }
+    else {
+      player.stop();
+    }
+  }
 
   void gameOver() {
     if (isGameOver) return;

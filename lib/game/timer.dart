@@ -22,7 +22,8 @@ class TimerGift extends TextComponent
   Surprise? activeSurprises;
   late final List<Surprise> surprises;
   final Random random = Random();
-
+  final surpriseText="SURPRISE!!" ;
+  final timerText="Surprise Timer:";
   @override
   Future<void> onLoad() async {
     surprises = [
@@ -100,6 +101,7 @@ class TimerGift extends TextComponent
     if (isSurprise) {
       timerSurprise.update(dt);
     }
-    text = isSurprise ? "SURPRISE!!" : "Surprise Timer:$timeLeft";
-  }
+    text = isSurprise
+        ? surpriseText
+        : '$timerText$timeLeft';  }
 }

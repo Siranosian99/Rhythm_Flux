@@ -1,16 +1,17 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/game.dart';
 import 'package:rhythm_flux/game/game_screen.dart';
 import 'package:rhythm_flux/game/player.dart';
 
 import '../states/score_state.dart';
 
 class ScoreZone extends PositionComponent
-    with CollisionCallbacks, HasGameRef<MyGame> {
+    with CollisionCallbacks, HasGameRef<MyGame>{
   bool counted = false;
-  final GameState state = GameState();
-  final Player player;
-
+  late Player player;
+  final bottom=398;
+  final top=600;
   ScoreZone(this.player)
       : super(
     size: Vector2(230, 230),
@@ -51,9 +52,8 @@ class ScoreZone extends PositionComponent
       // print("Player Top: $playerTop, Bottom: $playerBottom");
 
 
-      if (playerBottom < 398 || playerTop > 600) {
-        gameRef.state.addScore();
-        print("SCORE +1 ✅");
+      if (playerBottom < bottom || playerTop > top) {
+        game.state.addScore();
       }
     }
   }

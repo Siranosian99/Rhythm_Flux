@@ -9,6 +9,8 @@ class UserService {
     BaseOptions(
       baseUrl: ApiConfig.baseUrl,
       headers: {"Content-Type": "application/json"},
+      connectTimeout: const Duration(seconds: 2),
+      receiveTimeout: const Duration(seconds: 2),
     ),
   );
   final _tokenHelper = TokenHelper();
@@ -25,8 +27,11 @@ class UserService {
         },
         onError: (DioException e, handler) async {
           if (e.response?.statusCode == 401) {
-            print("Token expired → refreshing...");
+            print(e.response);
+            if(e.response?.statusMessage==""){}
             final succses = await refreshToken();
+            print("___:$succses");
+            print("Token expired → refreshing...");
             if (succses != null && succses) {
               final newToken = await _tokenHelper.tokenLocalGetter();
               e.requestOptions.headers["Authorization"] = "Bearer $newToken";
@@ -97,7 +102,6 @@ class UserService {
   Future<void> getUser() async {
     try {
       final token = await _tokenHelper.tokenLocalGetter();
-      print("ads");
       final response = await _dio.get(
         ApiConfig.getUser,
         data: {"accessToken": token},
@@ -162,7 +166,6 @@ class UserService {
       if (response.statusCode == 200) {
         final score=response.data['userScores']['scores'];
         allScores=List<int>.from(score);
-        print("------$score");
         return allScores;
       }
     } on DioException catch (e) {

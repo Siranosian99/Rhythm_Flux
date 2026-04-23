@@ -16,7 +16,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver{
+class _SplashScreenState extends State<SplashScreen>
+    with WidgetsBindingObserver {
   final _tokenHelper = TokenHelper();
   late final UserService _userService;
   late bool isVerified;
@@ -29,39 +30,52 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
       tokenChecker();
     });
   }
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       tokenChecker();
     }
   }
+
   Future<void> tokenChecker() async {
     _userService = UserService();
-    await _userService.getUser();
+    final refresh =await _userService.getUser();
     isVerified = await DecoderUtils.isVerifiedToken();
-    final data = await _tokenHelper.tokenLocalGetter();
-
-    if (data != null && data.isNotEmpty && isVerified) {
-      isTokenExpired(data);
-    }
-
-    if (!mounted) return;
-    if (data != null && data.isNotEmpty && isVerified) {
-      if (!isTokenExpired(data)) {
+    final token = await _tokenHelper.tokenLocalGetter();
+    if (token != null && token.isNotEmpty) {
+      if (isVerified && !isTokenExpired(token)) {
+        if (!mounted) return;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const MainMenuScreen()),
         );
+      } else if ( isTokenExpired(token)) {
+       refresh;
+        if (!mounted) return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                SignupScreen(isTokenValid: isTokenExpired(token)),
+          ),
+        );
       }
-    } else if(data == null){
+    } else {
+      if (!mounted) return;
+      refresh;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => SignupScreen(isTokenValid: isTokenExpired(data ??'') ,)),
+        MaterialPageRoute(
+          builder: (_) =>
+              SignupScreen(isTokenValid: isTokenExpired(token ?? '')),
+        ),
       );
     }
   }

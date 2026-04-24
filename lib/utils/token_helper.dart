@@ -24,6 +24,12 @@ class TokenHelper {
     final String? action = prefs.getString('refreshToken');
     return action;
   }
+
+  Future<bool?> refreshTokenLocalRemover() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final  action = prefs.remove('refreshToken');
+    return action;
+  }
   Future<void> userIdLocalSaver(String userId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('userId', userId);

@@ -27,10 +27,14 @@ class UserService {
         },
         onError: (DioException e, handler) async {
           if (e.response?.statusCode == 401) {
-            print(e.response);
-            if(e.response?.statusMessage==""){}
+            if (e.response?.data["message"] ==
+                "Invalid or expired refresh token") {
+              _tokenHelper.refreshTokenLocalRemover();
+
+              print("Key Removed  isVerified Relogin to Save...");
+            }
             final succses = await refreshToken();
-            print("___:$succses");
+            _tokenHelper.refreshTokenLocalRemover();
             print("Token expired → refreshing...");
             if (succses != null && succses) {
               final newToken = await _tokenHelper.tokenLocalGetter();
@@ -40,7 +44,7 @@ class UserService {
 
               return handler.resolve(retryResponse);
             } else {
-              DecoderUtils.removeKey();
+              _tokenHelper.refreshTokenLocalRemover();
               print("Key Removed  isVerified Relogin to Save...");
               print("Refresh failed → login");
             }
@@ -157,15 +161,15 @@ class UserService {
 
   Future<List<int>?> getScores() async {
     try {
-      List<int> allScores=[];
+      List<int> allScores = [];
       final token = await _tokenHelper.tokenLocalGetter();
       final response = await _dio.get(
         ApiConfig.getScore,
         data: {"accessToken": token},
       );
       if (response.statusCode == 200) {
-        final score=response.data['userScores']['scores'];
-        allScores=List<int>.from(score);
+        final score = response.data['userScores']['scores'];
+        allScores = List<int>.from(score);
         return allScores;
       }
     } on DioException catch (e) {

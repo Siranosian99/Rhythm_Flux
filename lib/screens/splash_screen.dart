@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen>
     isVerified = await DecoderUtils.isVerifiedToken();
     final token = await _tokenHelper.tokenLocalGetter();
     if (token != null && token.isNotEmpty) {
-      if (isVerified && !isTokenExpired(token)) {
+      if (isVerified && !isTokenExpired(token) ) {
         if (!mounted) return;
         Navigator.pushReplacement(
           context,

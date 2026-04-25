@@ -25,6 +25,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+    _userService = UserService();
     WidgetsBinding.instance.addObserver(this);
     Future.delayed(Duration(seconds: 2), () {
       tokenChecker();
@@ -45,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> tokenChecker() async {
-    _userService = UserService();
+
     final refresh =await _userService.getUser();
     isVerified = await DecoderUtils.isVerifiedToken();
     final token = await _tokenHelper.tokenLocalGetter();
@@ -56,7 +57,8 @@ class _SplashScreenState extends State<SplashScreen>
           context,
           MaterialPageRoute(builder: (_) => const MainMenuScreen()),
         );
-      } else if ( isTokenExpired(token)) {
+      }
+      else if(isTokenExpired(token)) {
        refresh;
         if (!mounted) return;
         Navigator.pushReplacement(
@@ -67,16 +69,17 @@ class _SplashScreenState extends State<SplashScreen>
           ),
         );
       }
-    } else {
+    }
+    else{
       if (!mounted) return;
-      refresh;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (_) =>
-              SignupScreen(isTokenValid: isTokenExpired(token ?? '')),
+              SignupScreen(isTokenValid: isTokenExpired(token.toString())),
         ),
       );
+
     }
   }
 

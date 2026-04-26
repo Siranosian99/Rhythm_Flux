@@ -25,7 +25,6 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-    _userService = UserService();
     WidgetsBinding.instance.addObserver(this);
     Future.delayed(Duration(seconds: 2), () {
       tokenChecker();
@@ -46,41 +45,66 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> tokenChecker() async {
+    try {
+      _userService = UserService();
 
-    final refresh =await _userService.getUser();
-    isVerified = await DecoderUtils.isVerifiedToken();
-    final token = await _tokenHelper.tokenLocalGetter();
-    if (token != null && token.isNotEmpty) {
-      if (isVerified && !isTokenExpired(token) ) {
+      var token = await _tokenHelper.tokenLocalGetter();
+
+      print("TOKEN (ilk): $token");
+
+      // TOKEN YOK
+      if (token == null || token.isEmpty) {
         if (!mounted) return;
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const MainMenuScreen()),
-        );
+        _go(SignupScreen(isTokenValid: false));
+        return;
       }
-      else if(isTokenExpired(token)) {
-       refresh;
+
+      // TOKEN EXPIRED → REFRESH
+      if (isTokenExpired(token)) {
+        print("TOKEN EXPIRED → REFRESH");
+
+        await _userService.getUser();
+
+        // 🔥 EN ÖNEMLİ SATIR
+        token = await _tokenHelper.tokenLocalGetter();
+
+        print("TOKEN (refresh sonrası): $token");
+
+        if (token == null || token.isEmpty) {
+          if (!mounted) return;
+          _go(SignupScreen(isTokenValid: false));
+          return;
+        }
+      }
+
+      final isVerified = await DecoderUtils.isVerifiedToken();
+
+      print("VERIFIED: $isVerified");
+
+      // TOKEN GEÇERLİ
+      if (!isTokenExpired(token) && isVerified) {
         if (!mounted) return;
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) =>
-                SignupScreen(isTokenValid: isTokenExpired(token)),
-          ),
-        );
+        _go(const MainMenuScreen());
+        return;
       }
-    }
-    else{
+
+      // fallback
       if (!mounted) return;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) =>
-              SignupScreen(isTokenValid: isTokenExpired(token.toString())),
-        ),
-      );
+      _go(SignupScreen(isTokenValid: false));
 
+    } catch (e) {
+      print("TOKEN CHECK ERROR: $e");
+
+      if (!mounted) return;
+      _go(SignupScreen(isTokenValid: false));
     }
+  }
+
+  void _go(Widget page) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => page),
+    );
   }
 
   @override

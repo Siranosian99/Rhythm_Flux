@@ -33,38 +33,41 @@ class UserService {
 
             if (token == null || token.isEmpty) {
               await _tokenHelper.refreshTokenLocalRemover();
-              await _tokenHelper.tokenLocalRemover();
+              print("------------- pre 1 latest removers");
               return handler.next(e);
             }
 
             final isExpired = isTokenExpired(token);
-
+            // print("sex is:$isExpired");
             if (isExpired) {
-              final success = await refreshToken();
-
-              if (!success!) {
-                await _tokenHelper.refreshTokenLocalRemover();
-                await _tokenHelper.tokenLocalRemover();
-                return handler.next(e);
-              }
-
-              final newToken = await _tokenHelper.tokenLocalGetter();
-
-              if (newToken == null || newToken.isEmpty) {
-                await _tokenHelper.refreshTokenLocalRemover();
-                await _tokenHelper.tokenLocalRemover();
-                return handler.next(e);
-              }
-
-              e.requestOptions.headers["Authorization"] = "Bearer $newToken";
-
-              final retryResponse = await _dio.fetch(e.requestOptions);
-              return handler.resolve(retryResponse);
+              // final success = await refreshToken();
+               print(refreshToken());
+            //   if (success != null && !success) {
+            //     await _tokenHelper.refreshTokenLocalRemover();
+            //     await _tokenHelper.tokenLocalRemover();
+            //     print("------------- pre 2 latest removers");
+            //     return handler.next(e);
+            //   }
+            //
+            //   final newToken = await _tokenHelper.tokenLocalGetter();
+            //
+            //   if (newToken == null || newToken.isEmpty) {
+            //     await _tokenHelper.refreshTokenLocalRemover();
+            //     await _tokenHelper.tokenLocalRemover();
+            //     print("------------- pre 3 latest removers");
+            //     return handler.next(e);
+            //   }
+            //
+            //   e.requestOptions.headers["Authorization"] = "Bearer $newToken";
+            //
+            //   final retryResponse = await _dio.fetch(e.requestOptions);
+            //   return handler.resolve(retryResponse);
             }
 
             // token expired değil ama 401 → invalid token
             await _tokenHelper.refreshTokenLocalRemover();
             await _tokenHelper.tokenLocalRemover();
+            print("------------- latest removers");
           }
 
           return handler.next(e);

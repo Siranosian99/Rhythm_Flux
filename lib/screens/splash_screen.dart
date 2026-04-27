@@ -52,7 +52,6 @@ class _SplashScreenState extends State<SplashScreen>
 
       print("TOKEN (ilk): $token");
 
-      // TOKEN YOK
       if (token == null || token.isEmpty) {
         if (!mounted) return;
         _go(SignupScreen(isTokenValid: false));
@@ -65,7 +64,6 @@ class _SplashScreenState extends State<SplashScreen>
 
         await _userService.getUser();
 
-        // 🔥 EN ÖNEMLİ SATIR
         token = await _tokenHelper.tokenLocalGetter();
 
         print("TOKEN (refresh sonrası): $token");
@@ -81,7 +79,6 @@ class _SplashScreenState extends State<SplashScreen>
 
       print("VERIFIED: $isVerified");
 
-      // TOKEN GEÇERLİ
       if (!isTokenExpired(token) && isVerified) {
         if (!mounted) return;
         _go(const MainMenuScreen());

@@ -321,3 +321,49 @@ class _SplashScreenState extends State<SplashScreen>
 //     );
 //   }
 // }
+
+
+
+
+
+// onError: (DioException e, handler) async {
+// if (e.response?.statusCode == 401) {
+// final token = await _tokenHelper.tokenLocalGetter();
+//
+// if (token == null || token.isEmpty) {
+// await _tokenHelper.refreshTokenLocalRemover();
+// print("------------- pre 1 latest removers");
+// return handler.next(e);
+// }
+// print("q3e${isTokenExpired(token)}");
+// final isExpired = isTokenExpired(token);
+// if (isExpired) {
+// print("ENTERED EXPIRED BLOCK");
+//
+// try {
+// final success = await refreshToken()
+//     .timeout(const Duration(seconds:4));
+//
+// print("REFRESH RESULT: $success");
+//
+// if (!success) {
+// print("REFRESH FAILED");
+// return;
+// }
+//
+// final newToken = await _tokenHelper.tokenLocalGetter();
+// print("NEW TOKEN: $newToken");
+//
+// } catch (e) {
+// print("REFRESH ERROR: $e");
+// }
+// }
+//
+// // token expired değil ama 401 → invalid token
+// await _tokenHelper.refreshTokenLocalRemover();
+// await _tokenHelper.tokenLocalRemover();
+// print("------------- latest removers");
+// }
+//
+// return handler.next(e);
+// },

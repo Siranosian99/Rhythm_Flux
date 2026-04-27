@@ -1,9 +1,10 @@
+import 'dart:ffi';
+
 import 'package:dio/dio.dart';
 import 'package:rhythm_flux/constant/api_config.dart';
 import 'package:rhythm_flux/service/models/score_model.dart';
 import 'package:rhythm_flux/utils/decode_token_details.dart';
 import 'package:rhythm_flux/utils/token_helper.dart';
-
 import '../../utils/token_checker.dart';
 
 class UserService {
@@ -18,7 +19,9 @@ class UserService {
   final _tokenHelper = TokenHelper();
 
   UserService() {
+
     _dio.interceptors.add(
+
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           final token = await _tokenHelper.tokenLocalGetter();
@@ -28,6 +31,9 @@ class UserService {
           return handler.next(options);
         },
         onError: (DioException e, handler) async {
+          if (e.requestOptions.path.contains("refresh")) {
+            return handler.next(e);
+          }
           if (e.response?.statusCode == 401) {
             final token = await _tokenHelper.tokenLocalGetter();
 
@@ -36,32 +42,34 @@ class UserService {
               print("------------- pre 1 latest removers");
               return handler.next(e);
             }
-
+            print("q3e${isTokenExpired(token)}");
             final isExpired = isTokenExpired(token);
             // print("sex is:$isExpired");
             if (isExpired) {
-              // final success = await refreshToken();
-               print(refreshToken());
-            //   if (success != null && !success) {
-            //     await _tokenHelper.refreshTokenLocalRemover();
-            //     await _tokenHelper.tokenLocalRemover();
-            //     print("------------- pre 2 latest removers");
-            //     return handler.next(e);
-            //   }
-            //
-            //   final newToken = await _tokenHelper.tokenLocalGetter();
-            //
-            //   if (newToken == null || newToken.isEmpty) {
-            //     await _tokenHelper.refreshTokenLocalRemover();
-            //     await _tokenHelper.tokenLocalRemover();
-            //     print("------------- pre 3 latest removers");
-            //     return handler.next(e);
-            //   }
-            //
-            //   e.requestOptions.headers["Authorization"] = "Bearer $newToken";
-            //
-            //   final retryResponse = await _dio.fetch(e.requestOptions);
-            //   return handler.resolve(retryResponse);
+              // print("Really Expired:$isExpired and the RefreshedToken function:${await _tokenHelper.refreshTokenLocalGetter()}");
+              final success = await refreshToken().timeout(Duration(seconds: 2));
+              // print(success);
+               // print("----_---_______-------_______${refreshToken()}");
+              if  (!success) {
+                await _tokenHelper.refreshTokenLocalRemover();
+                await _tokenHelper.tokenLocalRemover();
+                print("------------- pre 2 latest removers");
+                return handler.next(e);
+              }
+
+              final newToken = await _tokenHelper.tokenLocalGetter();
+
+              if (newToken == null || newToken.isEmpty) {
+                await _tokenHelper.refreshTokenLocalRemover();
+                await _tokenHelper.tokenLocalRemover();
+                print("------------- pre 3 latest removers");
+                return handler.next(e);
+              }
+
+              e.requestOptions.headers["Authorization"] = "Bearer $newToken";
+
+              final retryResponse = await _dio.fetch(e.requestOptions);
+              return handler.resolve(retryResponse);
             }
 
             // token expired değil ama 401 → invalid token
@@ -145,27 +153,40 @@ class UserService {
     }
   }
 
-  Future<bool?> refreshToken() async {
+  Future<bool> refreshToken() async {
     try {
       final rtoken = await _tokenHelper.refreshTokenLocalGetter();
-      if (rtoken == null) return false;
+
+      if (rtoken == null || rtoken.isEmpty) {
+        return false;
+      }
 
       final response = await _dio.post(
         ApiConfig.refreshToken,
         data: {"refreshToken": rtoken},
       );
 
-      if (response.statusCode == 200) {
-        final newAccessToken = response.data['accessToken'];
-        await _tokenHelper.tokenLocalSaver(newAccessToken);
-        return true;
+      if (response.statusCode != 200) {
+        return false;
       }
-    } on DioException catch (e) {
-      print(e.response?.data);
-    }
-    return null;
-  }
 
+      final newAccessToken = response.data['accessToken'];
+
+      if (newAccessToken == null || newAccessToken.isEmpty) {
+        return false;
+      }
+
+      await _tokenHelper.tokenLocalSaver(newAccessToken);
+
+      return true;
+    } on DioException catch (e) {
+      print("REFRESH ERROR: ${e.response?.data}");
+      return false;
+    } catch (e) {
+      print("UNKNOWN ERROR: $e");
+      return false;
+    }
+  }
   Future<void> saveScore(int score) async {
     try {
       final response = await _dio.post(

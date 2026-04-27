@@ -174,7 +174,7 @@ class Paddle extends RectangleComponent
           ),
         ),
       );
-      FlameAudio.play('death_music.wav', volume: 0.3);
+      // FlameAudio.play('death_music.wav', volume: 0.3);
     }
     super.onCollisionStart(points, other);
   }

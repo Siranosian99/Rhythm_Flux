@@ -46,14 +46,11 @@ class UserService {
             final isExpired = isTokenExpired(token);
             // print("sex is:$isExpired");
             if (isExpired) {
-              // print("Really Expired:$isExpired and the RefreshedToken function:${await _tokenHelper.refreshTokenLocalGetter()}");
               final success = await refreshToken().timeout(Duration(seconds: 2));
-              // print(success);
-               // print("----_---_______-------_______${refreshToken()}");
+
               if  (!success) {
                 await _tokenHelper.refreshTokenLocalRemover();
                 await _tokenHelper.tokenLocalRemover();
-                print("------------- pre 2 latest removers");
                 return handler.next(e);
               }
 
@@ -62,7 +59,6 @@ class UserService {
               if (newToken == null || newToken.isEmpty) {
                 await _tokenHelper.refreshTokenLocalRemover();
                 await _tokenHelper.tokenLocalRemover();
-                print("------------- pre 3 latest removers");
                 return handler.next(e);
               }
 
@@ -75,7 +71,6 @@ class UserService {
             // token expired değil ama 401 → invalid token
             await _tokenHelper.refreshTokenLocalRemover();
             await _tokenHelper.tokenLocalRemover();
-            print("------------- latest removers");
           }
 
           return handler.next(e);

@@ -53,7 +53,6 @@ class MyGame extends FlameGame
 
   void gameOver() {
     if (isGameOver) return;
-
     isGameOver = true;
     pauseEngine();
     AudioManager.pause();
@@ -65,8 +64,9 @@ class MyGame extends FlameGame
     removeAll(children);
     isGameOver = false;
     game.state.score = 0;
-
-    add(player);
+    Player players=Player();
+    add(players);
+    players.restart();
     add(Square());
     add(ScoreBoard());
     add(ScoreZone(player));

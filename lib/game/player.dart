@@ -16,6 +16,7 @@ class Player extends SpriteComponent
         position: Vector2(210, 840),
       );
   double speed = 500;
+  late Vector2 startPosition;
   static bool isFast = false;
   static bool isMoving = false;
   final pos = Vector2.zero();
@@ -25,6 +26,7 @@ class Player extends SpriteComponent
 
   @override
   FutureOr<void> onLoad() async {
+    startPosition = Vector2(210, 840);
     add(RectangleHitbox());
     sprite = await Sprite.load('spaceman.png');
     velocity = pos;
@@ -41,6 +43,10 @@ class Player extends SpriteComponent
 
   void start() {
     velocity = posMain;
+  }
+  void restart() {
+    position = startPosition.clone();
+    velocity = Vector2.zero();
   }
 
   @override

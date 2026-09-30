@@ -12,8 +12,8 @@ class UserService {
     BaseOptions(
       baseUrl: ApiConfig.baseUrl,
       headers: {"Content-Type": "application/json"},
-      connectTimeout: const Duration(seconds: 2),
-      receiveTimeout: const Duration(seconds: 2),
+      connectTimeout: const Duration(seconds: 5),
+      receiveTimeout: const Duration(seconds: 5),
     ),
   );
   final _tokenHelper = TokenHelper();

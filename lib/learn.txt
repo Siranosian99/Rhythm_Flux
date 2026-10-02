@@ -1,0 +1,84 @@
+----------------------------------------
+             SONG
+               │
+        ┌──────┴──────┐
+        │             │
+       BPM          beats[]
+        │             │
+        ↓             ↓
+   baseSpeed     beat intervals
+        │             │
+        │       son birkaç beat
+        │             │
+        │       average interval
+        │             │
+        │       rhythm multiplier
+        │             │
+        └──────┬──────┘
+               ↓
+        targetSpeed
+               ↓
+          clamp limits
+               ↓
+           smoothing
+               ↓
+         currentSpeed
+               ↓
+          Door.update()
+               ↓
+        x -= speed * dt
+
+----------------------------------------
+
+        REFERENCE_BPM       = 110
+        REFERENCE_SPEED     = 300
+
+        MIN_BASE_SPEED      = 220
+        MAX_BASE_SPEED      = 380
+
+        MIN_RHYTHM_MULTIPLIER = 0.80
+        MAX_RHYTHM_MULTIPLIER = 1.20
+
+        MIN_SPEED           = 220
+        MAX_SPEED           = 380
+
+        AVERAGE_INTERVAL_COUNT = 4
+
+----------------------------------------
+
+        BPM
+         ↓
+        normalInterval
+
+        beats
+         ↓
+        actualInterval
+
+        normalInterval / actualInterval
+         ↓
+        rhythmMultiplier
+
+        baseSpeed × rhythmMultiplier
+         ↓
+        targetSpeed
+----------------------------------------
+
+
+bpm
+ ↓
+normalBeatInterval
+ ↓
+baseSpeed
+
+beats
+ ↓
+beatIntervals
+ ↓
+averageBeatInterval
+ ↓
+rhythmMultiplier
+ ↓
+baseSpeed × rhythmMultiplier
+ ↓
+finalSpeed
+----------------------------------------

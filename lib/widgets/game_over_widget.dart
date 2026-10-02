@@ -22,10 +22,10 @@ class GameOverOverlay extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               decoration: BoxDecoration(
-                color: const Color(0xFF0F1020), // koyu arka plan
+                color: const Color(0xFF0F1020),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: const Color(0xFF6C63FF), // purple border
+                  color: const Color(0xFF6C63FF),
                   width: 2,
                 ),
                 boxShadow: [

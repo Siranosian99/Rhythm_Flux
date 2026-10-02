@@ -144,7 +144,7 @@ class Paddle extends RectangleComponent
   @override
   void update(double dt) {
     super.update(dt);
-    position.x += speed * dt;
+    position.x += speed  * dt;
     if ((position.x - startX).abs() >= maxDistance) {
       speed = -speed;
     }

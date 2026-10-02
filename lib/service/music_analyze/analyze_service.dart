@@ -7,7 +7,7 @@ import '../../provider/audio_provider.dart';
 import '../models/audio_model.dart';
 
 class Analyzer {
-  TokenHelper _tokenHelper = TokenHelper();
+  final TokenHelper _tokenHelper = TokenHelper();
   final Dio _dio = Dio(
     BaseOptions(
       baseUrl: ApiConfig.baseUrl,

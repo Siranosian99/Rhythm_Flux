@@ -64,7 +64,7 @@ class Square extends RectangleComponent
     // add(ScoreBoard());
     add(
       Paddle(
-        speed: -120,
+        speed: 100  / 0.2,//-120
         isLeft: true,
         color: Colors.purpleAccent,
         moveX: true,
@@ -74,7 +74,7 @@ class Square extends RectangleComponent
     );
     add(
       Paddle(
-        speed: -120,
+        speed: 100 / 0.2, //-120
         isLeft: false,
         color: Colors.blueAccent,
         moveX: true,

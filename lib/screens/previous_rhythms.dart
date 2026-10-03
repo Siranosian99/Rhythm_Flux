@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rhythm_flux/constant/app_texts.dart';
+import 'package:rhythm_flux/service/bpm_saver/bpm_local_saver.dart';
 import 'package:rhythm_flux/service/models/audio_model.dart';
 import 'package:rhythm_flux/service/music_analyze/analyze_service.dart';
 
@@ -13,6 +14,7 @@ class RhythmListScreen extends StatefulWidget {
 
 class _RhythmListScreenState extends State<RhythmListScreen> {
   late Analyzer _analyzer;
+  final BpmLocalHelper _bpmLocalHelper =BpmLocalHelper();
   late List<AudioData> rhythms = [];
   late final UserService _userService;
 
@@ -61,76 +63,81 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
               itemBuilder: (context, index) {
                 final rhythm = rhythms[index];
 
-                return Container(
-                  margin: const EdgeInsets.all(12),
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.deepPurple.shade900,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.blueAccent, width: 2),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.blueAccent.withOpacity(0.4),
-                        blurRadius: 10,
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        rhythm.name,
-                        style: GoogleFonts.pressStart2p(
-                          fontSize: 14,
-                          color: Colors.blueAccent,
+                return GestureDetector(
+                  onTap: (){
+                    _bpmLocalHelper.saveBpm(rhythm.bpm);
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurple.shade900,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.blueAccent, width: 2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blueAccent.withOpacity(0.4),
+                          blurRadius: 10,
                         ),
-                      ),
-
-                      const SizedBox(height: 12),
-                      Text(
-                        "BPM: ${rhythm.bpm}",
-                        style: GoogleFonts.pressStart2p(
-                          fontSize: 12,
-                          color: Colors.purpleAccent,
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          rhythm.name,
+                          style: GoogleFonts.pressStart2p(
+                            fontSize: 14,
+                            color: Colors.blueAccent,
+                          ),
                         ),
-                      ),
 
-                      const SizedBox(height: 12),
+                        const SizedBox(height: 12),
+                        Text(
+                          "BPM: ${rhythm.bpm}",
+                          style: GoogleFonts.pressStart2p(
+                            fontSize: 12,
+                            color: Colors.purpleAccent,
+                          ),
+                        ),
 
-                      /// 🎯 Beats Visual Timeline
-                      Wrap(
-                        spacing: 6,
-                        children: List.generate(rhythm.beats.length, (i) {
-                          double diff = i == 0
-                              ? 0
-                              : rhythm.beats[i] - rhythm.beats[i - 1];
+                        const SizedBox(height: 12),
 
-                          double intensity = (1 / (diff + 0.1)).clamp(0.3, 1.0);
+                        /// 🎯 Beats Visual Timeline
+                        Wrap(
+                          spacing: 6,
+                          children: List.generate(rhythm.beats.length, (i) {
+                            double diff = i == 0
+                                ? 0
+                                : rhythm.beats[i] - rhythm.beats[i - 1];
 
-                          Color color;
-                          if (diff < 0.4) {
-                            color = Colors.purpleAccent;
-                          } else {
-                            color = Colors.blueAccent;
-                          }
+                            double intensity = (1 / (diff + 0.1)).clamp(0.3, 1.0);
 
-                          return Container(
-                            width: 12,
-                            height: 12,
-                            decoration: BoxDecoration(
-                              color: color.withOpacity(intensity),
-                              borderRadius: BorderRadius.circular(3),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: color.withOpacity(intensity * 0.6),
-                                  blurRadius: 6,
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                      ),
-                    ],
+                            Color color;
+                            if (diff < 0.4) {
+                              color = Colors.purpleAccent;
+                            } else {
+                              color = Colors.blueAccent;
+                            }
+
+                            return Container(
+                              width: 12,
+                              height: 12,
+                              decoration: BoxDecoration(
+                                color: color.withOpacity(intensity),
+                                borderRadius: BorderRadius.circular(3),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: color.withOpacity(intensity * 0.6),
+                                    blurRadius: 6,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },

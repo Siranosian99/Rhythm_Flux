@@ -1,15 +1,20 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+class BpmLocalHelper {
+  late final SharedPreferences _prefs;
 
-class BpmLocalHelper{
-  Future<void> saveBpm(double bpm) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('bpm', bpm);
+  Future<void> init() async {
+    _prefs = await SharedPreferences.getInstance();
   }
-  Future<double> getBpm() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final double bpm = prefs.getDouble('bpm') ?? 0;
+
+  Future<void> saveBpm(double bpm) async {
+    await _prefs.setDouble('bpm', bpm);
+    print('Saved BPM: $bpm');
+  }
+
+  double getBpm() {
+    final double bpm = _prefs.getDouble('bpm') ?? 0;
+    print('Get BPM: $bpm');
     return bpm;
   }
-
 }

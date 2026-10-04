@@ -16,12 +16,15 @@ import 'package:rhythm_flux/utils/suprises.dart';
 
 import '../game/game_screen.dart';
 import '../game/score_board.dart';
+import '../service/bpm_saver/bpm_local_saver.dart';
 
 class Square extends RectangleComponent
     with TapCallbacks, HasGameRef<MyGame>, CollisionCallbacks {
   static int speed = -100;
   static const squareSize = 50.0;
   static const indicatorSize = 6.0;
+  final BpmLocalHelper bpmHelper = BpmLocalHelper();
+
 
   // static final Paint red = BasicPalette.red.paint();
   // static final Paint blue = BasicPalette.blue.paint();
@@ -37,6 +40,10 @@ class Square extends RectangleComponent
   @override
   FutureOr<void> onLoad() async {
     super.onLoad();
+    await bpmHelper.init();
+
+    final bpm = bpmHelper.getBpm();
+    final beatDuration = 60 / bpm;
 
     // add(
     //   RectangleComponent(
@@ -64,7 +71,7 @@ class Square extends RectangleComponent
     // add(ScoreBoard());
     add(
       Paddle(
-        speed: 100  / 0.2,//-120
+        speed: 100  / beatDuration,//-120
         isLeft: true,
         color: Colors.purpleAccent,
         moveX: true,
@@ -74,7 +81,7 @@ class Square extends RectangleComponent
     );
     add(
       Paddle(
-        speed: 100 / 0.2, //-120
+        speed: 100 / beatDuration, //-120
         isLeft: false,
         color: Colors.blueAccent,
         moveX: true,

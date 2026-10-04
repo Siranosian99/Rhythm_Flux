@@ -23,9 +23,12 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
     super.initState();
     _userService = UserService();
     _analyzer = Analyzer();
+    init();
     Rhythms();
   }
-
+  Future<void> init() async {
+    await _bpmLocalHelper.init();
+  }
   Future<void> Rhythms() async {
     await _userService.getUser();
 

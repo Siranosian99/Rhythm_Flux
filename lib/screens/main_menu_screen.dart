@@ -14,6 +14,7 @@ import 'package:rhythm_flux/widgets/score_dialog.dart';
 import '../constant/app_texts.dart';
 import '../constant/app_texts_style.dart';
 import '../provider/audio_provider.dart';
+import '../service/bpm_saver/bpm_local_saver.dart';
 import '../utils/audio_manager.dart';
 
 class MainMenuScreen extends StatefulWidget {
@@ -28,14 +29,33 @@ class _MainMenuScreenState extends State<MainMenuScreen>
   late final _userService;
   late final AnimationController _controller;
   bool isAblePlay = false;
-  bool isMute=false;
+  bool isMute = false;
   double volume = 0.5;
   List<int> allScores = [];
+  final BpmLocalHelper _bpmLocalHelper = BpmLocalHelper();
+  late final bpm;
+  bool isReady = false;
+  double beatDuration = 0;
+
+  Future<void> init() async {
+    await _bpmLocalHelper.init();
+
+    bpm = _bpmLocalHelper.getBpm();
+    beatDuration = 60 / bpm;
+
+    if (mounted) {
+      setState(() {
+        isReady = true;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    init();
     WidgetsBinding.instance.addObserver(this);
+
     _userService = UserService();
     AudioManager.isMusicPlaying("old_sega");
     getScores();
@@ -159,7 +179,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                   height: bottomOffset,
                   child: GestureDetector(
                     onTap: //isaAblePlay
-                    true
+                   isReady
                         ? () async {
                             Navigator.pushReplacement(
                               context,
@@ -180,18 +200,26 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                 children: [
                   TextButton(
                     onPressed: () async {
-                      await settingsDialog(context, (value) {
-                        setState(() {
-                          volume = value;
-                        });
+                      await settingsDialog(
+                        context,
+                        (value) {
+                          setState(() {
+                            volume = value;
+                          });
 
-                        AudioManager.setVol(value);
-                      }, volume,isMute,(value){
-                        setState(() {
-                          isMute=value;
-                        });
-                       isMute ? AudioManager.mute(): AudioManager.unMute(volume);
-                      });
+                          AudioManager.setVol(value);
+                        },
+                        volume,
+                        isMute,
+                        (value) {
+                          setState(() {
+                            isMute = value;
+                          });
+                          isMute
+                              ? AudioManager.mute()
+                              : AudioManager.unMute(volume);
+                        },
+                      );
                     },
                     child: Text(
                       AppTexts.settings,

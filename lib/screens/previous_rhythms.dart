@@ -26,6 +26,7 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
     init();
     Rhythms();
   }
+
   Future<void> init() async {
     await _bpmLocalHelper.init();
   }

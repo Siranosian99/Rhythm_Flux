@@ -43,7 +43,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
     bpm = _bpmLocalHelper.getBpm();
     beatDuration = 60 / bpm;
 
-    if (mounted) {
+    if (mounted ) {
       setState(() {
         isReady = true;
       });

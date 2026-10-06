@@ -4,6 +4,8 @@ import 'package:rhythm_flux/screens/main_menu_screen.dart';
 import 'package:rhythm_flux/widgets/game_over_widget.dart';
 import 'package:rhythm_flux/game/game_screen.dart';
 
+import '../constant/app_texts.dart';
+
 class PlayScreen extends StatefulWidget {
   const PlayScreen({super.key});
 
@@ -28,7 +30,7 @@ class _PlayScreenState extends State<PlayScreen> {
           }
         ),
         overlayBuilderMap: {
-          'GameOver': (context,game) {
+         AppTexts.gameOver2: (context,game) {
             return GameOverOverlay(game:game as MyGame);
           },
 

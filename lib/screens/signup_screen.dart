@@ -31,6 +31,13 @@ class _SignupScreenState extends State<SignupScreen> {
   late final UserService _userService;
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passController.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     _userService = UserService();
     _tokenHelper = TokenHelper();
@@ -41,6 +48,11 @@ class _SignupScreenState extends State<SignupScreen> {
   Future<void> getBoolValue() async {
     await _userService.getUser();
     final id = await _tokenHelper.tokenLocalGetter();
+  }
+
+  void clearTextFields() {
+    _passController.clear();
+    _emailController.clear();
   }
 
   @override
@@ -120,12 +132,9 @@ class _SignupScreenState extends State<SignupScreen> {
                       style: TextStyle(
                         shadows: [
                           Shadow(
-                            blurRadius: 10.0, // shadow blur
-                            color: Colors.lightBlueAccent, // shadow color
-                            offset: Offset(
-                              2.0,
-                              2.0,
-                            ), // how much shadow will be shown
+                            blurRadius: 10.0,
+                            color: Colors.lightBlueAccent,
+                            offset: Offset(2.0, 2.0),
                           ),
                         ],
                       ),
@@ -219,6 +228,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           try {
                             isVerified = await DecoderUtils.isVerifiedToken();
                             if (isVerified && widget.isTokenValid) {
+                              if (!context.mounted) return;
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -231,14 +241,14 @@ class _SignupScreenState extends State<SignupScreen> {
                                       email: _emailController.text,
                                       password: _passController.text,
                                     )
-                                  :
-
-                              await _userService.login(
-                                email: _emailController.text,
-                                password: _passController.text,
-                              );
+                                  : await _userService.login(
+                                      email: _emailController.text,
+                                      password: _passController.text,
+                                    );
+                              clearTextFields();
                               isVerified = await DecoderUtils.isVerifiedToken();
                               if (isVerified) {
+                                if (!context.mounted) return;
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -246,6 +256,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   ),
                                 );
                               } else {
+                                if (!context.mounted) return;
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text("Verify your email"),
@@ -254,7 +265,11 @@ class _SignupScreenState extends State<SignupScreen> {
                               }
                             }
                           } catch (e) {
-                            print("Error is e:$e");
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Error:$e"),
+                                ),
+                                );
                           } finally {
                             if (mounted) {
                               setState(() {
@@ -317,55 +332,3 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 }
 
-//
-// else {
-//   Center(
-//     child: Column(
-//       mainAxisSize: MainAxisSize.min,
-//       children: [
-//         Container(
-//           padding: EdgeInsets.all(20),
-//           decoration: BoxDecoration(
-//             shape: BoxShape.circle,
-//             boxShadow: [
-//               BoxShadow(
-//                 color: Colors.purple.withOpacity(
-//                   0.6,
-//                 ),
-//                 blurRadius: 20,
-//                 spreadRadius: 5,
-//               ),
-//             ],
-//           ),
-//           child: CircularProgressIndicator(
-//             strokeWidth: 3,
-//             color: Colors.purpleAccent,
-//           ),
-//         ),
-//         SizedBox(height: 20),
-//         Text(
-//           "Please wait...",
-//           style: TextStyle(
-//             color: Colors.white,
-//             fontWeight: FontWeight.w500,
-//           ),
-//         ),
-//       ],
-//     ),
-//   );
-// ScaffoldMessenger
-//     .of(context)
-//     .showSnackBar(
-//   SnackBar(
-//     content: Text("Please verify your email",
-//       style: TextStyle(color: Colors.purple),),
-//     backgroundColor: Colors.black,
-//   ),
-// );
-// Navigator.pushReplacement(
-//   context,
-//   MaterialPageRoute(
-//     builder: (_) =>
-//     const SignupScreen(isTokenValid: false),
-//   ),
-// );

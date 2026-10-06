@@ -28,22 +28,33 @@ class _MainMenuScreenState extends State<MainMenuScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   late final _userService;
   late final AnimationController _controller;
-  bool isAblePlay = false;
   bool isMute = false;
   double volume = 0.5;
   List<int> allScores = [];
   final BpmLocalHelper _bpmLocalHelper = BpmLocalHelper();
-  late final bpm;
+  double? bpm;
   bool isReady = false;
   double beatDuration = 0;
 
-  Future<void> init() async {
+  Future<void> _initializeBpm() async {
     await _bpmLocalHelper.init();
+    await _loadBpm();
+  }
 
-    bpm = _bpmLocalHelper.getBpm();
-    beatDuration = 60 / bpm;
+  Future<void> _loadBpm() async {
+    final savedBpm = _bpmLocalHelper.getBpm();
 
-    if (mounted ) {
+    if (savedBpm <= 0) {
+      setState(() {
+        isReady = false;
+      });
+      return;
+    }
+
+    bpm = savedBpm;
+    beatDuration = 60 / bpm!;
+
+    if (mounted) {
       setState(() {
         isReady = true;
       });
@@ -53,9 +64,8 @@ class _MainMenuScreenState extends State<MainMenuScreen>
   @override
   void initState() {
     super.initState();
-    init();
+    _initializeBpm();
     WidgetsBinding.instance.addObserver(this);
-
     _userService = UserService();
     AudioManager.isMusicPlaying("old_sega");
     getScores();
@@ -79,14 +89,11 @@ class _MainMenuScreenState extends State<MainMenuScreen>
       AudioManager.pause();
     }
   }
-
-  Future<void> getToken() async {
-    await _userService.getUser();
-  }
-
   Future<void> getScores() async {
     allScores = await _userService.getScores();
-    // allScores = data.map((e) => e as int).toList();
+    setState(() {
+      allScores;
+    });
   }
 
   @override
@@ -101,7 +108,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
               Stack(
                 alignment: AlignmentGeometry.center,
                 children: [
-                  Lottie.asset('assets/lottie/equalizer_pink.json'),
+                  Lottie.asset('${AppTexts.assets}/equalizer_pink.json'),
                   Text(
                     AppTexts.appName1,
                     style: AppTextStyles.appName1Style(context),
@@ -112,7 +119,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
               Stack(
                 alignment: AlignmentGeometry.center,
                 children: [
-                  Lottie.asset('assets/lottie/equalizer_blue.json'),
+                  Lottie.asset('${AppTexts.assets}/equalizer_blue.json'),
                   Text(
                     AppTexts.appName2,
                     style: AppTextStyles.appName2Style(context),
@@ -130,7 +137,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                       height: 100,
                       width: 100,
                       child: Lottie.asset(
-                        "assets/lottie/music_notes_white.json",
+                        "${AppTexts.assets}/music_notes_white.json",
                       ),
                     ),
                   ),
@@ -140,7 +147,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                       height: 100,
                       width: 100,
                       child: Lottie.asset(
-                        "assets/lottie/music_notes_white.json",
+                        "${AppTexts.assets}/music_notes_white.json",
                       ),
                     ),
                   ),
@@ -149,7 +156,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
               SizedBox(
                 height: 200,
                 width: 200,
-                child: Lottie.asset("assets/lottie/happy_spaceman.json"),
+                child: Lottie.asset("${AppTexts.assets}/happy_spaceman.json"),
               ),
               Text(
                 AppTexts.startPlay,
@@ -157,16 +164,9 @@ class _MainMenuScreenState extends State<MainMenuScreen>
               ),
               TextButton(
                 onPressed: () async {
-                  // final token = await TokenHelper().tokenLocalGetter();
-                  // print("ttt--------------$token");
-                  await getToken();
+                  await _userService.getUser();
                   FilePickerHelper.selectFile();
-                  // final formData = await FilePickerHelper.selectFile();
-                  // if (!context.mounted) return;
-                  // if (formData == null) return;
-                  // final audioData = await analyzer.analyzer(formData);
-                  // if (!context.mounted) return;
-                  // context.read<AudioProvider>().setAudio(audioData!);
+
                 },
                 child: Text(
                   AppTexts.selectMusic,
@@ -179,9 +179,9 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                   height: bottomOffset,
                   child: GestureDetector(
                     onTap: //isaAblePlay
-                   isReady
+                    isReady
                         ? () async {
-                            Navigator.pushReplacement(
+                            await Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                 builder: (_) => const PlayScreen(),
@@ -190,7 +190,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                             AudioManager.pause();
                           }
                         : null,
-                    child: Lottie.asset('assets/lottie/play_button.json'),
+                    child: Lottie.asset('${AppTexts.assets}/play_button.json'),
                   ),
                 ),
               ),
@@ -234,6 +234,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                         context,
                         MaterialPageRoute(builder: (_) => RhythmListScreen()),
                       );
+                      await _loadBpm();
                       AudioManager.resume();
                     },
                     child: Text(

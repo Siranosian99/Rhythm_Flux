@@ -8,13 +8,13 @@ class AppTextStyles {
     final scale = screenWidth / 375;
 
     return GoogleFonts.pressStart2p(
-      fontSize: 55 * scale, // scale ile büyüklük ayarlanıyor
+      fontSize: 55 * scale,
       color: Colors.lightBlueAccent,
       shadows: [
         Shadow(blurRadius: 5, color: Colors.purpleAccent),
         Shadow(blurRadius: 15, color: Colors.purpleAccent),
         Shadow(blurRadius: 30, color: Colors.purpleAccent),
-        Shadow(blurRadius: 60, color: Colors.purpleAccent.withOpacity(0.5)),
+        Shadow(blurRadius: 60, color: Colors.purpleAccent.withValues(alpha: 0.5)),
       ],
     );
   }
@@ -30,7 +30,7 @@ class AppTextStyles {
         Shadow(blurRadius: 5, color: Colors.lightBlueAccent),
         Shadow(blurRadius: 15, color: Colors.lightBlueAccent),
         Shadow(blurRadius: 30, color: Colors.lightBlueAccent),
-        Shadow(blurRadius: 60, color: Colors.lightBlueAccent.withOpacity(0.5)),
+        Shadow(blurRadius: 60, color: Colors.lightBlueAccent.withValues(alpha: 0.5)),
       ],
     );
   }
@@ -55,7 +55,7 @@ static TextStyle settingStyle=GoogleFonts.comicNeue(
     Shadow(blurRadius: 5, color: Colors.purpleAccent),
     Shadow(blurRadius: 15, color: Colors.purpleAccent),
     Shadow(blurRadius: 1, color: Colors.purpleAccent),
-    Shadow(blurRadius: 2, color: Colors.purpleAccent.withOpacity(0.5)),
+    Shadow(blurRadius: 2, color: Colors.purpleAccent.withValues(alpha: 0.5)),
   ]
 
 );
@@ -70,7 +70,7 @@ static TextStyle settingStyle=GoogleFonts.comicNeue(
         Shadow(blurRadius: 5, color: Colors.lightBlueAccent),
         Shadow(blurRadius: 15, color: Colors.lightBlueAccent),
         Shadow(blurRadius: 30, color: Colors.lightBlueAccent),
-        Shadow(blurRadius: 60, color: Colors.lightBlueAccent.withOpacity(0.5)),
+        Shadow(blurRadius: 60, color: Colors.lightBlueAccent.withValues(alpha: 0.5)),
       ],
     );
   }

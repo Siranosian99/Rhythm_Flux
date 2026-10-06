@@ -14,8 +14,8 @@ class RhythmListScreen extends StatefulWidget {
 
 class _RhythmListScreenState extends State<RhythmListScreen> {
   late Analyzer _analyzer;
-  final BpmLocalHelper _bpmLocalHelper =BpmLocalHelper();
-  late List<AudioData> rhythms = [];
+  final BpmLocalHelper _bpmLocalHelper = BpmLocalHelper();
+   List<AudioData> rhythms = [];
   late final UserService _userService;
 
   @override
@@ -23,20 +23,19 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
     super.initState();
     _userService = UserService();
     _analyzer = Analyzer();
-    init();
-    Rhythms();
+    _initializeBpm();
+    _loadRhythms();
   }
 
-  Future<void> init() async {
+  Future<void> _initializeBpm() async {
     await _bpmLocalHelper.init();
   }
-  Future<void> Rhythms() async {
-    await _userService.getUser();
 
+  Future<void> _loadRhythms() async {
+    await _userService.getUser();
     rhythms = await _analyzer.getUserRhythms() ?? [];
-    setState(() {
-      rhythms;
-    });
+    if(!context.mounted) return;
+    setState(() {});
   }
 
   @override
@@ -66,10 +65,9 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
               itemCount: rhythms.length,
               itemBuilder: (context, index) {
                 final rhythm = rhythms[index];
-
                 return GestureDetector(
-                  onTap: (){
-                    _bpmLocalHelper.saveBpm(rhythm.bpm);
+                  onTap: () async{
+                   await _bpmLocalHelper.saveBpm(rhythm.bpm);
                   },
                   child: Container(
                     margin: const EdgeInsets.all(12),
@@ -107,7 +105,6 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
 
                         const SizedBox(height: 12),
 
-                        /// 🎯 Beats Visual Timeline
                         Wrap(
                           spacing: 6,
                           children: List.generate(rhythm.beats.length, (i) {
@@ -115,7 +112,10 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
                                 ? 0
                                 : rhythm.beats[i] - rhythm.beats[i - 1];
 
-                            double intensity = (1 / (diff + 0.1)).clamp(0.3, 1.0);
+                            double intensity = (1 / (diff + 0.1)).clamp(
+                              0.3,
+                              1.0,
+                            );
 
                             Color color;
                             if (diff < 0.4) {
@@ -128,11 +128,13 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
                               width: 12,
                               height: 12,
                               decoration: BoxDecoration(
-                                color: color.withOpacity(intensity),
+                                color: color.withValues(alpha: intensity),
                                 borderRadius: BorderRadius.circular(3),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: color.withOpacity(intensity * 0.6),
+                                    color: color.withValues(
+                                      alpha: intensity * 0.6,
+                                    ),
                                     blurRadius: 6,
                                   ),
                                 ],
@@ -149,5 +151,3 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
     );
   }
 }
-
-//beats = [0.5, 1.0, 1.8, 2.0]

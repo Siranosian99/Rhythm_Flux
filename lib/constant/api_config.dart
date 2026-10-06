@@ -9,6 +9,4 @@ class ApiConfig{
   static String getRhythms= '/serviceAnalyze/getRhythms';
   static String saveScore='/userAuth/saveScore';
   static String getScore='/userAuth/getScores';
-
-
 }

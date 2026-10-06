@@ -7,6 +7,7 @@ class AppTexts {
   static const signup = "Create Account";
   static const signup2 = "Sign Up";
   static const gameOver = "GAME OVER";
+  static const gameOver2= "GameOver";
   static const yourScore = "YOUR SCORE";
   static const restart = "RESTART";
   static const cancel = "CANCEL";
@@ -17,4 +18,5 @@ class AppTexts {
   static const previous="Previous Rhythms";
   static const rhythms="Rhythms";
   static const oops=  "OOPS! EMPTY";
+  static const assets="assets/lottie";
 }

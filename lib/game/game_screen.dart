@@ -10,6 +10,7 @@ import 'package:rhythm_flux/game/timer.dart';
 import 'package:rhythm_flux/service/user_service/users.dart';
 import 'package:rhythm_flux/states/score_state.dart';
 import 'package:rhythm_flux/utils/audio_manager.dart';
+import '../service/bpm_saver/bpm_local_saver.dart';
 import '../widgets/door_widget.dart';
 
 class MyGame extends FlameGame
@@ -17,7 +18,8 @@ class MyGame extends FlameGame
   bool isGameOver = false;
   late final UserService _userService;
   late GameState state;
-
+  late double beatDuration;
+  final BpmLocalHelper bpmHelper = BpmLocalHelper();
   final VoidCallback onExit;
   late Player player;
   final gameOverTxt = "GameOver";
@@ -29,12 +31,14 @@ class MyGame extends FlameGame
   FutureOr<void> onLoad() async {
     state = GameState();
     // debugMode =true;
+    await bpmHelper.init();
+    final bpm = bpmHelper.getBpm();
+     beatDuration=60 / bpm;
     player = Player();
     _userService = UserService();
     AudioManager.isMusicPlaying(playTxt);
     add(player);
-    // add(Player());
-    add(Square());
+    add(Square(beatDuration: beatDuration));
     add(ScoreBoard());
     add(ScoreZone(player));
     add(TimerGift());
@@ -64,10 +68,10 @@ class MyGame extends FlameGame
     removeAll(children);
     isGameOver = false;
     game.state.score = 0;
-    Player players=Player();
-    add(players);
-    players.restart();
-    add(Square());
+    player=Player();
+    add(player);
+    player.restart();
+    add(Square(beatDuration:  beatDuration));
     add(ScoreBoard());
     add(ScoreZone(player));
     add(TimerGift());

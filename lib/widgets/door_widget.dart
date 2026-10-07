@@ -1,77 +1,27 @@
 import 'dart:async';
-import 'dart:math' as math;
-import 'dart:ui';
-
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/events.dart';
 import 'package:flame/particles.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:rhythm_flux/game/player.dart';
-import 'package:rhythm_flux/game/score_board.dart';
-import 'package:rhythm_flux/game/score_zone.dart';
-import 'package:rhythm_flux/service/user_service/users.dart';
-import 'package:rhythm_flux/utils/suprises.dart';
-
 import '../game/game_screen.dart';
-import '../game/score_board.dart';
-import '../service/bpm_saver/bpm_local_saver.dart';
 
 class Square extends RectangleComponent
-    with TapCallbacks, HasGameRef<MyGame>, CollisionCallbacks {
-  static int speed = -100;
-  static const squareSize = 50.0;
-  static const indicatorSize = 6.0;
-  final BpmLocalHelper bpmHelper = BpmLocalHelper();
+    {
+  final double beatDuration;
+  Square({
+    required this.beatDuration,
+  });
 
-
-  // static final Paint red = BasicPalette.red.paint();
-  // static final Paint blue = BasicPalette.blue.paint();
-  Square() : super();
-
-  // Square(Vector2 position)
-  //     : super(
-  //   position: Vector2(122,121),
-  //   size: Vector2.all(squareSize),
-  //   anchor: Anchor.center,
-  // );
 
   @override
   FutureOr<void> onLoad() async {
     super.onLoad();
-    await bpmHelper.init();
-
-    final bpm = bpmHelper.getBpm();
-    final beatDuration = 60 / bpm;
-
-    // add(
-    //   RectangleComponent(
-    //     size: Vector2(20, 100),
-    //     anchor: Anchor.centerRight,
-    //     position: Vector2(
-    //       gameRef.size.x / 1.2,        // ekranın en sağı
-    //       gameRef.size.y / 2,    // dikey ortası
-    //     ),
-    //     paint: Paint()..color = Colors.blueAccent,
-    //   ),
-    // );
-    // add(
-    //   RectangleComponent(
-    //     size: Vector2(20, 100),
-    //     anchor: Anchor.centerLeft,
-    //     position: Vector2(
-    //      60,                     // ekranın solu
-    //       gameRef.size.y / 2,    // dikeyde ortala
-    //     ),
-    //     paint: Paint()..color = Colors.purpleAccent,
-    //     // paintLayers: [Paint()..color = Colors.purpleAccent,]
-    //   ),
-    // );
-    // add(ScoreBoard());
     add(
       Paddle(
-        speed: 100  / beatDuration,//-120
+        speed: 100 / beatDuration,
+        //-120
         isLeft: true,
         color: Colors.purpleAccent,
         moveX: true,
@@ -81,7 +31,8 @@ class Square extends RectangleComponent
     );
     add(
       Paddle(
-        speed: 100 / beatDuration, //-120
+        speed: 100 / beatDuration,
+        //-120
         isLeft: false,
         color: Colors.blueAccent,
         moveX: true,
@@ -90,21 +41,6 @@ class Square extends RectangleComponent
       ),
     );
   }
-
-  @override
-  void update(double dt) {
-    super.update(dt);
-    // speed +=speed *2;
-    // position.y += 1;
-    // angle += speed * dt;
-    // angle %= 2 * math.pi;
-  }
-
-  // @override
-  // void onTapDown(TapDownEvent event) {
-  //   removeFromParent();
-  //   event.handled = true;
-  // }
 }
 
 class Paddle extends RectangleComponent

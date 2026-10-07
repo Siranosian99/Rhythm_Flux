@@ -17,4 +17,5 @@ class BpmLocalHelper {
     print('Get BPM: $bpm');
     return bpm;
   }
+
 }

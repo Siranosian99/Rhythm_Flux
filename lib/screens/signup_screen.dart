@@ -39,12 +39,16 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   void initState() {
+    // init();
     _userService = UserService();
     _tokenHelper = TokenHelper();
+
     getBoolValue();
     super.initState();
   }
-
+  Future<void> init()async{
+    await  _tokenHelper.init();
+  }
   Future<void> getBoolValue() async {
     await _userService.getUser();
     final id = await _tokenHelper.tokenLocalGetter();
@@ -78,7 +82,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.purple.withOpacity(0.6),
+                            color: Colors.purple.withValues(alpha: 0.6),
                             blurRadius: 20,
                             spreadRadius: 5,
                           ),
@@ -277,8 +281,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               });
                             }
                           }
-                          // await _userService.getUser();
-                          // }
+
                         }
                       },
                       style: ButtonStyle(

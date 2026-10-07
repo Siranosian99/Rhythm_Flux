@@ -25,12 +25,15 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+    init();
     WidgetsBinding.instance.addObserver(this);
     Future.delayed(Duration(seconds: 2), () {
       tokenChecker();
     });
   }
-
+  Future<void> init()async{
+  await  _tokenHelper.init();
+  }
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);

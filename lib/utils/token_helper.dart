@@ -1,49 +1,41 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TokenHelper {
+  late final SharedPreferences _prefs;
 
+  Future<void> init() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
   Future<void> tokenLocalSaver(String token) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
     print("accsesToken is Saved:$token}");
-    await prefs.setString('token', token);
+    await _prefs.setString('token', token);
   }
 
-  Future<String?> tokenLocalGetter() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? action = prefs.getString('token');
-    return action;
+  String? tokenLocalGetter()  {
+    return _prefs.getString('token');
   }
   Future<bool?> tokenLocalRemover() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final  action = prefs.remove('token');
-    return action;
+    return _prefs.remove('token');
   }
   Future<void> refreshTokenLocalSaver(String token) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
     print("refreshToken is Saved:$token}");
-    await prefs.setString('refreshToken', token);
+    await _prefs.setString('refreshToken', token);
   }
 
-  Future<String?> refreshTokenLocalGetter() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? action = prefs.getString('refreshToken');
-    return action;
+  String? refreshTokenLocalGetter()  {
+    return _prefs.getString('refreshToken');;
   }
 
   Future<bool?> refreshTokenLocalRemover() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final  action = prefs.remove('refreshToken');
+    final  action = _prefs.remove('refreshToken');
     return action;
   }
   Future<void> userIdLocalSaver(String userId) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('userId', userId);
+    await _prefs.setString('userId', userId);
   }
 
-  Future<String?> userIdLocalGetter() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? action = prefs.getString('userId');
-    return action;
+ String? userIdLocalGetter()  {
+    return  _prefs.getString('userId');
   }
 
 }

@@ -2,12 +2,12 @@ import 'dart:ffi';
 
 import 'package:dio/dio.dart';
 import 'package:rhythm_flux/constant/api_config.dart';
-import 'package:rhythm_flux/service/models/score_model.dart';
 import 'package:rhythm_flux/utils/decode_token_details.dart';
 import 'package:rhythm_flux/utils/token_helper.dart';
 import '../../utils/token_checker.dart';
 
 class UserService {
+  final _tokenHelper = TokenHelper();
   final Dio _dio = Dio(
     BaseOptions(
       baseUrl: ApiConfig.baseUrl,
@@ -16,15 +16,13 @@ class UserService {
       receiveTimeout: const Duration(seconds: 5),
     ),
   );
-  final _tokenHelper = TokenHelper();
 
   UserService() {
-
+    init();
     _dio.interceptors.add(
-
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          final token = await _tokenHelper.tokenLocalGetter();
+          final token = _tokenHelper.tokenLocalGetter();
           if (token != null) {
             options.headers["Authorization"] = "Bearer $token";
           }
@@ -35,7 +33,7 @@ class UserService {
             return handler.next(e);
           }
           if (e.response?.statusCode == 401) {
-            final token = await _tokenHelper.tokenLocalGetter();
+            final token = _tokenHelper.tokenLocalGetter();
 
             if (token == null || token.isEmpty) {
               await _tokenHelper.refreshTokenLocalRemover();
@@ -54,7 +52,7 @@ class UserService {
                 return handler.next(e);
               }
 
-              final newToken = await _tokenHelper.tokenLocalGetter();
+              final newToken = _tokenHelper.tokenLocalGetter();
 
               if (newToken == null || newToken.isEmpty) {
                 await _tokenHelper.refreshTokenLocalRemover();
@@ -78,7 +76,9 @@ class UserService {
       ),
     );
   }
-
+  Future<void> init()async{
+    await  _tokenHelper.init();
+  }
   Future<void> createAccount({
     required String email,
     required String password,
@@ -129,7 +129,7 @@ class UserService {
 
   Future<void> getUser() async {
     try {
-      final token = await _tokenHelper.tokenLocalGetter();
+      final token = _tokenHelper.tokenLocalGetter();
       final response = await _dio.get(
         ApiConfig.getUser,
         data: {"accessToken": token},
@@ -150,7 +150,7 @@ class UserService {
 
   Future<bool> refreshToken() async {
     try {
-      final rtoken = await _tokenHelper.refreshTokenLocalGetter();
+      final rtoken = _tokenHelper.refreshTokenLocalGetter();
 
       if (rtoken == null || rtoken.isEmpty) {
         return false;
@@ -199,7 +199,7 @@ class UserService {
   Future<List<int>?> getScores() async {
     try {
       List<int> allScores = [];
-      final token = await _tokenHelper.tokenLocalGetter();
+      final token = _tokenHelper.tokenLocalGetter();
       final response = await _dio.get(
         ApiConfig.getScore,
         data: {"accessToken": token},

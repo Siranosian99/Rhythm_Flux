@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rhythm_flux/constant/app_texts.dart';
 
 Future<void> settingsDialog(BuildContext context,  Function(double) onChangedDouble,double volume,bool isMute,Function(bool) onChangedBool) async {
   showDialog(
@@ -17,7 +18,7 @@ Future<void> settingsDialog(BuildContext context,  Function(double) onChangedDou
 
             title: const Center(
               child: Text(
-                'SETTINGS',
+              AppTexts.settings2,
                 style: TextStyle(
                   fontFamily: 'PressStart2P',
                   color: Colors.deepOrangeAccent,
@@ -39,7 +40,7 @@ Future<void> settingsDialog(BuildContext context,  Function(double) onChangedDou
                   Column(
                     children: [
                       const Text(
-                        "VOLUME",
+                       AppTexts.volume ,
                         style: TextStyle(
                           fontFamily: 'PressStart2P',
                           color: Colors.purpleAccent,
@@ -66,7 +67,7 @@ Future<void> settingsDialog(BuildContext context,  Function(double) onChangedDou
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        "MUSIC",
+                       AppTexts.music,
                         style: TextStyle(
                           fontFamily: 'PressStart2P',
                           color: Colors.purpleAccent,
@@ -107,7 +108,7 @@ Future<void> settingsDialog(BuildContext context,  Function(double) onChangedDou
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text(
-                  'CLOSE',
+                  AppTexts.close,
                   style: TextStyle(
                     fontFamily: 'PressStart2P',
                     color: Colors.purpleAccent,

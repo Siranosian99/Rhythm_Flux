@@ -8,6 +8,12 @@ import '../models/audio_model.dart';
 
 class Analyzer {
   final TokenHelper _tokenHelper = TokenHelper();
+  Future<void> init()async{
+    await  _tokenHelper.init();
+  }
+  Analyzer(){
+   init();
+  }
   final Dio _dio = Dio(
     BaseOptions(
       baseUrl: ApiConfig.baseUrl,

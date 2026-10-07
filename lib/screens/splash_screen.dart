@@ -26,11 +26,14 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    Future.delayed(Duration(seconds: 2), () {
+    init();
+    Future.delayed(Duration(seconds: 5), () {
       tokenChecker();
     });
   }
-
+  Future<void> init()async{
+    await  _tokenHelper.init();
+  }
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
@@ -123,7 +126,7 @@ class _SplashScreenState extends State<SplashScreen>
                   style: GoogleFonts.comicNeue(
                     textStyle: const TextStyle(
                       fontSize: 50,
-                      fontWeight: FontWeight.bold, // 👈 bold
+                      fontWeight: FontWeight.bold,
                       color: Colors.white,
                       letterSpacing: 1.5,
                     ),

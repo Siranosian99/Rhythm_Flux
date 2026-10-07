@@ -15,7 +15,7 @@ class RhythmListScreen extends StatefulWidget {
 class _RhythmListScreenState extends State<RhythmListScreen> {
   late Analyzer _analyzer;
   final BpmLocalHelper _bpmLocalHelper = BpmLocalHelper();
-   List<AudioData> rhythms = [];
+  List<AudioData> rhythms = [];
   late final UserService _userService;
 
   @override
@@ -32,9 +32,10 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
   }
 
   Future<void> _loadRhythms() async {
+    await _userService.init();
     await _userService.getUser();
     rhythms = await _analyzer.getUserRhythms() ?? [];
-    if(!context.mounted) return;
+    if (!context.mounted) return;
     setState(() {});
   }
 
@@ -66,8 +67,8 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
               itemBuilder: (context, index) {
                 final rhythm = rhythms[index];
                 return GestureDetector(
-                  onTap: () async{
-                   await _bpmLocalHelper.saveBpm(rhythm.bpm);
+                  onTap: () async {
+                    await _bpmLocalHelper.saveBpm(rhythm.bpm);
                   },
                   child: Container(
                     margin: const EdgeInsets.all(12),

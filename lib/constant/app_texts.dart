@@ -11,6 +11,10 @@ class AppTexts {
   static const yourScore = "YOUR SCORE";
   static const restart = "RESTART";
   static const cancel = "CANCEL";
+  static const settings2="SETTINGS";
+  static const volume="VOLUME";
+  static const close ="CLOSE";
+  static const music= "MUSIC";
   static const login = "Login";
   static const email = "Enter Your email";
   static const password = "Enter Your password";

@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen>
     _userService = UserService();
     await _userService.getUser();
     isVerified = await DecoderUtils.isVerifiedToken();
-    final data = await _tokenHelper.tokenLocalGetter();
+    final data = _tokenHelper.tokenLocalGetter();
 
     if (data != null && data.isNotEmpty && isVerified) {
       isTokenExpired(data);

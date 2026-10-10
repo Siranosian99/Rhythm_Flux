@@ -48,6 +48,7 @@ class DoorTransparent extends Surprise<bool> {
     print("Transparent ON");
   }
 
+  @override
   void stop() {
     Paddle.isTransparent = false;
     print("Transparent OFF");
@@ -63,6 +64,7 @@ class IncreaseSpeed extends Surprise<bool> {
     print("Speed ON");
   }
 
+  @override
   void stop() {
     Player.isFast = false;
     print("Speed OFF");

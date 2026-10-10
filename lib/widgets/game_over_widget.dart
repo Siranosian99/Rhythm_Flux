@@ -3,12 +3,15 @@ import 'package:rhythm_flux/constant/app_texts.dart';
 import 'package:rhythm_flux/game/game_screen.dart';
 import 'package:rhythm_flux/game/score_board.dart';
 import 'package:rhythm_flux/widgets/restart_button_widget.dart';
+
+import '../utils/suprises.dart';
 class GameOverOverlay extends StatelessWidget {
   final MyGame game;
   const GameOverOverlay({super.key, required this.game});
 
   @override
   Widget build(BuildContext context) {
+    final Surprise activeSurprises;
     return Center(
       child: Container(
         padding: const EdgeInsets.all(20),
@@ -43,7 +46,6 @@ class GameOverOverlay extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // GAME OVER
                   const Text(
                     "GAME OVER",
                     style: TextStyle(
@@ -87,6 +89,7 @@ class GameOverOverlay extends StatelessWidget {
               children: [
                 EButtons(buttonText:AppTexts.restart,onPressed:(){
                   game.resetGame();
+
                 },),
                 const SizedBox(width: 20),
                 EButtons(buttonText:AppTexts.cancel,onPressed:(){

@@ -26,7 +26,7 @@ class MainMenuScreen extends StatefulWidget {
 
 class _MainMenuScreenState extends State<MainMenuScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-  late final _userService;
+   final _userService=UserService();
   late final AnimationController _controller;
   bool isMute = false;
   double volume = 0.5;
@@ -64,11 +64,11 @@ class _MainMenuScreenState extends State<MainMenuScreen>
   @override
   void initState() {
     super.initState();
+    getScores();
     _initializeBpm();
     WidgetsBinding.instance.addObserver(this);
-    _userService = UserService();
     AudioManager.isMusicPlaying("old_sega");
-    getScores();
+
     _controller = AnimationController(vsync: this);
   }
 
@@ -90,7 +90,8 @@ class _MainMenuScreenState extends State<MainMenuScreen>
     }
   }
   Future<void> getScores() async {
-    allScores = await _userService.getScores();
+    await _userService.getUser();
+    allScores = (await _userService.getScores())!;
     setState(() {
       allScores;
     });
@@ -178,7 +179,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                   width: bottomOffset,
                   height: bottomOffset,
                   child: GestureDetector(
-                    onTap: //isaAblePlay
+                    onTap:
                     isReady
                         ? () async {
                             await Navigator.pushReplacement(
@@ -199,8 +200,8 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                    onPressed: () async {
-                      await settingsDialog(
+                    onPressed: ()  {
+                       settingsDialog(
                         context,
                         (value) {
                           setState(() {
@@ -243,8 +244,8 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                     ),
                   ),
                   TextButton(
-                    onPressed: () async {
-                      await scoreDialog(context, allScores);
+                    onPressed: ()  {
+                       scoreDialog(context, allScores);
                     },
                     child: Text(
                       AppTexts.scores,

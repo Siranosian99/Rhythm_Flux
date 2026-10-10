@@ -21,6 +21,7 @@ class MyGame extends FlameGame
   late double beatDuration;
   final BpmLocalHelper bpmHelper = BpmLocalHelper();
   final VoidCallback onExit;
+  late TimerGift timerGift;
   late Player player;
   final gameOverTxt = "GameOver";
   final playTxt = "play";
@@ -29,11 +30,13 @@ class MyGame extends FlameGame
 
   @override
   FutureOr<void> onLoad() async {
+    await super.onLoad();
     state = GameState();
     // debugMode =true;
+    timerGift = TimerGift();
     await bpmHelper.init();
     final bpm = bpmHelper.getBpm();
-     beatDuration=60 / bpm;
+    beatDuration = 60 / bpm;
     player = Player();
     _userService = UserService();
     AudioManager.isMusicPlaying(playTxt);
@@ -41,9 +44,7 @@ class MyGame extends FlameGame
     add(Square(beatDuration: beatDuration));
     add(ScoreBoard());
     add(ScoreZone(player));
-    add(TimerGift());
-    // add(ScoreBoard());
-    // add(Maze());
+    add(timerGift);
   }
 
   @override
@@ -58,6 +59,7 @@ class MyGame extends FlameGame
   void gameOver() {
     if (isGameOver) return;
     isGameOver = true;
+    timerGift.stopSurprise();
     pauseEngine();
     AudioManager.pause();
     _userService.saveScore(state.score);
@@ -65,16 +67,18 @@ class MyGame extends FlameGame
   }
 
   void resetGame() {
+    timerGift.stopSurprise();
     removeAll(children);
     isGameOver = false;
-    game.state.score = 0;
-    player=Player();
+    state.score = 0;
+    player = Player();
     add(player);
     player.restart();
-    add(Square(beatDuration:  beatDuration));
+    add(Square(beatDuration: beatDuration));
     add(ScoreBoard());
     add(ScoreZone(player));
-    add(TimerGift());
+    timerGift = TimerGift();
+    add(timerGift);
     resumeEngine();
     AudioManager.resume();
     overlays.remove(gameOverTxt);

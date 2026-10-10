@@ -16,12 +16,11 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
   late Analyzer _analyzer;
   final BpmLocalHelper _bpmLocalHelper = BpmLocalHelper();
   List<AudioData> rhythms = [];
-  late final UserService _userService;
+   final UserService _userService=UserService();
 
   @override
   void initState() {
     super.initState();
-    _userService = UserService();
     _analyzer = Analyzer();
     _initializeBpm();
     _loadRhythms();
@@ -32,7 +31,6 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
   }
 
   Future<void> _loadRhythms() async {
-    await _userService.init();
     await _userService.getUser();
     rhythms = await _analyzer.getUserRhythms() ?? [];
     if (!context.mounted) return;

@@ -50,7 +50,7 @@ class Analyzer {
 
   Future<void> saveRhythms(double bpm, List<double> beats, String name) async {
     try {
-      final token = await _tokenHelper.tokenLocalGetter();
+      final token = _tokenHelper.tokenLocalGetter();
       final response = await _dio.post(
         ApiConfig.saveMusic,
         options: Options(headers: {'Authorization': 'Bearer $token'}),
@@ -66,7 +66,7 @@ class Analyzer {
 
   Future<List<AudioData>?> getUserRhythms() async {
     try {
-      final token = await _tokenHelper.tokenLocalGetter();
+      final token = _tokenHelper.tokenLocalGetter();
 
       final response = await _dio.get(
         ApiConfig.getRhythms,

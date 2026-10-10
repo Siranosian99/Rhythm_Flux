@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rhythm_flux/constant/app_texts.dart';
 
-Future<void> settingsDialog(BuildContext context,  Function(double) onChangedDouble,double volume,bool isMute,Function(bool) onChangedBool) async {
+void settingsDialog(
+  BuildContext context,
+  Function(double) onChangedDouble,
+  double volume,
+  bool isMute,
+  Function(bool) onChangedBool,
+)  {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       double tempVolume = volume;
-      bool tempMute=isMute;
+      bool tempMute = isMute;
       return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
@@ -18,14 +25,12 @@ Future<void> settingsDialog(BuildContext context,  Function(double) onChangedDou
 
             title: const Center(
               child: Text(
-              AppTexts.settings2,
+                AppTexts.settings2,
                 style: TextStyle(
                   fontFamily: 'PressStart2P',
                   color: Colors.deepOrangeAccent,
                   fontSize: 14,
-                  shadows: [
-                    Shadow(color: Colors.blueAccent, blurRadius: 10),
-                  ],
+                  shadows: [Shadow(color: Colors.blueAccent, blurRadius: 10)],
                 ),
               ),
             ),
@@ -36,11 +41,10 @@ Future<void> settingsDialog(BuildContext context,  Function(double) onChangedDou
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-
                   Column(
                     children: [
                       const Text(
-                       AppTexts.volume ,
+                        AppTexts.volume,
                         style: TextStyle(
                           fontFamily: 'PressStart2P',
                           color: Colors.purpleAccent,
@@ -49,25 +53,25 @@ Future<void> settingsDialog(BuildContext context,  Function(double) onChangedDou
                       ),
                       Slider(
                         value: tempVolume,
-                        onChanged: tempMute?null:(value){
-                          setState(() {
-                            tempVolume = value;
-                          });
-
-                          onChangedDouble(value);
-                        },
+                        onChanged: tempMute
+                            ? null
+                            : (value) {
+                                setState(() {
+                                  tempVolume = value;
+                                });
+                                onChangedDouble(value);
+                              },
                         min: 0,
                         max: 1,
                       ),
                     ],
                   ),
 
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                       AppTexts.music,
+                        AppTexts.music,
                         style: TextStyle(
                           fontFamily: 'PressStart2P',
                           color: Colors.purpleAccent,
@@ -76,29 +80,32 @@ Future<void> settingsDialog(BuildContext context,  Function(double) onChangedDou
                       ),
                       Switch(
                         value: tempMute,
-                        onChanged: (value){
-                          setState((){
-                            tempMute=value;
+                        onChanged: (value) {
+                          setState(() {
+                            tempMute = value;
                           });
-                       onChangedBool(value);
+                          onChangedBool(value);
                         },
                       ),
                     ],
                   ),
 
-                  // ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: Colors.redAccent,
-                  //   ),
-                  //   onPressed: null, // UI only
-                  //   child: const Text(
-                  //     "EXIT GAME",
-                  //     style: TextStyle(
-                  //       fontFamily: 'PressStart2P',
-                  //       fontSize: 10,
-                  //     ),
-                  //   ),
-                  // ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.redAccent,
+                    ),
+                    onPressed: () {
+                      SystemNavigator.pop();
+                    },
+                    child: const Text(
+                      "EXIT GAME",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'PressStart2P',
+                        fontSize: 25,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

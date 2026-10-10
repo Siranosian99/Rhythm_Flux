@@ -16,9 +16,11 @@ class UserService {
       receiveTimeout: const Duration(seconds: 5),
     ),
   );
-
+  Future<void> init()async{
+    await  _tokenHelper.init();
+  }
   UserService() {
-    init();
+
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -76,9 +78,7 @@ class UserService {
       ),
     );
   }
-  Future<void> init()async{
-    await  _tokenHelper.init();
-  }
+
   Future<void> createAccount({
     required String email,
     required String password,
@@ -129,6 +129,7 @@ class UserService {
 
   Future<void> getUser() async {
     try {
+      await _tokenHelper.init();
       final token = _tokenHelper.tokenLocalGetter();
       final response = await _dio.get(
         ApiConfig.getUser,

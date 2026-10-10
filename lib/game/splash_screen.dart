@@ -19,21 +19,52 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with WidgetsBindingObserver {
   final _tokenHelper = TokenHelper();
-  late final UserService _userService;
-  late bool isVerified;
+  final UserService _userService = UserService();
+  bool isChecking = false;
+
+  Future<void> tokenChecker() async {
+    if (isChecking) return;
+    isChecking = true;
+    try {
+      await _tokenHelper.init();
+      await _userService.getUser();
+      bool isVerified = await DecoderUtils.isVerifiedToken();
+      final data = _tokenHelper.tokenLocalGetter();
+      if (!mounted) return;
+      if (data != null &&
+          data.isNotEmpty &&
+          isVerified &&
+          isTokenExpired(data)) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const MainMenuScreen()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) =>
+                SignupScreen(isTokenValid: isTokenExpired(data ?? '')),
+          ),
+        );
+      }
+    } catch (e) {
+      print("token error:$e");
+    } finally {
+      isChecking = false;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    init();
+    tokenChecker();
     WidgetsBinding.instance.addObserver(this);
-    Future.delayed(Duration(seconds: 2), () {
-      tokenChecker();
-    });
+    // Future.delayed(Duration(seconds: 5), () {
+    //   tokenChecker();
+    // });
   }
-  Future<void> init()async{
-  await  _tokenHelper.init();
-  }
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
@@ -44,35 +75,6 @@ class _SplashScreenState extends State<SplashScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       tokenChecker();
-    }
-  }
-
-  Future<void> tokenChecker() async {
-    _userService = UserService();
-    await _userService.getUser();
-    isVerified = await DecoderUtils.isVerifiedToken();
-    final data = _tokenHelper.tokenLocalGetter();
-
-    if (data != null && data.isNotEmpty && isVerified) {
-      isTokenExpired(data);
-    }
-
-    if (!mounted) return;
-    if (data != null && data.isNotEmpty && isVerified) {
-      if (!isTokenExpired(data)) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const MainMenuScreen()),
-        );
-      }
-    } else if (data == null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) =>
-              SignupScreen(isTokenValid: isTokenExpired(data ?? '')),
-        ),
-      );
     }
   }
 
@@ -115,8 +117,6 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 }
-
-
 
 
 
@@ -324,10 +324,6 @@ class _SplashScreenState extends State<SplashScreen>
 //     );
 //   }
 // }
-
-
-
-
 
 // onError: (DioException e, handler) async {
 // if (e.response?.statusCode == 401) {

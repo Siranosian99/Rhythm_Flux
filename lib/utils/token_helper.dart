@@ -7,7 +7,7 @@ class TokenHelper {
     _prefs = await SharedPreferences.getInstance();
   }
   Future<void> tokenLocalSaver(String token) async {
-    print("accsesToken is Saved:$token}");
+    print("accessesToken is Saved:$token}");
     await _prefs.setString('token', token);
   }
 
@@ -23,7 +23,7 @@ class TokenHelper {
   }
 
   String? refreshTokenLocalGetter()  {
-    return _prefs.getString('refreshToken');;
+    return _prefs.getString('refreshToken');
   }
 
   Future<bool?> refreshTokenLocalRemover() async {

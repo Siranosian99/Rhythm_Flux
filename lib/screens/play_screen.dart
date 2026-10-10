@@ -6,14 +6,9 @@ import 'package:rhythm_flux/game/game_screen.dart';
 
 import '../constant/app_texts.dart';
 
-class PlayScreen extends StatefulWidget {
+class PlayScreen extends StatelessWidget {
   const PlayScreen({super.key});
 
-  @override
-  State<PlayScreen> createState() => _PlayScreenState();
-}
-
-class _PlayScreenState extends State<PlayScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

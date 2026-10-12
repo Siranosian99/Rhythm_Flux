@@ -2,9 +2,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class TokenHelper {
   late final SharedPreferences _prefs;
+  bool _isInitialized = false;
 
   Future<void> init() async {
+    if (_isInitialized) return;
+
     _prefs = await SharedPreferences.getInstance();
+    _isInitialized = true;
   }
   Future<void> tokenLocalSaver(String token) async {
     print("accessesToken is Saved:$token}");

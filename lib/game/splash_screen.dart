@@ -26,7 +26,6 @@ class _SplashScreenState extends State<SplashScreen>
     if (isChecking) return;
     isChecking = true;
     try {
-      await _tokenHelper.init();
       await _userService.getUser();
       bool isVerified = await DecoderUtils.isVerifiedToken();
       final data = _tokenHelper.tokenLocalGetter();

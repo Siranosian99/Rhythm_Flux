@@ -16,11 +16,7 @@ class UserService {
       receiveTimeout: const Duration(seconds: 5),
     ),
   );
-  Future<void> init()async{
-    await  _tokenHelper.init();
-  }
   UserService() {
-
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {

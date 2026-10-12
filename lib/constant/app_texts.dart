@@ -23,4 +23,5 @@ class AppTexts {
   static const rhythms="Rhythms";
   static const oops=  "OOPS! EMPTY";
   static const assets="assets/lottie";
+  static const selectBpm="Select Bpm to play";
 }

@@ -46,9 +46,7 @@ class _SignupScreenState extends State<SignupScreen> {
     getBoolValue();
     super.initState();
   }
-  Future<void> init()async{
-    await  _tokenHelper.init();
-  }
+
   Future<void> getBoolValue() async {
     await _userService.getUser();
     final id = await _tokenHelper.tokenLocalGetter();

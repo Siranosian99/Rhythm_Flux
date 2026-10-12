@@ -21,7 +21,6 @@ class Square extends RectangleComponent
     add(
       Paddle(
         speed: 100 / beatDuration,
-        //-120
         isLeft: true,
         color: Colors.purpleAccent,
         moveX: true,
@@ -32,7 +31,6 @@ class Square extends RectangleComponent
     add(
       Paddle(
         speed: 100 / beatDuration,
-        //-120
         isLeft: false,
         color: Colors.blueAccent,
         moveX: true,
@@ -63,7 +61,6 @@ class Paddle extends RectangleComponent
   }) : super(
          size: Vector2(30, 200),
          anchor: Anchor.center,
-         // paint: Paint()..color = isTransparent ?Colors.transparent:color,
        );
 
   @override
@@ -84,25 +81,32 @@ class Paddle extends RectangleComponent
     }
   }
 
-  @override
+ @override
   void update(double dt) {
     super.update(dt);
-    position.x += speed  * dt;
-    if ((position.x - startX).abs() >= maxDistance) {
+
+    if (!moveX) return;
+
+    position.x += speed * dt;
+
+    final distance = position.x - startX;
+
+    if (distance >= maxDistance) {
+      position.x = startX + maxDistance;
+      speed = -speed;
+    } else if (distance <= -maxDistance) {
+      position.x = startX - maxDistance;
       speed = -speed;
     }
-    // speed++;
-    // position.x =speed;
   }
-
   @override
-  void onCollisionStart(Set<Vector2> points, PositionComponent other) {
+  void onCollisionStart(Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is Player) {
 
       gameRef.gameOver();
       game.add(
         ParticleSystemComponent(
-          position: points.first,
+          position: intersectionPoints.first,
           particle: Particle.generate(
             count: 20,
             lifespan: 0.5,
@@ -119,6 +123,6 @@ class Paddle extends RectangleComponent
       );
       FlameAudio.play('death_music.wav', volume: 0.3);
     }
-    super.onCollisionStart(points, other);
+    super.onCollisionStart(intersectionPoints, other);
   }
 }

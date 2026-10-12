@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen>
     try {
       _userService = UserService();
 
-      var token = await _tokenHelper.tokenLocalGetter();
+      var token = _tokenHelper.tokenLocalGetter();
 
       print("TOKEN (ilk): $token");
 

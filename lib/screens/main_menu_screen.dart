@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:lottie/lottie.dart';
+import 'package:rhythm_flux/screens/bpm_screen.dart';
 import 'package:rhythm_flux/screens/play_screen.dart';
 import 'package:rhythm_flux/screens/previous_rhythms.dart';
 import 'package:rhythm_flux/service/models/score_model.dart';
@@ -26,8 +27,9 @@ class MainMenuScreen extends StatefulWidget {
 
 class _MainMenuScreenState extends State<MainMenuScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-   final _userService=UserService();
+  final _userService = UserService();
   late final AnimationController _controller;
+  final TokenHelper _tokenHelper = TokenHelper();
   bool isMute = false;
   double volume = 0.5;
   List<int> allScores = [];
@@ -68,7 +70,6 @@ class _MainMenuScreenState extends State<MainMenuScreen>
     _initializeBpm();
     WidgetsBinding.instance.addObserver(this);
     AudioManager.isMusicPlaying("old_sega");
-
     _controller = AnimationController(vsync: this);
   }
 
@@ -89,6 +90,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
       AudioManager.pause();
     }
   }
+
   Future<void> getScores() async {
     await _userService.getUser();
     allScores = (await _userService.getScores())!;
@@ -167,20 +169,32 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                 onPressed: () async {
                   await _userService.getUser();
                   FilePickerHelper.selectFile();
-
                 },
+
                 child: Text(
                   AppTexts.selectMusic,
                   style: AppTextStyles.songSelectTextStyle(context),
                 ),
               ),
+              TextButton(
+                onPressed: () async {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => const BpmScreen()),
+                  );
+                },
+                child: Text(
+                  AppTexts.selectBpm,
+                  style: AppTextStyles.songSelectTextStyle(context),
+                ),
+              ),
+
               Expanded(
                 child: SizedBox(
                   width: bottomOffset,
                   height: bottomOffset,
                   child: GestureDetector(
-                    onTap:
-                    isReady
+                    onTap: isReady
                         ? () async {
                             await Navigator.pushReplacement(
                               context,
@@ -200,8 +214,8 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                    onPressed: ()  {
-                       settingsDialog(
+                    onPressed: () {
+                      settingsDialog(
                         context,
                         (value) {
                           setState(() {
@@ -244,8 +258,8 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                     ),
                   ),
                   TextButton(
-                    onPressed: ()  {
-                       scoreDialog(context, allScores);
+                    onPressed: () {
+                      scoreDialog(context, allScores);
                     },
                     child: Text(
                       AppTexts.scores,

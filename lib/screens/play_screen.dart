@@ -28,8 +28,16 @@ class PlayScreen extends StatelessWidget {
          AppTexts.gameOver2: (context,game) {
             return GameOverOverlay(game:game as MyGame);
           },
-
+          'PauseMenu': (context, game) {
+            return const Center(
+              child: Text(
+                'PAUSED',
+                style: TextStyle(color: Colors.white, fontSize: 30),
+              ),
+            );
+          },
         },
+
       ),
     );
   }

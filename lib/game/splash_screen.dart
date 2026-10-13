@@ -23,11 +23,12 @@ class _SplashScreenState extends State<SplashScreen>
   bool isChecking = false;
 
   Future<void> tokenChecker() async {
+    DecoderUtils.init();
     if (isChecking) return;
     isChecking = true;
     try {
       await _userService.getUser();
-      bool isVerified = await DecoderUtils.isVerifiedToken();
+      bool isVerified = DecoderUtils.isVerifiedToken();
       final data = _tokenHelper.tokenLocalGetter();
       if (!mounted) return;
       if (data != null &&

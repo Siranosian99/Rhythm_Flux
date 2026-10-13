@@ -32,9 +32,13 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
 
   Future<void> _loadRhythms() async {
     await _userService.getUser();
-    rhythms = await _analyzer.getUserRhythms() ?? [];
-    if (!context.mounted) return;
-    setState(() {});
+    final loadedRhythms = await _analyzer.getUserRhythms() ?? [];
+
+    if (!mounted) return;
+
+    setState(() {
+      rhythms = loadedRhythms;
+    });
   }
 
   @override

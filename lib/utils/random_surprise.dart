@@ -9,8 +9,7 @@ extension RandomSurprise on List<Surprise> {
     if (isEmpty) return;
 
     final selected = this[_random.nextInt(length)];
-    print("RunTIME:-------${selected.runtimeType}");
-
+    print("RunTime:-------${selected.runtimeType}");
     selected.surprise();
   }
 }

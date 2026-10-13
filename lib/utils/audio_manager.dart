@@ -1,21 +1,31 @@
 import 'package:just_audio/just_audio.dart';
 
 class AudioManager {
-  static AudioPlayer player = AudioPlayer();
+  static final AudioPlayer player = AudioPlayer();
 
-  static void isMusicPlaying(String music) async {
+  static Future<void> playMusic(String music) async {
     await player.setAsset('assets/audio/$music.mp3');
     await player.setLoopMode(LoopMode.one);
-    player.play();
-
+    await player.play();
   }
 
-  static void setVol(double volume)=>player.setVolume(volume);
-  static void unMute(double volume)=>player.setVolume(volume);
-  static void mute()=> player.setVolume(0);
-  static void pause() => player.pause();
-  static void resume() => player.play();
+  static Future<void> setVolume(double volume) {
+    return player.setVolume(volume);
+  }
 
-  static void dispose() => player.dispose();
-  
+  static Future<void> mute() {
+    return player.setVolume(0);
+  }
+
+  static Future<void> pause() {
+    return player.pause();
+  }
+
+  static Future<void> resume() {
+    return player.play();
+  }
+
+  static Future<void> dispose() {
+    return player.dispose();
+  }
 }

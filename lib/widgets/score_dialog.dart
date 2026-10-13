@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rhythm_flux/service/models/score_model.dart';
+
+import '../constant/app_texts.dart';
 
 void scoreDialog(BuildContext context, List<int> scores)  {
   showDialog(
@@ -14,7 +15,7 @@ void scoreDialog(BuildContext context, List<int> scores)  {
 
         title: Center(
           child: Text(
-            'SCORES',
+            AppTexts.scores2,
             style: TextStyle(
               fontFamily: 'PressStart2P',
               color: Colors.deepOrangeAccent,
@@ -34,32 +35,34 @@ void scoreDialog(BuildContext context, List<int> scores)  {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Container(
-                  padding: EdgeInsets.all(10),
+                child: DecoratedBox(
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.blueAccent),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '#${index + 1}',
-                        style: TextStyle(
-                          fontFamily: 'PressStart2P',
-                          color: Colors.purpleAccent,
-                          fontSize: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '#${index + 1}',
+                          style: TextStyle(
+                            fontFamily: 'PressStart2P',
+                            color: Colors.purpleAccent,
+                            fontSize: 10,
+                          ),
                         ),
-                      ),
-                      Text(
-                        scores[index].toString(),
-                        style: TextStyle(
-                          fontFamily: 'PressStart2P',
-                          color: Colors.blueAccent,
-                          fontSize: 10,
+                        Text(
+                          scores[index].toString(),
+                          style: TextStyle(
+                            fontFamily: 'PressStart2P',
+                            color: Colors.blueAccent,
+                            fontSize: 10,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -72,7 +75,7 @@ void scoreDialog(BuildContext context, List<int> scores)  {
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
-              'CLOSE',
+              AppTexts.close2,
               style: TextStyle(
                 fontFamily: 'PressStart2P',
                 color: Colors.purpleAccent,

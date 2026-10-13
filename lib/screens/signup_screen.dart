@@ -40,6 +40,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   void initState() {
     // init();
+    DecoderUtils.init();
     _userService = UserService();
     _tokenHelper = TokenHelper();
 
@@ -49,7 +50,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Future<void> getBoolValue() async {
     await _userService.getUser();
-    final id = await _tokenHelper.tokenLocalGetter();
+    final id = _tokenHelper.tokenLocalGetter();
   }
 
   void clearTextFields() {
@@ -131,19 +132,34 @@ class _SignupScreenState extends State<SignupScreen> {
                         return null;
                       },
                       controller: _emailController,
-                      style: TextStyle(
+                      style: const TextStyle(
                         shadows: [
                           Shadow(
-                            blurRadius: 10.0,
+                            blurRadius: 8.0,
                             color: Colors.lightBlueAccent,
-                            offset: Offset(2.0, 2.0),
+                            offset: Offset(1.0, 1.0),
                           ),
                         ],
                       ),
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         hintText: "example@mail.com",
-                        prefixIcon: Icon(Icons.email_outlined),
+                        hintStyle: TextStyle(
+                          color: Colors.grey.shade400,
+                          fontSize: 14,
+                        ),
+                        prefixIcon: const Icon(
+                          Icons.email_outlined,
+                          color: Colors.lightBlueAccent,
+                          size: 21,
+                        ),
+                        prefixIconConstraints: const BoxConstraints(
+                          minWidth: 48,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        ),
                         isDense: true,
                         filled: true,
                         fillColor: Colors.white,
@@ -151,15 +167,19 @@ class _SignupScreenState extends State<SignupScreen> {
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
                         ),
-
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.grey.shade300),
+                          borderSide: BorderSide(
+                            color: Colors.grey.shade300,
+                            width: 1,
+                          ),
                         ),
-
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.blue, width: 2),
+                          borderSide: const BorderSide(
+                            color: Colors.lightBlueAccent,
+                            width: 2,
+                          ),
                         ),
                       ),
                     ),
@@ -180,32 +200,48 @@ class _SignupScreenState extends State<SignupScreen> {
                         return null;
                       },
                       controller: _passController,
-                      style: TextStyle(
+
+                      style: const TextStyle(
                         shadows: [
                           Shadow(
-                            blurRadius: 10.0, // shadow blur
-                            color: Colors.purpleAccent, // shadow colorScheme
-                            offset: Offset(
-                              2.0,
-                              2.0,
-                            ), // how much shadow will be shown
+                            blurRadius: 8.0,
+                            color: Colors.purpleAccent,
+                            offset: Offset(1.0, 1.0),
                           ),
                         ],
                       ),
                       obscureText: obscurePassword,
                       decoration: InputDecoration(
                         hintText: "ex:Tr0ub4dor&3sda",
-                        prefixIcon: Icon(Icons.lock_outline),
+                        hintStyle: TextStyle(
+                          color: Colors.grey.shade400,
+                          fontSize: 14,
+                        ),
+                        prefixIcon: const Icon(
+                          Icons.lock_outline,
+                          color: Colors.purpleAccent,
+                          size: 21,
+                        ),
+                        prefixIconConstraints: const BoxConstraints(
+                          minWidth: 48,
+                        ),
                         isDense: true,
-
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        ),
                         filled: true,
                         fillColor: Colors.white,
-
                         suffixIcon: IconButton(
+                          tooltip: obscurePassword
+                              ? 'Show password'
+                              : 'Hide password',
                           icon: Icon(
                             obscurePassword
                                 ? Icons.visibility
                                 : Icons.visibility_off,
+                            color: Colors.grey.shade600,
+                            size: 21,
                           ),
                           onPressed: () {
                             setState(() {
@@ -213,10 +249,23 @@ class _SignupScreenState extends State<SignupScreen> {
                             });
                           },
                         ),
-
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: Colors.grey.shade300,
+                            width: 1,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: Colors.purpleAccent,
+                            width: 2,
+                          ),
                         ),
                       ),
                     ),
@@ -228,7 +277,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             isChecking = true;
                           });
                           try {
-                            isVerified = await DecoderUtils.isVerifiedToken();
+                            isVerified = DecoderUtils.isVerifiedToken();
                             if (isVerified && widget.isTokenValid) {
                               if (!context.mounted) return;
                               Navigator.pushReplacement(
@@ -247,8 +296,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                       email: _emailController.text,
                                       password: _passController.text,
                                     );
-                              clearTextFields();
-                              isVerified = await DecoderUtils.isVerifiedToken();
+
+                              isVerified = DecoderUtils.isVerifiedToken();
                               if (isVerified) {
                                 if (!context.mounted) return;
                                 Navigator.pushReplacement(
@@ -267,11 +316,9 @@ class _SignupScreenState extends State<SignupScreen> {
                               }
                             }
                           } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("Error:$e"),
-                                ),
-                                );
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(SnackBar(content: Text("Error:$e")));
                           } finally {
                             if (mounted) {
                               setState(() {
@@ -279,7 +326,6 @@ class _SignupScreenState extends State<SignupScreen> {
                               });
                             }
                           }
-
                         }
                       },
                       style: ButtonStyle(
@@ -304,6 +350,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     TextButton(
                       onPressed: () {
+                        clearTextFields();
                         setState(() {
                           signUp = !signUp;
                         });
@@ -332,4 +379,3 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 }
-

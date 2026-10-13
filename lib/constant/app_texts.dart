@@ -14,7 +14,9 @@ class AppTexts {
   static const settings2="SETTINGS";
   static const volume="VOLUME";
   static const close ="CLOSE";
+  static const close2="CLOSE";
   static const music= "MUSIC";
+  static const scores2= "SCORES";
   static const login = "Login";
   static const email = "Enter Your email";
   static const password = "Enter Your password";

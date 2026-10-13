@@ -25,6 +25,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+    DecoderUtils.init();
     WidgetsBinding.instance.addObserver(this);
     init();
     Future.delayed(Duration(seconds: 5), () {
@@ -78,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen>
         }
       }
 
-      final isVerified = await DecoderUtils.isVerifiedToken();
+      final isVerified = DecoderUtils.isVerifiedToken();
 
       print("VERIFIED: $isVerified");
 

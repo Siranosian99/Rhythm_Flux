@@ -1,27 +1,36 @@
+
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DecoderUtils {
+  static late final SharedPreferences _prefs;
+  static bool _isInitialized = false;
+
+  static Future<void> init() async {
+    if (_isInitialized) return;
+
+    _prefs = await SharedPreferences.getInstance();
+    _isInitialized = true;
+  }
+
   static bool decoder(String token) {
-    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-    print("-_-_-_-:$decodedToken");
-    return decodedToken["isVerified"];
+    try {
+      final decodedToken = JwtDecoder.decode(token);
+      return decodedToken['isVerified'] == true;
+    } catch (_) {
+      return false;
+    }
   }
 
-  static Future<bool> isVerifySaver(bool isVerify) async {
-    final prefs = await SharedPreferences.getInstance();
-    bool isVerified = await prefs.setBool('isVerified', isVerify);
-    return isVerified;
+  static Future<bool> isVerifySaver(bool isVerify) {
+    return _prefs.setBool('isVerified', isVerify);
   }
 
-  static Future<bool> isVerifiedToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool isVerified = prefs.getBool('isVerified') ?? false;
-    return isVerified;
+  static bool isVerifiedToken() {
+    return _prefs.getBool('isVerified') ?? false;
   }
-  static void removeKey()async{
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('isVerified');
 
+  static Future<void> removeKey() async {
+    await _prefs.remove('isVerified');
   }
 }

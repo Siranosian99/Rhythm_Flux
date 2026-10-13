@@ -40,7 +40,6 @@ class UserService {
             }
             print("q3e${isTokenExpired(token)}");
             final isExpired = isTokenExpired(token);
-            // print("sex is:$isExpired");
             if (isExpired) {
               final success = await refreshToken().timeout(Duration(seconds: 2));
 
@@ -104,7 +103,7 @@ class UserService {
         ApiConfig.login,
         data: {"email": email, "password": password},
       );
-
+      DecoderUtils.init();
       if (response.statusCode == 200) {
         // final VerifiedValue= DecoderUtils.decoder(response.data['user']['accessToken']);
         final isVerify = DecoderUtils.decoder(response.data['accessToken']);

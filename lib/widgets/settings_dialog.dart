@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:rhythm_flux/constant/app_texts.dart';
 
 void settingsDialog(
   BuildContext context,
-  Function(double) onChangedDouble,
+  ValueChanged<double> onVolumeChanged,
   double volume,
   bool isMute,
-  Function(bool) onChangedBool,
-)  {
+  ValueChanged<bool> onMuteChanged,
+  VoidCallback onExit,
+) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -59,7 +59,7 @@ void settingsDialog(
                                 setState(() {
                                   tempVolume = value;
                                 });
-                                onChangedDouble(value);
+                                onVolumeChanged(value);
                               },
                         min: 0,
                         max: 1,
@@ -84,7 +84,7 @@ void settingsDialog(
                           setState(() {
                             tempMute = value;
                           });
-                          onChangedBool(value);
+                          onMuteChanged(value);
                         },
                       ),
                     ],
@@ -94,9 +94,7 @@ void settingsDialog(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.redAccent,
                     ),
-                    onPressed: () {
-                      SystemNavigator.pop();
-                    },
+                    onPressed: onExit,
                     child: const Text(
                       "EXIT GAME",
                       style: TextStyle(

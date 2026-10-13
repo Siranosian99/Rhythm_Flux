@@ -13,7 +13,7 @@ class FilePickerHelper {
       allowedExtensions: ['mp3', 'wav', 'm4a'],
     );
     if (result == null || result.files.single.path == null) {
-      return null;
+      return;
     }
     final path = result.files.single.path!;
     final fileName = result.files.single.name;

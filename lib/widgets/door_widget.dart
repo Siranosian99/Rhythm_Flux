@@ -17,7 +17,7 @@ class Square extends RectangleComponent
 
   @override
   FutureOr<void> onLoad() async {
-    super.onLoad();
+  await  super.onLoad();
     add(
       Paddle(
         speed: 100 / beatDuration,

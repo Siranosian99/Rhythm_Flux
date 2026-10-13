@@ -67,7 +67,7 @@ class MyGame extends FlameGame
     beatDuration = 60 / bpm;
     player = Player();
     _userService = UserService();
-    AudioManager.isMusicPlaying(playTxt);
+    await AudioManager.playMusic(playTxt);
     add(player);
     add(Square(beatDuration: beatDuration));
     add(ScoreBoard());

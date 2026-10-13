@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rhythm_flux/constant/app_texts.dart';
 import 'package:rhythm_flux/game/game_screen.dart';
-import 'package:rhythm_flux/game/score_board.dart';
 import 'package:rhythm_flux/widgets/restart_button_widget.dart';
 
 import '../utils/suprises.dart';
@@ -11,7 +10,7 @@ class GameOverOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Surprise activeSurprises;
+    // final Surprise activeSurprises;
     return Center(
       child: Container(
         padding: const EdgeInsets.all(20),
@@ -33,7 +32,7 @@ class GameOverOverlay extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF6C63FF).withOpacity(0.4),
+                    color: const Color(0xFF6C63FF).withValues(alpha: 0.4),
                     blurRadius: 12,
                     spreadRadius: 2,
                   ),

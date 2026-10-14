@@ -7,8 +7,10 @@ import 'package:rhythm_flux/utils/decode_token_details.dart';
 import 'package:rhythm_flux/utils/mail_pass_controller.dart';
 import 'package:rhythm_flux/utils/token_helper.dart';
 
-import '../constant/app_texts.dart';
-import '../constant/app_texts_style.dart';
+import '../core/constant/app_texts.dart';
+import '../core/constant/app_texts_style.dart';
+
+
 
 class SignupScreen extends StatefulWidget {
   final bool isTokenValid;

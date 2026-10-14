@@ -23,7 +23,8 @@ class _SplashScreenState extends State<SplashScreen>
   bool isChecking = false;
 
   Future<void> tokenChecker() async {
-    DecoderUtils.init();
+   await DecoderUtils.init();
+    _tokenHelper.init();
     if (isChecking) return;
     isChecking = true;
     try {
@@ -60,9 +61,7 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
     tokenChecker();
     WidgetsBinding.instance.addObserver(this);
-    // Future.delayed(Duration(seconds: 5), () {
-    //   tokenChecker();
-    // });
+
   }
 
   @override

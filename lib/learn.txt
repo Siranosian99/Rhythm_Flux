@@ -1,33 +1,56 @@
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+lib/
 
-class DecoderUtils {
-  static late final SharedPreferences _prefs;
-  static bool _isInitialized = false;
+core/
+Uygulama genelinde kullanılan altyapı
+ network/
+ dio_client.dart
+ auth_interceptor.dart
+ errors/
+ storage/
+ constants/
 
-  Future<void> init() async {
-    if (_isInitialized) return;
 
-    _prefs = await SharedPreferences.getInstance();
-    _isInitialized = true;
-  }
-  static bool decoder(String token) {
-    Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-    print("-_-_-_-:$decodedToken");
-    return decodedToken["isVerified"];
-  }
 
-  static Future<bool> isVerifySaver(bool isVerify) async {
-    bool isVerified = await _prefs.setBool('isVerified', isVerify);
-    return isVerified;
-  }
 
-  static Future<bool> isVerifiedToken() async {
-    bool isVerified = _prefs.getBool('isVerified') ?? false;
-    return isVerified;
-  }
-  static void removeKey()async{
-    await _prefs.remove('isVerified');
+features/
+Her özellik kendi kodunu içerir
+ auth/
+data/
+datasources/auth_remote_data_source.dart
+repositories/auth_repository_impl.dart
+domain/
+repositories/auth_repository.dart
+presentation/
+bloc/auth_cubit.dart
+pages/login_page.dart
+pages/register_page.dart
 
-  }
-}
+
+
+ user/
+data/
+domain/
+presentation/
+
+
+
+ scores/
+data/
+domain/
+presentation/
+
+
+
+
+
+
+config/
+Ortam ve uygulama yapılandırması
+api_config.dart
+app_config.dart
+
+
+
+
+main.dart
+Uygulama başlangıcı ve dependency setup

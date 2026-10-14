@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../constant/app_texts.dart';
+import '../core/constant/app_texts.dart';
 
 void scoreDialog(BuildContext context, List<int> scores)  {
   showDialog(
@@ -30,7 +30,62 @@ void scoreDialog(BuildContext context, List<int> scores)  {
         content: SizedBox(
           width: double.maxFinite,
           height: 200,
-          child: ListView.builder(
+          child: scores.isEmpty?Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 28,
+                vertical: 24,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xFF151126),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: Colors.purpleAccent.withValues(alpha: 0.65),
+                  width: 1.2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.purpleAccent.withValues(alpha: 0.12),
+                    blurRadius: 18,
+                    spreadRadius: 2,
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.emoji_events_outlined,
+                    size: 42,
+                    color: Colors.lightBlueAccent.withValues(alpha: 0.9),
+                  ),
+                  const SizedBox(height: 18),
+                  const Text(
+                   AppTexts.noScores,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'PressStart2P',
+                      color: Colors.purpleAccent,
+                      fontSize: 10,
+                      letterSpacing: 1.2,
+                      height: 1.8,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                  AppTexts.playToGet,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'PressStart2P',
+                      color: Colors.white.withValues(alpha: 0.55),
+                      fontSize: 7,
+                      height: 2.2,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ):ListView.builder(
             itemCount: scores.length,
             itemBuilder: (context, index) {
               return Padding(

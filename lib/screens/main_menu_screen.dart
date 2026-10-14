@@ -8,8 +8,9 @@ import 'package:rhythm_flux/service/user_service/users.dart';
 import 'package:rhythm_flux/utils/file_picker.dart';
 import 'package:rhythm_flux/widgets/settings_dialog.dart';
 import 'package:rhythm_flux/widgets/score_dialog.dart';
-import '../constant/app_texts.dart';
-import '../constant/app_texts_style.dart';
+
+import '../core/constant/app_texts.dart';
+import '../core/constant/app_texts_style.dart';
 import '../service/bpm_saver/bpm_local_saver.dart';
 import '../utils/audio_manager.dart';
 

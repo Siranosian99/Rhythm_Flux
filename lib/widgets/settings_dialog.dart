@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rhythm_flux/constant/app_texts.dart';
+
+import '../core/constant/app_texts.dart';
 
 void settingsDialog(
   BuildContext context,

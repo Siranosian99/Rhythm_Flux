@@ -1,9 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:rhythm_flux/constant/api_config.dart';
 import 'package:rhythm_flux/utils/token_helper.dart';
 
-import '../../provider/audio_provider.dart';
+import '../../core/constant/api_config.dart';
 import '../models/audio_model.dart';
 
 class Analyzer {

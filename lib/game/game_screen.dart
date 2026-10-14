@@ -89,17 +89,15 @@ class MyGame extends FlameGame
     }
   }
 
-  void gameOver() {
+  void gameOver()async {
     if (isGameOver) return;
     isGameOver = true;
     timerGift.stopSurprise();
     pauseEngine();
     AudioManager.pause();
-    _userService.saveScore(state.score);
     overlays.add(gameOverTxt);
+     _userService.saveScore(state.score);
   }
-// siranos1999@gmail.com
-  // Vartan1!
   void resetGame() {
     timerGift.stopSurprise();
     removeAll(children);

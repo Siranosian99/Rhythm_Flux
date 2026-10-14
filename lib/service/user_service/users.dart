@@ -1,9 +1,7 @@
-import 'dart:ffi';
-
 import 'package:dio/dio.dart';
-import 'package:rhythm_flux/constant/api_config.dart';
 import 'package:rhythm_flux/utils/decode_token_details.dart';
 import 'package:rhythm_flux/utils/token_helper.dart';
+import '../../core/constant/api_config.dart';
 import '../../utils/token_checker.dart';
 
 class UserService {
@@ -20,6 +18,7 @@ class UserService {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          await _tokenHelper.init();
           final token = _tokenHelper.tokenLocalGetter();
           if (token != null) {
             options.headers["Authorization"] = "Bearer $token";
@@ -27,6 +26,7 @@ class UserService {
           return handler.next(options);
         },
         onError: (DioException e, handler) async {
+          await _tokenHelper.init();
           if (e.requestOptions.path.contains("refresh")) {
             return handler.next(e);
           }
@@ -41,7 +41,7 @@ class UserService {
             print("q3e${isTokenExpired(token)}");
             final isExpired = isTokenExpired(token);
             if (isExpired) {
-              final success = await refreshToken().timeout(Duration(seconds: 2));
+              final success = await refreshAccessToken().timeout(Duration(seconds: 2));
 
               if  (!success) {
                 await _tokenHelper.refreshTokenLocalRemover();
@@ -144,17 +144,17 @@ class UserService {
     }
   }
 
-  Future<bool> refreshToken() async {
+  Future<bool> refreshAccessToken() async {
     try {
-      final rtoken = _tokenHelper.refreshTokenLocalGetter();
+      final refreshToken = _tokenHelper.refreshTokenLocalGetter();
 
-      if (rtoken == null || rtoken.isEmpty) {
+      if (refreshToken == null || refreshToken.isEmpty) {
         return false;
       }
 
       final response = await _dio.post(
         ApiConfig.refreshToken,
-        data: {"refreshToken": rtoken},
+        data: {"refreshToken": refreshToken},
       );
 
       if (response.statusCode != 200) {

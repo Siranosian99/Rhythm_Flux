@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rhythm_flux/constant/app_texts.dart';
 import 'package:rhythm_flux/game/game_screen.dart';
 import 'package:rhythm_flux/widgets/restart_button_widget.dart';
 
+import '../core/constant/app_texts.dart';
 import '../utils/suprises.dart';
 class GameOverOverlay extends StatelessWidget {
   final MyGame game;

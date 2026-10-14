@@ -26,4 +26,6 @@ class AppTexts {
   static const oops=  "OOPS! EMPTY";
   static const assets="assets/lottie";
   static const selectBpm="Select Bpm to play";
+  static const playToGet="PLAY A RHYTHM TO SET YOUR\\nFIRST RECORD";
+  static const noScores= "NO SCORES YET";
 }

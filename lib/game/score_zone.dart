@@ -1,10 +1,8 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/game.dart';
 import 'package:rhythm_flux/game/game_screen.dart';
 import 'package:rhythm_flux/game/player.dart';
 
-import '../states/score_state.dart';
 
 class ScoreZone extends PositionComponent
     with CollisionCallbacks, HasGameRef<MyGame>{

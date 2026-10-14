@@ -48,13 +48,17 @@ class MyGame extends FlameGame
     await super.onLoad();
     add(
       PauseButton(
-        onPause: () {
+        onPause: () async{
           if (isGameOver) return;
 
           if (isPaused) {
             resumeGame();
+           await AudioManager.playMusic(playTxt);
+
           } else {
             pauseGame();
+            AudioManager.pause();
+
           }
         },
       ),
@@ -101,13 +105,15 @@ class MyGame extends FlameGame
     removeAll(children);
     add(
       PauseButton(
-        onPause: () {
+        onPause: () async{
           if (isGameOver) return;
 
           if (isPaused) {
             resumeGame();
+           await AudioManager.playMusic(playTxt);
           } else {
             pauseGame();
+            AudioManager.pause();
           }
         },
       ),

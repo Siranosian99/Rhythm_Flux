@@ -197,13 +197,13 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                 child: GestureDetector(
                   onTap: isReady
                       ? () async {
-                    AudioManager.pause();
                           await Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (_) => const PlayScreen(),
                             ),
                           );
+                          await AudioManager.pause();
                         }
                       : null,
                   child: Lottie.asset('${AppTexts.assets}/play_button.json'),

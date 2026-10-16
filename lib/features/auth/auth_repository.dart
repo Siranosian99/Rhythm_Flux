@@ -1,15 +1,20 @@
 import 'package:dio/dio.dart';
+import 'package:rhythm_flux/utils/token_helper.dart';
 
 import '../../core/constant/api_config.dart';
 import '../../utils/decode_token_details.dart';
 
-class AuthService {
+class AuthRepository {
+   final Dio dio;
+   final TokenHelper tokenHelper;
+  AuthRepository({required this.dio,required this.tokenHelper});
+
   Future<void> createAccount({
     required String email,
     required String password,
   }) async {
     try {
-      final response = await _dio.post(
+      final response = await dio.post(
         ApiConfig.createAccount,
         data: {"email": email, "password": password},
       );
@@ -29,7 +34,7 @@ class AuthService {
 
   Future<bool?> login({required String email, required String password}) async {
     try {
-      final response = await _dio.post(
+      final response = await dio.post(
         ApiConfig.login,
         data: {"email": email, "password": password},
       );
@@ -38,28 +43,28 @@ class AuthService {
         // final VerifiedValue= DecoderUtils.decoder(response.data['user']['accessToken']);
         final isVerify = DecoderUtils.decoder(response.data['accessToken']);
         await DecoderUtils.isVerifySaver(isVerify);
-        _tokenHelper.tokenLocalSaver(response.data['accessToken']);
-        _tokenHelper.refreshTokenLocalSaver(
+        tokenHelper.tokenLocalSaver(response.data['accessToken']);
+        tokenHelper.refreshTokenLocalSaver(
           response.data['user']['refreshToken'],
         );
-        _tokenHelper.userIdLocalSaver(response.data['user']['_id']);
+        tokenHelper.userIdLocalSaver(response.data['user']['_id']);
 
         return true;
       }
     } on DioException catch (e) {
-      print(e.response?.data);
+      throw Exception("error in login:$e");
     }
     return null;
   }
   Future<bool> refreshAccessToken() async {
     try {
-      final refreshToken = _tokenHelper.refreshTokenLocalGetter();
+      final refreshToken = tokenHelper.refreshTokenLocalGetter();
 
       if (refreshToken == null || refreshToken.isEmpty) {
         return false;
       }
 
-      final response = await _dio.post(
+      final response = await dio.post(
         ApiConfig.refreshToken,
         data: {"refreshToken": refreshToken},
       );
@@ -74,7 +79,7 @@ class AuthService {
         return false;
       }
 
-      await _tokenHelper.tokenLocalSaver(newAccessToken);
+      await tokenHelper.tokenLocalSaver(newAccessToken);
 
       return true;
     } on DioException catch (e) {

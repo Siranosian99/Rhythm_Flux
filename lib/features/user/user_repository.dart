@@ -1,14 +1,19 @@
 import 'package:dio/dio.dart';
+import 'package:rhythm_flux/utils/token_helper.dart';
 
 import '../../core/constant/api_config.dart';
 import '../../utils/decode_token_details.dart';
 
-class UserService {
+class UserRepository {
+   final Dio dio;
+   final TokenHelper tokenHelper;
+  UserRepository({required this.dio,required this.tokenHelper});
+
   Future<void> getUser() async {
     try {
-      await _tokenHelper.init();
-      final token = _tokenHelper.tokenLocalGetter();
-      final response = await _dio.get(
+      await tokenHelper.init();
+      final token = tokenHelper.tokenLocalGetter();
+      final response = await dio.get(
         ApiConfig.getUser,
         data: {"accessToken": token},
       );

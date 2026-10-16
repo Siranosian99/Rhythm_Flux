@@ -1,11 +1,15 @@
 import 'package:dio/dio.dart';
 
 import '../../core/constant/api_config.dart';
+import '../../utils/token_helper.dart';
 
-class ScoreService {
+class ScoreRepository {
+   final Dio dio;
+  final TokenHelper tokenHelper;
+  ScoreRepository({required this.dio,required this.tokenHelper});
   Future<void> saveScore(int score) async {
     try {
-      final response = await _dio.post(
+      final response = await dio.post(
         ApiConfig.saveScore,
         data: {"score": score},
       );
@@ -20,8 +24,8 @@ class ScoreService {
   Future<List<int>?> getScores() async {
     try {
       List<int> allScores = [];
-      final token = _tokenHelper.tokenLocalGetter();
-      final response = await _dio.get(
+      final token = tokenHelper.tokenLocalGetter();
+      final response = await dio.get(
         ApiConfig.getScore,
         data: {"accessToken": token},
       );

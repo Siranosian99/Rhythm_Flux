@@ -33,7 +33,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(
         state.copyWith(
           status: AuthStatus.success,
-          successMessage: 'Hesap başarıyla oluşturuldu.',
+          successMessage: 'Account Created Successfully..',
           clearError: true,
         ),
       );

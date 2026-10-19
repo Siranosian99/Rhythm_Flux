@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rhythm_flux/features/auth/auth_cubit.dart';
+import 'package:rhythm_flux/features/user/user_cubit.dart';
 import 'package:rhythm_flux/game/game_screen.dart';
 import 'package:rhythm_flux/screens/main_menu_screen.dart';
 import 'package:rhythm_flux/service/user_service/users.dart';
@@ -30,7 +33,6 @@ class _SignupScreenState extends State<SignupScreen> {
   late TokenHelper _tokenHelper;
   bool isVerified = false;
   bool isChecking = false;
-  late final UserService _userService;
 
   @override
   void dispose() {
@@ -43,7 +45,7 @@ class _SignupScreenState extends State<SignupScreen> {
   void initState() {
     // init();
     DecoderUtils.init();
-    _userService = UserService();
+    // _userService = UserService();
     _tokenHelper = TokenHelper();
 
     getBoolValue();
@@ -51,8 +53,8 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   Future<void> getBoolValue() async {
-    await _userService.getUser();
-    final id = _tokenHelper.tokenLocalGetter();
+    await context.read<UserCubit>().getUser();
+    // final id = _tokenHelper.tokenLocalGetter();
   }
 
   void clearTextFields() {
@@ -290,11 +292,12 @@ class _SignupScreenState extends State<SignupScreen> {
                               );
                             } else {
                               signUp
-                                  ? await _userService.createAccount(
+                                  ? await context.read<AuthCubit>().createAccount(
                                       email: _emailController.text,
                                       password: _passController.text,
                                     )
-                                  : await _userService.login(
+
+                                  : await context.read<AuthCubit>().login(
                                       email: _emailController.text,
                                       password: _passController.text,
                                     );

@@ -10,3 +10,4 @@ class ApiConfig{
   static String saveScore='/userAuth/saveScore';
   static String getScore='/userAuth/getScores';
 }
+

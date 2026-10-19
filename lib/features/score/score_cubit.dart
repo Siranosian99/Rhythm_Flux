@@ -5,7 +5,7 @@ import 'package:rhythm_flux/features/score/score_states.dart';
 
 class ScoreCubit extends Cubit<ScoreState> {
   final ScoreRepository repository;
-
+  List<int> allScores=[];
   ScoreCubit({
     required this.repository,
   }) : super(const ScoreState());
@@ -52,11 +52,13 @@ class ScoreCubit extends Cubit<ScoreState> {
         emit(
           state.copyWith(
             fetchStatus: ScoreStatus.failure,
-            fetchError: 'Cant Get Scores ',
+            fetchError: "Can't get scores",
           ),
         );
         return;
       }
+
+      allScores = scores;
 
       emit(
         state.copyWith(
@@ -73,5 +75,4 @@ class ScoreCubit extends Cubit<ScoreState> {
         ),
       );
     }
-  }
-}
+  }}

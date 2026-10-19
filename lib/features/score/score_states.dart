@@ -30,6 +30,7 @@ class ScoreState {
     String? fetchError,
     bool clearSaveError = false,
     bool clearFetchError = false,
+
   }) {
     return ScoreState(
       saveStatus: saveStatus ?? this.saveStatus,

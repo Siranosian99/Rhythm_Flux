@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rhythm_flux/screens/main_menu_screen.dart';
 import 'package:rhythm_flux/screens/signup_screen.dart';
-import 'package:rhythm_flux/service/user_service/users.dart';
 import 'package:rhythm_flux/utils/decode_token_details.dart';
 import 'package:rhythm_flux/utils/token_checker.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../features/user/user_cubit.dart';
 import '../utils/token_helper.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,16 +19,16 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with WidgetsBindingObserver {
   final _tokenHelper = TokenHelper();
-  final UserService _userService = UserService();
   bool isChecking = false;
 
   Future<void> tokenChecker() async {
-   await DecoderUtils.init();
+    await DecoderUtils.init();
     _tokenHelper.init();
     if (isChecking) return;
     isChecking = true;
     try {
-      await _userService.getUser();
+      if (!mounted) return;
+      await context.read<UserCubit>().getUser();
       bool isVerified = DecoderUtils.isVerifiedToken();
       final data = _tokenHelper.tokenLocalGetter();
       if (!mounted) return;
@@ -61,7 +61,6 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
     tokenChecker();
     WidgetsBinding.instance.addObserver(this);
-
   }
 
   @override
@@ -116,6 +115,3 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 }
-
-
-

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rhythm_flux/service/bpm_saver/bpm_local_saver.dart';
 import 'package:rhythm_flux/service/models/audio_model.dart';
 import 'package:rhythm_flux/service/music_analyze/analyze_service.dart';
 
 import '../core/constant/app_texts.dart';
+import '../features/user/user_cubit.dart';
 import '../service/user_service/users.dart';
 
 class RhythmListScreen extends StatefulWidget {
@@ -16,7 +18,6 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
   late Analyzer _analyzer;
   final BpmLocalHelper _bpmLocalHelper = BpmLocalHelper();
   List<AudioData> rhythms = [];
-   final UserService _userService=UserService();
 
   @override
   void initState() {
@@ -31,7 +32,7 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
   }
 
   Future<void> _loadRhythms() async {
-    await _userService.getUser();
+    await context.read<UserCubit>().getUser();
     final loadedRhythms = await _analyzer.getUserRhythms() ?? [];
 
     if (!mounted) return;

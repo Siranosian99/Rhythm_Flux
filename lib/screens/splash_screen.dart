@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:rhythm_flux/screens/main_menu_screen.dart';
 import 'package:rhythm_flux/screens/signup_screen.dart';
@@ -7,6 +8,7 @@ import 'package:rhythm_flux/utils/decode_token_details.dart';
 import 'package:rhythm_flux/utils/token_checker.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../features/user/user_cubit.dart';
 import '../utils/token_helper.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,7 +21,6 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with WidgetsBindingObserver {
   final _tokenHelper = TokenHelper();
-  late final UserService _userService;
   late bool isVerified;
 
   @override
@@ -50,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> tokenChecker() async {
     try {
-      _userService = UserService();
+      // _userService = UserService();
 
       var token = _tokenHelper.tokenLocalGetter();
 
@@ -66,7 +67,8 @@ class _SplashScreenState extends State<SplashScreen>
       if (isTokenExpired(token)) {
         print("TOKEN EXPIRED → REFRESH");
 
-        await _userService.getUser();
+
+        await context.read<UserCubit>().getUser();
 
         token = await _tokenHelper.tokenLocalGetter();
 

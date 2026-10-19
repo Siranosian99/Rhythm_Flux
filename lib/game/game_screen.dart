@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flame/events.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'package:rhythm_flux/features/score/score_cubit.dart';
 import 'package:rhythm_flux/game/player.dart';
 import 'package:rhythm_flux/game/score_board.dart';
 import 'package:rhythm_flux/game/score_zone.dart';
@@ -11,13 +12,14 @@ import 'package:rhythm_flux/service/user_service/users.dart';
 import 'package:rhythm_flux/states/score_state.dart';
 import 'package:rhythm_flux/utils/audio_manager.dart';
 import 'package:rhythm_flux/widgets/pause_button.dart';
+import '../features/user/user_cubit.dart';
 import '../service/bpm_saver/bpm_local_saver.dart';
 import '../widgets/door_widget.dart';
 
 class MyGame extends FlameGame
     with HasCollisionDetection, HasGameRef<MyGame>, TapCallbacks {
   bool isGameOver = false;
-  late final UserService _userService;
+  final ScoreCubit scoreCubit;
   late GameState state;
   late double beatDuration;
   final BpmLocalHelper bpmHelper = BpmLocalHelper();
@@ -28,7 +30,7 @@ class MyGame extends FlameGame
   final playTxt = "play";
   bool isPaused = false;
 
-  MyGame({required this.onExit});
+  MyGame({required this.onExit, required this.scoreCubit});
 
   void pauseGame() {
     if (isPaused) return;
@@ -70,7 +72,6 @@ class MyGame extends FlameGame
     final bpm = bpmHelper.getBpm();
     beatDuration = 60 / bpm;
     player = Player();
-    _userService = UserService();
     await AudioManager.playMusic(playTxt);
     add(player);
     add(Square(beatDuration: beatDuration));
@@ -96,7 +97,7 @@ class MyGame extends FlameGame
     pauseEngine();
     AudioManager.pause();
     overlays.add(gameOverTxt);
-     _userService.saveScore(state.score);
+    await scoreCubit.saveScore(state.score);
   }
   void resetGame() {
     timerGift.stopSurprise();

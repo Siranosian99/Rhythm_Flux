@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:rhythm_flux/utils/token_helper.dart';
 
 import '../../core/constant/api_config.dart';
@@ -46,7 +47,7 @@ class Analyzer {
     return null;
   }
 
-  Future<void> saveRhythms(double bpm, List<double> beats, String name) async {
+  Future<void> saveRhythms(double bpm, List<double> beats, String name,BuildContext context) async {
     try {
       final token = _tokenHelper.tokenLocalGetter();
       final response = await _dio.post(
@@ -55,7 +56,16 @@ class Analyzer {
         data: {"bpm": bpm, "beats": beats, "name": name},
       );
       if (response.statusCode == 201 || response.statusCode == 200) {
-        print(response.data);
+
+        if (!context.mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Music rhythm saved successfully!'),
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 1),
+          ),
+        );
       }
     } catch (e) {
       print("Error in Save System:${e.toString()}");

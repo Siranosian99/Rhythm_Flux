@@ -14,6 +14,7 @@ import '../core/constant/app_texts_style.dart';
 import '../features/user/user_cubit.dart';
 import '../service/bpm_saver/bpm_local_saver.dart';
 import '../utils/audio_manager.dart';
+import '../widgets/select_bpm_snackBar.dart';
 
 class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});
@@ -204,7 +205,9 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                       );
                       await AudioManager.pause();
                     }
-                  : null,
+                  : (){
+                showBpmSnackBar(context);
+              },
               child: Lottie.asset('${AppTexts.assets}/play_button.json'),
             ),
           ),

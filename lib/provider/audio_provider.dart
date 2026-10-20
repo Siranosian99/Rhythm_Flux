@@ -1,19 +1,19 @@
-import 'package:flutter/foundation.dart';
-import 'package:rhythm_flux/service/models/audio_model.dart';
-
-class AudioProvider  extends ChangeNotifier{
-  AudioData? _audio;
-
-  AudioData? get audio => _audio;
-  double get bpm => _audio?.bpm ?? 0;
-  List<double> get beats => _audio?.beats ?? const [];
-  bool get hasData => _audio != null;
-  void setAudio(AudioData audio){
-    _audio=audio;
-    notifyListeners();
-  }
-  void clear() {
-    _audio = null;
-    notifyListeners();
-  }
-}
+// import 'package:flutter/foundation.dart';
+// import 'package:rhythm_flux/service/models/audio_model.dart';
+//
+// class AudioProvider  extends ChangeNotifier{
+//   AudioData? _audio;
+//
+//   AudioData? get audio => _audio;
+//   double get bpm => _audio?.bpm ?? 0;
+//   List<double> get beats => _audio?.beats ?? const [];
+//   bool get hasData => _audio != null;
+//   void setAudio(AudioData audio){
+//     _audio=audio;
+//     notifyListeners();
+//   }
+//   void clear() {
+//     _audio = null;
+//     notifyListeners();
+//   }
+// }

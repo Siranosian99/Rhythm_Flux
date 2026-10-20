@@ -323,7 +323,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           } catch (e) {
                             ScaffoldMessenger.of(
                               context,
-                            ).showSnackBar(SnackBar(content: Text("Error:$e")));
+                            ).showSnackBar(SnackBar(content: Text("Error:$e"),duration: Duration(seconds: 1),));
                           } finally {
                             if (mounted) {
                               setState(() {

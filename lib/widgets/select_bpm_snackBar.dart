@@ -18,7 +18,6 @@ void showBpmSnackBar(BuildContext context,String txt1,String txt2) {
               children: [
                 Text(
                   txt1,
-                  // 'Music rhythm required',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 15,
@@ -28,7 +27,6 @@ void showBpmSnackBar(BuildContext context,String txt1,String txt2) {
                 SizedBox(height: 4),
                 Text(
                   txt2,
-                  // 'Please select a music rhythm to play.',
                   style: TextStyle(
                     color: Color(0xFFD0C5E0),
                     fontSize: 12,

@@ -3,13 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rhythm_flux/service/bpm_saver/bpm_local_saver.dart';
 import 'package:rhythm_flux/service/models/audio_model.dart';
-import 'package:rhythm_flux/service/music_analyze/analyze_service.dart';
 
 import '../core/constant/app_texts.dart';
+import '../features/music_analyze/analyze_service.dart';
 import '../features/user/user_cubit.dart';
-import '../service/user_service/users.dart';
 
 class RhythmListScreen extends StatefulWidget {
+  const RhythmListScreen({super.key});
+
   @override
   State<RhythmListScreen> createState() => _RhythmListScreenState();
 }
@@ -82,7 +83,7 @@ class _RhythmListScreenState extends State<RhythmListScreen> {
                       border: Border.all(color: Colors.blueAccent, width: 2),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.blueAccent.withOpacity(0.4),
+                          color: Colors.blueAccent.withValues(alpha: 0.4),
                           blurRadius: 10,
                         ),
                       ],

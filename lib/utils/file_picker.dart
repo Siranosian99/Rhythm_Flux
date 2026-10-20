@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:rhythm_flux/service/music_analyze/analyze_service.dart';
+import 'package:flutter/cupertino.dart';
+
+import '../features/music_analyze/analyze_service.dart';
 
 class FilePickerHelper {
 
-  static Future<void> selectFile() async {
+  static Future<void> selectFile(BuildContext context) async {
     final analyze = Analyzer();
 
     final result = await FilePicker.platform.pickFiles(
@@ -22,7 +24,8 @@ class FilePickerHelper {
     final formData = FormData.fromMap({
       "audio": await MultipartFile.fromFile(path, filename: "music.mp3"),
     });
-    await analyze.analyzer(formData,fileName);
+    if(!context.mounted) return;
+    await analyze.analyzer(formData,fileName,context);
 
   }
 }

@@ -28,4 +28,19 @@ class AppTexts {
   static const selectBpm="Select Bpm to play";
   static const playToGet="PLAY A RHYTHM TO SET YOUR\\nFIRST RECORD";
   static const noScores= "NO SCORES YET";
+  static const isReadyToPlay="Rhythm Saved Successfully!";
+  static const isReadyToPlay2="Your music rhythm is ready to play.";
+  static const isPressAble="Music rhythm required";
+  static const isPressAble2="Please select a music rhythm to play.";
+  static const isError1="Something Went Wrong!";
+  static const isError2="Unable to complete your request. Please try again.";
+  static const isAnalyzeSuccess1="Analysis Completed";
+  static const isAnalyzeSuccess2="Your music rhythm has been analyzed and saved successfully.";
+  static const isAnalyzeFailed1="Analysis Failed!";
+  static const isAnalyzeFailed2="Unable to analyze your music. Please try again.";
+  static const isBpmSaved1="BPM saved successfully!";
+  static const isBpmSaved2 = "Your BPM has been saved and is ready to use.";
+  static const isBpmFailed1 = "BPM Save Failed!";
+  static const isBpmFailed2 = "Unable to save your BPM. Please try again.";
+
 }

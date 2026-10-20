@@ -171,7 +171,8 @@ class _MainMenuScreenState extends State<MainMenuScreen>
         TextButton(
           onPressed: () async {
             await context.read<UserCubit>().getUser();
-            await FilePickerHelper.selectFile();
+            if(!context.mounted) return;
+            await FilePickerHelper.selectFile(context);
           },
 
           child: Text(
@@ -206,7 +207,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                       await AudioManager.pause();
                     }
                   : (){
-                showBpmSnackBar(context);
+                showBpmSnackBar(context,AppTexts.isPressAble,AppTexts.isPressAble2);
               },
               child: Lottie.asset('${AppTexts.assets}/play_button.json'),
             ),

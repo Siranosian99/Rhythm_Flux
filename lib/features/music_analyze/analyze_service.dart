@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:rhythm_flux/utils/token_helper.dart';
 
 import '../../core/constant/api_config.dart';
-import '../models/audio_model.dart';
+import '../../core/constant/app_texts.dart';
+import '../../service/models/audio_model.dart';
+import '../../widgets/select_bpm_snackBar.dart';
 
 class Analyzer {
   final TokenHelper _tokenHelper = TokenHelper();
@@ -20,7 +22,7 @@ class Analyzer {
     ),
   );
 
-  Future<AudioData?> analyzer(FormData formData, String name) async {
+  Future<AudioData?> analyzer(FormData formData, String name,BuildContext context) async {
     try {
       final response = await _dio.post(
         ApiConfig.analyzeMusic,
@@ -30,18 +32,33 @@ class Analyzer {
           print("${(sent / total * 100).toStringAsFixed(0)}%");
         },
       );
-      final bpm = double.parse(response.data['bpm'].toString());
+      if(response.statusCode ==200 || response.statusCode == 201) {
+        final bpm = double.parse(response.data['bpm'].toString());
 
-      final beats = (response.data['beats'] as List)
-          .map((e) => double.parse(e.toString()))
-          .toList();
+        final beats = (response.data['beats'] as List)
+            .map((e) => double.parse(e.toString()))
+            .toList();
 
-      final audioData = AudioData(bpm: bpm, beats: beats, name: name);
-      await saveRhythms(bpm, beats, name);
-      print(response.data); // { bpm: ..., beats: [...] }
-
-      return audioData;
-    } catch (e) {
+        final audioData = AudioData(bpm: bpm, beats: beats, name: name);
+        if (!context.mounted) return null;
+        await saveRhythms(bpm, beats, name, context);
+        print(response.data); // { bpm: ..., beats: [...] }
+        if (context.mounted) {
+          showBpmSnackBar(
+            context,
+            AppTexts.isAnalyzeSuccess1,
+            AppTexts.isAnalyzeSuccess2,
+          );
+        }
+        return audioData;
+      }} catch (e) {
+      if (context.mounted) {
+        showBpmSnackBar(
+          context,
+          AppTexts.isAnalyzeFailed1,
+          e.toString(),
+        );
+      }
       print("Error in alanyze:${e.toString()}");
     }
     return null;
@@ -58,16 +75,12 @@ class Analyzer {
       if (response.statusCode == 201 || response.statusCode == 200) {
 
         if (!context.mounted) return;
+        showBpmSnackBar(context,AppTexts.isReadyToPlay,AppTexts.isReadyToPlay2);
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Music rhythm saved successfully!'),
-            behavior: SnackBarBehavior.floating,
-            duration: Duration(seconds: 1),
-          ),
-        );
       }
     } catch (e) {
+      if (!context.mounted) return;
+      showBpmSnackBar(context, AppTexts.isError1,  e.toString());
       print("Error in Save System:${e.toString()}");
     }
   }

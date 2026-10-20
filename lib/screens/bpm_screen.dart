@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rhythm_flux/core/constant/app_texts.dart';
+import 'package:rhythm_flux/widgets/select_bpm_snackBar.dart';
 import '../service/bpm_saver/bpm_local_saver.dart';
 import 'main_menu_screen.dart';
 
@@ -53,15 +55,10 @@ class _BpmScreenState extends State<BpmScreen> {
     try {
       await bpmHelper.saveBpm(bpm);
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('BPM saved successfully!')));
+    showBpmSnackBar(context, AppTexts.isBpmSaved1, AppTexts.isBpmSaved2);
     } catch (e) {
       if (!mounted) return;
-
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Failed to save BPM: $e')));
+      showBpmSnackBar(context, AppTexts.isBpmFailed1 , AppTexts.isBpmFailed2 );
     } finally {
       if (mounted) {
         setState(() {

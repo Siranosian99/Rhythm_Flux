@@ -42,5 +42,8 @@ class AppTexts {
   static const isBpmSaved2 = "Your BPM has been saved and is ready to use.";
   static const isBpmFailed1 = "BPM Save Failed!";
   static const isBpmFailed2 = "Unable to save your BPM. Please try again.";
+  static const verifyEmail1 = "Verify Your Email!";
+  static const verifyEmail2 = "Please check your inbox and verify your email address to continue.";
+
 
 }

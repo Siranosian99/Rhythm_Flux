@@ -207,7 +207,7 @@ class _MainMenuScreenState extends State<MainMenuScreen>
                       await AudioManager.pause();
                     }
                   : (){
-                showBpmSnackBar(context,AppTexts.isPressAble,AppTexts.isPressAble2);
+                showBpmSnackBar(  Icons.music_note_rounded,context,AppTexts.isPressAble,AppTexts.isPressAble2);
               },
               child: Lottie.asset('${AppTexts.assets}/play_button.json'),
             ),

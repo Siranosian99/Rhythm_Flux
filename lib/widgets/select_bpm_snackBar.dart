@@ -1,12 +1,12 @@
 import  'package:flutter/material.dart';
 
-void showBpmSnackBar(BuildContext context,String txt1,String txt2) {
+void showBpmSnackBar(IconData iconData,BuildContext context,String txt1,String txt2) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Row(
         children: [
-          const Icon(
-            Icons.music_note_rounded,
+           Icon(
+          iconData,
             color: Color(0xFFD7B8FF),
             size: 28,
           ),
@@ -51,4 +51,6 @@ void showBpmSnackBar(BuildContext context,String txt1,String txt2) {
       ),
     ),
   );
+  Navigator.pop(context);
+
 }

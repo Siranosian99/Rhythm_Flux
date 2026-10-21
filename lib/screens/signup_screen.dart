@@ -12,8 +12,7 @@ import 'package:rhythm_flux/utils/token_helper.dart';
 
 import '../core/constant/app_texts.dart';
 import '../core/constant/app_texts_style.dart';
-
-
+import '../widgets/select_bpm_snackBar.dart';
 
 class SignupScreen extends StatefulWidget {
   final bool isTokenValid;
@@ -292,11 +291,12 @@ class _SignupScreenState extends State<SignupScreen> {
                               );
                             } else {
                               signUp
-                                  ? await context.read<AuthCubit>().createAccount(
-                                      email: _emailController.text,
-                                      password: _passController.text,
-                                    )
-
+                                  ? await context
+                                        .read<AuthCubit>()
+                                        .createAccount(
+                                          email: _emailController.text,
+                                          password: _passController.text,
+                                        )
                                   : await context.read<AuthCubit>().login(
                                       email: _emailController.text,
                                       password: _passController.text,
@@ -313,17 +313,22 @@ class _SignupScreenState extends State<SignupScreen> {
                                 );
                               } else {
                                 if (!context.mounted) return;
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Verify your email"),
-                                  ),
+
+                                showBpmSnackBar(
+                                  Icons.error,
+                                  context,
+                                  AppTexts.verifyEmail1,
+                                  AppTexts.verifyEmail2,
                                 );
                               }
                             }
                           } catch (e) {
-                            ScaffoldMessenger.of(
-                              context,
-                            ).showSnackBar(SnackBar(content: Text("Error:$e"),duration: Duration(seconds: 1),));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Error:$e"),
+                                duration: Duration(seconds: 1),
+                              ),
+                            );
                           } finally {
                             if (mounted) {
                               setState(() {

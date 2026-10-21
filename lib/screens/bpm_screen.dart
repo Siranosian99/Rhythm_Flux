@@ -55,10 +55,10 @@ class _BpmScreenState extends State<BpmScreen> {
     try {
       await bpmHelper.saveBpm(bpm);
       if (!mounted) return;
-    showBpmSnackBar(context, AppTexts.isBpmSaved1, AppTexts.isBpmSaved2);
+    showBpmSnackBar(  Icons.music_note_rounded,context, AppTexts.isBpmSaved1, AppTexts.isBpmSaved2);
     } catch (e) {
       if (!mounted) return;
-      showBpmSnackBar(context, AppTexts.isBpmFailed1 , AppTexts.isBpmFailed2 );
+      showBpmSnackBar(  Icons.music_note_rounded,context, AppTexts.isBpmFailed1 , AppTexts.isBpmFailed2 );
     } finally {
       if (mounted) {
         setState(() {

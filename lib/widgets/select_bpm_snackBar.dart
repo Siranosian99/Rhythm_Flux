@@ -1,6 +1,7 @@
 import  'package:flutter/material.dart';
 
 void showBpmSnackBar(IconData iconData,BuildContext context,String txt1,String txt2) {
+
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Row(
@@ -51,6 +52,7 @@ void showBpmSnackBar(IconData iconData,BuildContext context,String txt1,String t
       ),
     ),
   );
-  Navigator.pop(context);
+
+  // Navigator.pop(context);
 
 }
